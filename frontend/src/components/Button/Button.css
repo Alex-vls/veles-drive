@@ -1,0 +1,139 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Size variants */
+.button--sm {
+  height: 32px;
+  padding: 0 var(--spacing-md);
+  font-size: var(--text-sm);
+}
+
+.button--md {
+  height: 40px;
+  padding: 0 var(--spacing-lg);
+  font-size: var(--text-base);
+}
+
+.button--lg {
+  height: 48px;
+  padding: 0 var(--spacing-xl);
+  font-size: var(--text-lg);
+}
+
+/* Variant styles */
+.button--primary {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+}
+
+.button--secondary {
+  background-color: var(--secondary);
+  color: var(--text-primary);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: var(--secondary-dark);
+}
+
+.button--tertiary {
+  background-color: transparent;
+  color: var(--primary);
+}
+
+.button--tertiary:hover:not(:disabled) {
+  background-color: var(--primary-light);
+}
+
+.button--danger {
+  background-color: var(--danger);
+  color: var(--white);
+}
+
+.button--danger:hover:not(:disabled) {
+  background-color: var(--danger-dark);
+}
+
+/* States */
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button--full-width {
+  width: 100%;
+}
+
+/* Loading state */
+.button--loading {
+  cursor: wait;
+}
+
+.button__loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+}
+
+.button__loader-circle {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: button-loader 1s linear infinite;
+}
+
+.button__text {
+  opacity: 1;
+  transition: opacity var(--transition-normal);
+}
+
+.button--loading .button__text {
+  opacity: 0;
+}
+
+.button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button__icon--left {
+  margin-right: var(--spacing-xs);
+}
+
+.button__icon--right {
+  margin-left: var(--spacing-xs);
+}
+
+@keyframes button-loader {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .button--lg {
+    height: 40px;
+    padding: 0 var(--spacing-lg);
+    font-size: var(--text-base);
+  }
+} 

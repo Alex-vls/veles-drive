@@ -1,0 +1,34 @@
+{
+    "car": {
+        "title_template": "{brand} {model} {year} - Купить в ВЕЛЕС АВТО",
+        "description_template": "Купить {brand} {model} {year} года в ВЕЛЕС АВТО. {transmission} коробка передач, {fuel_type} двигатель, {body_type}. Цена: {price} руб.",
+        "keywords_template": "{brand}, {model}, {year}, {transmission}, {fuel_type}, {body_type}, купить, продажа, автомобиль",
+        "og_title_template": "{brand} {model} {year} - Продажа в ВЕЛЕС АВТО",
+        "og_description_template": "Купить {brand} {model} {year} года. {transmission} КПП, {fuel_type}, {body_type}. Цена: {price} руб.",
+        "robots_meta": "index,follow"
+    },
+    "company": {
+        "title_template": "{name} - Автосалон в {city} | ВЕЛЕС АВТО",
+        "description_template": "Автосалон {name} в {city}. Рейтинг: {rating}. Продажа новых и подержанных автомобилей. Официальный дилер.",
+        "keywords_template": "{name}, автосалон, {city}, продажа автомобилей, официальный дилер",
+        "og_title_template": "{name} - Автосалон в {city}",
+        "og_description_template": "Автосалон {name} в {city}. Рейтинг: {rating}. Продажа автомобилей.",
+        "robots_meta": "index,follow"
+    },
+    "article": {
+        "title_template": "{title} - ВЕЛЕС АВТО Блог",
+        "description_template": "Статья '{title}' в категории {category}. Автор: {author}. Читайте на ВЕЛЕС АВТО.",
+        "keywords_template": "{title}, {category}, автомобили, блог, ВЕЛЕС АВТО",
+        "og_title_template": "{title} | ВЕЛЕС АВТО Блог",
+        "og_description_template": "Статья '{title}' в категории {category}. Автор: {author}.",
+        "robots_meta": "index,follow"
+    },
+    "news": {
+        "title_template": "{title} - Новости ВЕЛЕС АВТО",
+        "description_template": "Новость: {title}. Источник: {source}. Актуальные новости автомобильного рынка на ВЕЛЕС АВТО.",
+        "keywords_template": "{title}, новости, автомобили, {source}, ВЕЛЕС АВТО",
+        "og_title_template": "{title} | Новости ВЕЛЕС АВТО",
+        "og_description_template": "Новость: {title}. Источник: {source}.",
+        "robots_meta": "index,follow"
+    }
+} 

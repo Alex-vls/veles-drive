@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # Backend Django application
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    volumes:
+      - ../backend:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - veles_network
+
+  # Frontend React application
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend/Dockerfile
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:8000
+    networks:
+      - veles_network
+
+  # Nginx reverse proxy
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - veles_network
+
+  # PostgreSQL database
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ../backend/.env
+    networks:
+      - veles_network
+
+  # Redis for caching and Celery
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - veles_network
+
+  # Celery worker for background tasks
+  celery_worker:
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    command: celery -A veles_auto worker -l INFO
+    volumes:
+      - ../backend:/app
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - veles_network
+
+  # Celery beat for scheduled tasks
+  celery_beat:
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    command: celery -A veles_auto beat -l INFO
+    volumes:
+      - ../backend:/app
+    env_file:
+      - ../backend/.env
+    depends_on:
+      - backend
+      - redis
+    networks:
+      - veles_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  veles_network:
+    driver: bridge

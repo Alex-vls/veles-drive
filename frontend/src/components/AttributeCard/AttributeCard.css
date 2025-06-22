@@ -1,0 +1,107 @@
+.attribute-card {
+  background: var(--main-bg);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-md);
+  transition: transform var(--transition-normal);
+  box-shadow: var(--shadow);
+}
+
+.attribute-card:hover {
+  transform: translateY(-4px);
+}
+
+.attribute-card--highlighted {
+  background: var(--accent-blue);
+  color: var(--text-white);
+}
+
+.attribute-card--highlighted .attribute-card__title,
+.attribute-card--highlighted .attribute-card__value,
+.attribute-card--highlighted .attribute-card__description {
+  color: var(--text-white);
+}
+
+.attribute-card__icon {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-bg);
+  border-radius: var(--radius-sm);
+  color: var(--accent-blue);
+}
+
+.attribute-card--highlighted .attribute-card__icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-white);
+}
+
+.attribute-card__content {
+  flex: 1;
+}
+
+.attribute-card__title {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-xs);
+}
+
+.attribute-card__value {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.attribute-card__description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.attribute-card__trend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.attribute-card__trend--up {
+  background: var(--accent-green-light);
+  color: var(--accent-green);
+}
+
+.attribute-card__trend--down {
+  background: var(--accent-red-light);
+  color: var(--accent-red);
+}
+
+.attribute-card__trend-icon {
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .attribute-card {
+    padding: var(--spacing-md);
+  }
+  
+  .attribute-card__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .attribute-card__value {
+    font-size: var(--font-size-lg);
+  }
+} 

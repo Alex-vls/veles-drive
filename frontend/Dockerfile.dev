@@ -1,0 +1,26 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Установка необходимых зависимостей
+RUN apk add --no-cache python3 make g++
+
+# Копирование файлов package.json и package-lock.json
+COPY package*.json ./
+
+# Установка зависимостей
+RUN npm install -g @craco/craco
+RUN npm install
+
+# Копирование остальных файлов проекта
+COPY . .
+
+# Открытие порта для React
+EXPOSE 3000
+
+# Установка переменных окружения
+ENV NODE_ENV=development
+ENV REACT_APP_API_URL=http://localhost:8000
+
+# Запуск в режиме разработки
+CMD ["npm", "start"] 
