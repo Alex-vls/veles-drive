@@ -6,7 +6,9 @@ from datetime import timedelta
 
 # Импорты моделей
 from veles_auto.models import (
-    User, Article, News, PageView
+    Category, Tag, Article, ContentImage, Subscription, ContentView, Comment, Reaction, ContentRating,
+    YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata, PageView, UserSession, SearchQuery, Conversion,
+    ABTest, ABTestVariant, ABTestResult
 )
 from companies.models import Company
 from cars.models import Car
@@ -109,16 +111,16 @@ def invalidate_content_stats(sender, instance, **kwargs):
         cache.delete(key)
 
 
-@receiver([post_save, post_delete], sender=News)
-def invalidate_news_stats(sender, instance, **kwargs):
-    """Инвалидация кэша статистики новостей"""
-    cache_keys = [
-        'content_stats_news',
-        'content_stats_published_news',
-        'recent_activities'
-    ]
-    for key in cache_keys:
-        cache.delete(key)
+# @receiver([post_save, post_delete], sender=News)
+# def invalidate_news_stats(sender, instance, **kwargs):
+#     """Инвалидация кэша статистики новостей"""
+#     cache_keys = [
+#         'content_stats_news',
+#         'content_stats_published_news',
+#         'recent_activities'
+#     ]
+#     for key in cache_keys:
+#         cache.delete(key)
 
 
 @receiver([post_save, post_delete], sender=PageView)
