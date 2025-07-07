@@ -18,7 +18,7 @@ import json
 from cars.models import Brand, Car, CarImage
 from companies.models import Company, Review, CompanySchedule, CompanyFeature
 from veles_auto.models import (
-    Category, Tag, Article, News, ContentImage,
+    Category, Tag, Article, ContentImage,
     Subscription, ContentView, Comment, Reaction, ContentRating,
     YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata,
     PageView, UserSession, SearchQuery, Conversion,
@@ -160,8 +160,8 @@ class VelesAutoUniversalAdminSite(AdminSite):
         # Контент статистика
         total_articles = Article.objects.count()
         published_articles = Article.objects.filter(status='published').count()
-        total_news = News.objects.count()
-        published_news = News.objects.filter(status='published').count()
+        # total_news = News.objects.count() # Удалено
+        # published_news = News.objects.filter(status='published').count() # Удалено
         
         return {
             'stats': {
@@ -196,8 +196,8 @@ class VelesAutoUniversalAdminSite(AdminSite):
                 'content': {
                     'articles': total_articles,
                     'published_articles': published_articles,
-                    'news': total_news,
-                    'published_news': published_news
+                    # 'news': total_news, # Удалено
+                    # 'published_news': published_news # Удалено
                 }
             }
         }
@@ -511,7 +511,7 @@ universal_admin_site.register(Car, UniversalCarAdmin)
 universal_admin_site.register(Brand, admin.ModelAdmin)
 universal_admin_site.register(Review, admin.ModelAdmin)
 universal_admin_site.register(Article, admin.ModelAdmin)
-universal_admin_site.register(News, admin.ModelAdmin)
+# universal_admin_site.register(News, admin.ModelAdmin) # Удалено
 universal_admin_site.register(Category, admin.ModelAdmin)
 universal_admin_site.register(Tag, admin.ModelAdmin)
 
