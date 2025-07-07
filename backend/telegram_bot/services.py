@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from .models import (
     TelegramBotSettings, TelegramUser, TelegramChat, TelegramMessage,
-    TelegramNotification, TelegramInlineKeyboard, TelegramUserState
+    TelegramNotification, TelegramInlineKeyboard, TelegramUserState, TelegramMiniAppSession
 )
 
 
