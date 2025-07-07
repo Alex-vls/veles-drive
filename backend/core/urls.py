@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     NewsListView, NewsDetailView,
     ArticleListView, ArticleDetailView,
-    NotificationListView, NotificationUpdateView,
+    NotificationListView, NotificationDetailView,
     ModerationViewSet,
     CarListView, CarDetailView,
     CarCreateView, CarUpdateView, CarDeleteView
@@ -19,7 +19,7 @@ urlpatterns = [
     path('articles/', ArticleListView.as_view(), name='article-list'),
     path('articles/<int:pk>/', ArticleDetailView.as_view(), name='article-detail'),
     path('notifications/', NotificationListView.as_view(), name='notification-list'),
-    path('notifications/<int:pk>/', NotificationUpdateView.as_view(), name='notification-update'),
+    path('notifications/<int:pk>/', NotificationDetailView.as_view(), name='notification-detail'),
     path('cars/', CarListView.as_view(), name='car-list'),
     path('cars/<int:pk>/', CarDetailView.as_view(), name='car-detail'),
     path('cars/create/', CarCreateView.as_view(), name='car-create'),
