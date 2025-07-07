@@ -13,7 +13,7 @@ urlpatterns = [
     path('api/action/', views.mini_app_action, name='mini_app_action'),
     
     # Утилиты
-    path('set-webhook/', views.set_webhook, name='set_webhook'),
-    path('delete-webhook/', views.delete_webhook, name='delete_webhook'),
-    path('bot-info/', views.bot_info, name='bot_info'),
+    # path('set-webhook/', views.set_webhook, name='set_webhook'),
+    # path('delete-webhook/', views.delete_webhook, name='delete_webhook'),
+    # path('bot-info/', views.bot_info, name='bot_info'),
 ] 
