@@ -35,7 +35,7 @@ interface NewsCardProps {
     content: string;
     image?: string;
     author: {
-      name: string;
+      name?: string;
       avatar?: string;
     };
     publishedAt: string;
@@ -283,11 +283,11 @@ const NewsCard: React.FC<NewsCardProps> = ({
             src={news.author.avatar}
             sx={{ width: 32, height: 32 }}
           >
-            {news.author.name.charAt(0)}
+            {news.author.name ? news.author.name.charAt(0) : '?'}
           </Avatar>
           <Box sx={{ flex: 1 }}>
             <Typography variant="body2" sx={{ fontWeight: 600, color: '#1D1D1F' }}>
-              {news.author.name}
+              {news.author.name || 'Неизвестный автор'}
             </Typography>
             <Typography variant="caption" sx={{ color: '#636366' }}>
               {formatDate(news.publishedAt)}
