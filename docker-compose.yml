@@ -1,46 +1,83 @@
 version: '3.8'
 
 services:
-  # Frontend сервис
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+  # ============================================================================
+  # ОСНОВНАЯ ИНФРАСТРУКТУРА
+  # ============================================================================
+  
+  # База данных PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: veles_db
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - REACT_APP_WS_URL=ws://localhost:8000
-    depends_on:
-      - backend
+      - POSTGRES_DB=veles_auto
+      - POSTGRES_USER=veles_user
+      - POSTGRES_PASSWORD=veles_password_2024
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      test: ["CMD-SHELL", "pg_isready -U veles_user -d veles_auto"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
-  # Backend сервис
+  # Redis для кэширования и очередей
+  redis:
+    image: redis:7-alpine
+    container_name: veles_redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - veles_network
+    restart: unless-stopped
+
+  # ============================================================================
+  # BACKEND СЕРВИСЫ
+  # ============================================================================
+  
+  # Основной Django Backend
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+    container_name: veles_backend
     volumes:
       - ./backend:/app
-      - ./backend/media:/app/media
-      - ./backend/static:/app/static
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+      - uploads_volume:/app/uploads
+    environment:
+      - DEBUG=False
+      - DJANGO_SETTINGS_MODULE=veles_auto.settings
+      - DATABASE_URL=postgres://veles_user:veles_password_2024@db:5432/veles_auto
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - ALLOWED_HOSTS=veles-auto.com,www.veles-auto.com,localhost,127.0.0.1
+      - CORS_ALLOWED_ORIGINS=https://veles-auto.com,https://www.veles-auto.com,http://localhost:3000
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHANNEL_ID=${TELEGRAM_CHANNEL_ID}
+      - TELEGRAM_CHANNEL_USERNAME=${TELEGRAM_CHANNEL_USERNAME}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - POSTGRES_DB=veles_auto
+      - POSTGRES_USER=veles_user
+      - POSTGRES_PASSWORD=veles_password_2024
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
     ports:
       - "8000:8000"
-    environment:
-      - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=veles_auto.settings
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/veles_auto
-      - REDIS_URL=redis://redis:6379/0
-      - EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
     depends_on:
       db:
         condition: service_healthy
@@ -48,110 +85,308 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
-      interval: 10s
-      timeout: 5s
+      interval: 30s
+      timeout: 10s
       retries: 3
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
-  # База данных
-  db:
-    image: postgres:15-alpine
+  # Celery Worker для фоновых задач
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: veles_celery_worker
+    command: celery -A veles_auto worker -l INFO --concurrency=4
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./backend:/app
+      - media_volume:/app/mediafiles
+      - uploads_volume:/app/uploads
     environment:
-      - POSTGRES_DB=veles_auto
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - DJANGO_SETTINGS_MODULE=veles_auto.settings
+      - DATABASE_URL=postgres://veles_user:veles_password_2024@db:5432/veles_auto
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
-  # Redis для кэширования и очередей
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # Celery Beat для планировщика задач
+  celery_beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: veles_celery_beat
+    command: celery -A veles_auto beat -l INFO
+    volumes:
+      - ./backend:/app
+    environment:
+      - DJANGO_SETTINGS_MODULE=veles_auto.settings
+      - DATABASE_URL=postgres://veles_user:veles_password_2024@db:5432/veles_auto
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
-  # Prometheus для мониторинга
+  # ============================================================================
+  # FRONTEND СЕРВИСЫ
+  # ============================================================================
+  
+  # Основной Frontend (сайт агрегатора)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: veles_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=https://api.veles-auto.com
+      - REACT_APP_WS_URL=wss://api.veles-auto.com
+      - REACT_APP_DOMAIN=veles-auto.com
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - veles_network
+    restart: unless-stopped
+
+  # Telegram Mini App Frontend (для агрегатора)
+  tg_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.tg
+    container_name: veles_tg_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=https://api.veles-auto.com
+      - REACT_APP_WS_URL=wss://api.veles-auto.com
+      - REACT_APP_TELEGRAM_MODE=true
+      - REACT_APP_DOMAIN=tg.veles-auto.com
+    ports:
+      - "3001:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - veles_network
+    restart: unless-stopped
+
+  # Telegram Mini App Frontend (для админки + ERP)
+  tg_admin_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.admin
+    container_name: veles_tg_admin_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=https://api.veles-auto.com
+      - REACT_APP_WS_URL=wss://api.veles-auto.com
+      - REACT_APP_TELEGRAM_MODE=true
+      - REACT_APP_ADMIN_MODE=true
+      - REACT_APP_DOMAIN=admin.veles-auto.com
+    ports:
+      - "3002:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - veles_network
+    restart: unless-stopped
+
+  # ============================================================================
+  # МОНИТОРИНГ И ЛОГИРОВАНИЕ
+  # ============================================================================
+  
+  # Prometheus для метрик
   prometheus:
     image: prom/prometheus:latest
+    container_name: veles_prometheus
     volumes:
-      - ./docker/prometheus:/etc/prometheus
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/rules:/etc/prometheus/rules
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
     ports:
       - "9090:9090"
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
-  # Alertmanager для управления алертами
+  # AlertManager для уведомлений
   alertmanager:
     image: prom/alertmanager:latest
+    container_name: veles_alertmanager
     volumes:
       - ./docker/prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/alertmanager'
     ports:
       - "9093:9093"
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9093/-/healthy"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
-  # Grafana для визуализации метрик
+  # Grafana для визуализации
   grafana:
     image: grafana/grafana:latest
+    container_name: veles_grafana
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=veles_admin_2024
       - GF_USERS_ALLOW_SIGN_UP=false
     ports:
-      - "3001:3000"
-    depends_on:
-      - prometheus
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - "3003:3000"
     networks:
-      - veles-network
+      - veles_network
+    restart: unless-stopped
 
+  # ============================================================================
+  # ПРОКСИ И БЕЗОПАСНОСТЬ
+  # ============================================================================
+  
+  # Nginx как reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: veles_nginx
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+      - uploads_volume:/app/uploads
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+      - tg_frontend
+      - tg_admin_frontend
+    networks:
+      - veles_network
+    restart: unless-stopped
+
+  # Certbot для SSL сертификатов
+  certbot:
+    image: certbot/certbot
+    container_name: veles_certbot
+    volumes:
+      - ./docker/nginx/ssl:/etc/letsencrypt
+      - ./docker/nginx/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email admin@veles-auto.com --agree-tos --no-eff-email -d veles-auto.com -d www.veles-auto.com -d api.veles-auto.com -d tg.veles-auto.com -d admin.veles-auto.com
+    networks:
+      - veles_network
+
+  # ============================================================================
+  # ХРАНИЛИЩЕ ФАЙЛОВ
+  # ============================================================================
+  
+  # MinIO для собственного хранилища файлов
+  minio:
+    image: minio/minio:latest
+    container_name: veles_minio
+    volumes:
+      - minio_data:/data
+    environment:
+      - MINIO_ROOT_USER=veles_minio_user
+      - MINIO_ROOT_PASSWORD=veles_minio_password_2024
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - veles_network
+    restart: unless-stopped
+
+  # MinIO Client для управления
+  minio_client:
+    image: minio/mc:latest
+    container_name: veles_minio_client
+    volumes:
+      - ./docker/minio/scripts:/scripts
+    environment:
+      - MINIO_ROOT_USER=veles_minio_user
+      - MINIO_ROOT_PASSWORD=veles_minio_password_2024
+    command: sh -c "sleep 10 && /scripts/setup-minio.sh"
+    depends_on:
+      - minio
+    networks:
+      - veles_network
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
 volumes:
   postgres_data:
-  prometheus_data:
-  grafana_data:
-  media_volume:
+    driver: local
+  redis_data:
+    driver: local
   static_volume:
+    driver: local
+  media_volume:
+    driver: local
+  uploads_volume:
+    driver: local
+  prometheus_data:
+    driver: local
+  alertmanager_data:
+    driver: local
+  grafana_data:
+    driver: local
+  minio_data:
+    driver: local
 
+# ============================================================================
+# NETWORKS
+# ============================================================================
 networks:
-  veles-network:
-    driver: bridge 
+  veles_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 

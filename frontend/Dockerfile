@@ -1,18 +1,32 @@
-FROM node:18-alpine
+# Многоэтапная сборка для оптимизации размера
+FROM node:18-alpine AS builder
 
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копирование файлов зависимостей
+# Копируем файлы зависимостей
 COPY package*.json ./
 
-# Установка зависимостей
-RUN npm install
+# Устанавливаем зависимости
+RUN npm install --only=production
 
-# Копирование проекта
+# Копируем исходный код
 COPY . .
 
-# Очистка кэша
-RUN npm run clean
+# Собираем приложение для production
+RUN npm run build
 
-# Запуск сервера разработки
-CMD ["npm", "start"] 
+# Production этап
+FROM nginx:alpine
+
+# Копируем собранное приложение
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Копируем конфигурацию Nginx для SPA
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Открываем порт
+EXPOSE 3000
+
+# Запускаем Nginx
+CMD ["nginx", "-g", "daemon off;"] 

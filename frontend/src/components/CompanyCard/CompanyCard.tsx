@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SchemaOrg from '../SchemaOrg/SchemaOrg';
+import { generateCompanySchema } from '../../utils/schemaOrg';
 import './CompanyCard.css';
 
 const CompanyCard = ({ company }) => {
@@ -15,8 +17,22 @@ const CompanyCard = ({ company }) => {
     city
   } = company;
 
+  // Генерируем Schema.org микроразметку для компании
+  const companySchema = generateCompanySchema({
+    id,
+    name,
+    logo,
+    rating,
+    phone,
+    city,
+    reviews
+  });
+
   return (
     <div className="company-card">
+      {/* Schema.org микроразметка */}
+      <SchemaOrg schema={companySchema} />
+      
       <div className="company-card__header">
         <img 
           src={logo} 

@@ -4,55 +4,60 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Company(models.Model):
-    """Company model"""
-    owner = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='owned_companies', null=True, blank=True, default=None)
-    name = models.CharField(_('name'), max_length=200, default='Unknown')
-    description = models.TextField(_('description'), default='No description')
-    logo = models.ImageField(_('logo'), upload_to='companies/logos/', null=True, blank=True)
-    address = models.CharField(_('address'), max_length=200, default='Unknown address')
-    city = models.CharField(_('city'), max_length=100, default='Unknown')
-    phone = models.CharField(_('phone'), max_length=20, default='0000000000')
-    email = models.EmailField(_('email'), default='unknown@example.com')
-    website = models.URLField(_('website'), blank=True, default='')
-    is_verified = models.BooleanField(_('verified'), default=False)
+    """Модель компании"""
+    owner = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='owned_companies', null=True, blank=True, default=None, verbose_name='Владелец')
+    name = models.CharField('Название', max_length=200, default='Неизвестно')
+    description = models.TextField('Описание', default='Без описания')
+    logo = models.ImageField('Логотип', upload_to='companies/logos/', null=True, blank=True)
+    address = models.CharField('Адрес', max_length=200, default='Неизвестный адрес')
+    city = models.CharField('Город', max_length=100, default='Неизвестно')
+    phone = models.CharField('Телефон', max_length=20, default='0000000000')
+    email = models.EmailField('Email', default='unknown@example.com')
+    website = models.URLField('Веб-сайт', blank=True, default='')
+    is_verified = models.BooleanField('Проверена', default=False)
     rating = models.DecimalField(
-        _('rating'),
+        'Рейтинг',
         max_digits=3,
         decimal_places=2,
         default=0,
         validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'Companies'
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Компании'
         ordering = ['-rating', '-created_at']
 
     def __str__(self):
         return self.name
 
 class CompanyImage(models.Model):
-    """Company image model"""
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(_('image'), upload_to='companies/images/')
-    is_main = models.BooleanField(_('main image'), default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    """Изображение компании"""
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='images', verbose_name='Компания')
+    image = models.ImageField('Изображение', upload_to='companies/images/')
+    is_main = models.BooleanField('Главное изображение', default=False)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
 
     class Meta:
+        verbose_name = 'Изображение компании'
+        verbose_name_plural = 'Изображения компаний'
         ordering = ['-is_main', '-created_at']
 
     def __str__(self):
-        return f"Image for {self.company}"
+        return f"Изображение для {self.company}"
 
 class CompanyFeature(models.Model):
-    """Company feature model"""
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='features')
-    name = models.CharField(_('name'), max_length=100)
-    value = models.CharField(_('value'), max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True)
+    """Характеристика компании"""
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='features', verbose_name='Компания')
+    name = models.CharField('Название', max_length=100)
+    value = models.CharField('Значение', max_length=100)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
 
     class Meta:
+        verbose_name = 'Характеристика компании'
+        verbose_name_plural = 'Характеристики компаний'
         unique_together = ('company', 'name')
         ordering = ['name']
 
@@ -60,19 +65,32 @@ class CompanyFeature(models.Model):
         return f"{self.name}: {self.value}"
 
 class CompanySchedule(models.Model):
-    """Company schedule model"""
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='schedule')
+    """Расписание работы компании"""
+    DAYS_OF_WEEK = [
+        (0, 'Понедельник'),
+        (1, 'Вторник'),
+        (2, 'Среда'),
+        (3, 'Четверг'),
+        (4, 'Пятница'),
+        (5, 'Суббота'),
+        (6, 'Воскресенье'),
+    ]
+    
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='schedule', verbose_name='Компания')
     day_of_week = models.PositiveSmallIntegerField(
-        _('day of week'),
+        'День недели',
+        choices=DAYS_OF_WEEK,
         validators=[MinValueValidator(0), MaxValueValidator(6)]
     )
-    open_time = models.TimeField(_('open time'))
-    close_time = models.TimeField(_('close time'))
-    is_closed = models.BooleanField(_('closed'), default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    open_time = models.TimeField('Время открытия')
+    close_time = models.TimeField('Время закрытия')
+    is_closed = models.BooleanField('Закрыто', default=False)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
     class Meta:
+        verbose_name = 'Расписание работы'
+        verbose_name_plural = 'Расписания работы'
         unique_together = ('company', 'day_of_week')
         ordering = ['day_of_week']
 

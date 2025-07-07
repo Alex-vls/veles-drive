@@ -6,7 +6,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-here'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'companies',
     'cars',
     'core',
+    'erp',  # ERP система
+    'universal_admin',  # Универсальная админка
+    'telegram_bot',  # Telegram Bot и Mini App
 ]
 
 MIDDLEWARE = [
@@ -66,11 +69,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'veles_auto',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': '5432',
+        'NAME': os.environ.get('POSTGRES_DB', 'veles_auto'),
+        'USER': os.environ.get('POSTGRES_USER', 'veles_user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'veles_password_2024'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 
@@ -112,7 +115,32 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
+
+# Поддерживаемые языки
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en', 'English'),
+]
+
+# Локальные файлы переводов
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
+# Middleware для локализации
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Добавляем локализацию
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'

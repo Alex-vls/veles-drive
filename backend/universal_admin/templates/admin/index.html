@@ -1,0 +1,349 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card h3 {
+        margin: 0 0 10px 0;
+        color: #666;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .stat-change {
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        display: inline-block;
+    }
+    
+    .stat-change.positive {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .stat-change.negative {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .chart-container {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .chart-container h3 {
+        margin: 0 0 15px 0;
+        color: #333;
+    }
+    
+    .activities-container {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 14px;
+    }
+    
+    .activity-icon.sale { background: #28a745; color: white; }
+    .activity-icon.user { background: #007bff; color: white; }
+    .activity-icon.task { background: #ffc107; color: #333; }
+    
+    .activity-content {
+        flex: 1;
+    }
+    
+    .activity-title {
+        font-weight: 500;
+        margin-bottom: 2px;
+    }
+    
+    .activity-meta {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    
+    .quick-action {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 15px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.2s;
+    }
+    
+    .quick-action:hover {
+        background: #f8f9fa;
+        border-color: #007bff;
+        text-decoration: none;
+        color: #333;
+    }
+    
+    .quick-action-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .quick-action-title {
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .module-section {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .module-section h3 {
+        margin: 0 0 15px 0;
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <h1>{% trans 'Панель управления VELES AUTO' %}</h1>
+    
+    <!-- Быстрые действия -->
+    {% if quick_actions %}
+    <div class="quick-actions">
+        {% for action in quick_actions %}
+        <a href="{{ action.url }}" class="quick-action">
+            <span class="quick-action-icon">{{ action.icon }}</span>
+            <div class="quick-action-title">{{ action.name }}</div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="dashboard-container">
+        <div class="main-content">
+            <!-- Статистика -->
+            {% if stats %}
+            <div class="stats-grid">
+                <!-- Пользователи -->
+                <div class="stat-card">
+                    <h3>Пользователи</h3>
+                    <div class="stat-value">{{ stats.users.total }}</div>
+                    <div class="stat-change {% if stats.users.growth >= 0 %}positive{% else %}negative{% endif %}">
+                        {% if stats.users.growth >= 0 %}+{% endif %}{{ stats.users.growth }}% за месяц
+                    </div>
+                </div>
+                
+                <!-- Компании -->
+                <div class="stat-card">
+                    <h3>Компании</h3>
+                    <div class="stat-value">{{ stats.companies.total }}</div>
+                    <div class="stat-change {% if stats.companies.growth >= 0 %}positive{% else %}negative{% endif %}">
+                        {% if stats.companies.growth >= 0 %}+{% endif %}{{ stats.companies.growth }}% за месяц
+                    </div>
+                </div>
+                
+                <!-- Автомобили -->
+                <div class="stat-card">
+                    <h3>Автомобили</h3>
+                    <div class="stat-value">{{ stats.cars.total }}</div>
+                    <div class="stat-change {% if stats.cars.growth >= 0 %}positive{% else %}negative{% endif %}">
+                        {% if stats.cars.growth >= 0 %}+{% endif %}{{ stats.cars.growth }}% за месяц
+                    </div>
+                </div>
+                
+                <!-- Продажи -->
+                <div class="stat-card">
+                    <h3>Продажи</h3>
+                    <div class="stat-value">{{ stats.sales.total }}</div>
+                    <div class="stat-change {% if stats.sales.growth >= 0 %}positive{% else %}negative{% endif %}">
+                        {% if stats.sales.growth >= 0 %}+{% endif %}{{ stats.sales.growth }}% за месяц
+                    </div>
+                </div>
+                
+                <!-- Выручка -->
+                <div class="stat-card">
+                    <h3>Выручка</h3>
+                    <div class="stat-value">{{ stats.sales.revenue|floatformat:0 }} ₽</div>
+                    <div class="stat-change">
+                        {{ stats.sales.monthly_revenue|floatformat:0 }} ₽ за месяц
+                    </div>
+                </div>
+                
+                <!-- Проекты -->
+                <div class="stat-card">
+                    <h3>Проекты</h3>
+                    <div class="stat-value">{{ stats.projects.total }}</div>
+                    <div class="stat-change">
+                        {{ stats.projects.active }} активных
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Графики -->
+            {% if charts %}
+            <div class="chart-container">
+                <h3>Продажи за последний месяц</h3>
+                <canvas id="salesChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Регистрации пользователей</h3>
+                <canvas id="usersChart" width="400" height="200"></canvas>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="sidebar">
+            <!-- Последние действия -->
+            {% if recent_activities %}
+            <div class="activities-container">
+                <h3>Последние действия</h3>
+                {% for activity in recent_activities %}
+                <div class="activity-item">
+                    <div class="activity-icon {{ activity.type }}">{{ activity.icon }}</div>
+                    <div class="activity-content">
+                        <div class="activity-title">{{ activity.title }}</div>
+                        <div class="activity-meta">{{ activity.description }} • {{ activity.date|date:"d.m.Y H:i" }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Быстрые ссылки -->
+            <div class="module-section">
+                <h3>Быстрые ссылки</h3>
+                <ul>
+                    <li><a href="{% url 'admin:cars_car_changelist' %}">Управление автомобилями</a></li>
+                    <li><a href="{% url 'admin:companies_company_changelist' %}">Управление компаниями</a></li>
+                    <li><a href="{% url 'admin:erp_sale_changelist' %}">Продажи</a></li>
+                    <li><a href="{% url 'admin:erp_projecttask_changelist' %}">Задачи проектов</a></li>
+                    <li><a href="{% url 'admin:veles_auto_article_changelist' %}">Статьи</a></li>
+                    <li><a href="{% url 'admin:auth_user_changelist' %}">Пользователи</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// График продаж
+{% if charts.sales %}
+const salesCtx = document.getElementById('salesChart').getContext('2d');
+const salesChart = new Chart(salesCtx, {
+    type: 'line',
+    data: {
+        labels: [{% for item in charts.sales %}'{{ item.date|date:"d.m" }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Продажи',
+            data: [{% for item in charts.sales %}{{ item.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+{% endif %}
+
+// График пользователей
+{% if charts.users %}
+const usersCtx = document.getElementById('usersChart').getContext('2d');
+const usersChart = new Chart(usersCtx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in charts.users %}'{{ item.date|date:"d.m" }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Регистрации',
+            data: [{% for item in charts.users %}{{ item.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            backgroundColor: '#28a745'
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+{% endif %}
+</script>
+{% endblock %} 

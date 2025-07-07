@@ -1,0 +1,1012 @@
+# Russian translations for VELES AUTO project.
+# Copyright (C) 2024 VELES AUTO
+# This file is distributed under the same license as the VELES AUTO project.
+msgid ""
+msgstr ""
+"Project-Id-Version: VELES AUTO 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-15 10:00+0300\n"
+"PO-Revision-Date: 2024-01-15 10:00+0300\n"
+"Last-Translator: VELES AUTO Team\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+# Django Admin
+msgid "Site administration"
+msgstr "Администрирование сайта"
+
+msgid "VELES AUTO administration"
+msgstr "Администрирование VELES AUTO"
+
+msgid "Welcome to VELES AUTO"
+msgstr "Добро пожаловать в VELES AUTO"
+
+msgid "View site"
+msgstr "Просмотр сайта"
+
+msgid "Change"
+msgstr "Изменить"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Yes, I'm sure"
+msgstr "Да, я уверен"
+
+msgid "No, take me back"
+msgstr "Нет, вернуть меня назад"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Clear"
+msgstr "Очистить"
+
+msgid "Apply"
+msgstr "Применить"
+
+msgid "All"
+msgstr "Все"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Unknown"
+msgstr "Неизвестно"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "True"
+msgstr "Истина"
+
+msgid "False"
+msgstr "Ложь"
+
+# Authentication
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Email"
+msgstr "Электронная почта"
+
+msgid "First name"
+msgstr "Имя"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "Date joined"
+msgstr "Дата регистрации"
+
+msgid "Last login"
+msgstr "Последний вход"
+
+msgid "Is active"
+msgstr "Активен"
+
+msgid "Is staff"
+msgstr "Персонал"
+
+msgid "Is superuser"
+msgstr "Суперпользователь"
+
+msgid "Groups"
+msgstr "Группы"
+
+msgid "User permissions"
+msgstr "Права пользователя"
+
+msgid "Personal info"
+msgstr "Личная информация"
+
+msgid "Permissions"
+msgstr "Права доступа"
+
+msgid "Important dates"
+msgstr "Важные даты"
+
+# Cars
+msgid "Car"
+msgstr "Автомобиль"
+
+msgid "Cars"
+msgstr "Автомобили"
+
+msgid "Brand"
+msgstr "Марка"
+
+msgid "Model"
+msgstr "Модель"
+
+msgid "Year"
+msgstr "Год"
+
+msgid "Price"
+msgstr "Цена"
+
+msgid "Mileage"
+msgstr "Пробег"
+
+msgid "Engine"
+msgstr "Двигатель"
+
+msgid "Transmission"
+msgstr "Трансмиссия"
+
+msgid "Fuel type"
+msgstr "Тип топлива"
+
+msgid "Color"
+msgstr "Цвет"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Image"
+msgstr "Изображение"
+
+msgid "Images"
+msgstr "Изображения"
+
+# Companies
+msgid "Company"
+msgstr "Компания"
+
+msgid "Companies"
+msgstr "Компании"
+
+msgid "Name"
+msgstr "Название"
+
+msgid "Address"
+msgstr "Адрес"
+
+msgid "Phone"
+msgstr "Телефон"
+
+msgid "Website"
+msgstr "Веб-сайт"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Rating"
+msgstr "Рейтинг"
+
+msgid "Reviews"
+msgstr "Отзывы"
+
+# ERP System
+msgid "Inventory"
+msgstr "Инвентарь"
+
+msgid "Sale"
+msgstr "Продажа"
+
+msgid "Sales"
+msgstr "Продажи"
+
+msgid "Service"
+msgstr "Услуга"
+
+msgid "Services"
+msgstr "Услуги"
+
+msgid "Service order"
+msgstr "Заказ на обслуживание"
+
+msgid "Service orders"
+msgstr "Заказы на обслуживание"
+
+msgid "Financial"
+msgstr "Финансы"
+
+msgid "Financial operations"
+msgstr "Финансовые операции"
+
+msgid "Project board"
+msgstr "Доска проектов"
+
+msgid "Project boards"
+msgstr "Доски проектов"
+
+msgid "Project column"
+msgstr "Колонка проекта"
+
+msgid "Project columns"
+msgstr "Колонки проектов"
+
+msgid "Project task"
+msgstr "Задача проекта"
+
+msgid "Project tasks"
+msgstr "Задачи проектов"
+
+msgid "Task label"
+msgstr "Метка задачи"
+
+msgid "Task labels"
+msgstr "Метки задач"
+
+msgid "Task comment"
+msgstr "Комментарий к задаче"
+
+msgid "Task comments"
+msgstr "Комментарии к задачам"
+
+msgid "Task attachment"
+msgstr "Вложение к задаче"
+
+msgid "Task attachments"
+msgstr "Вложения к задачам"
+
+msgid "Task history"
+msgstr "История задачи"
+
+msgid "Task histories"
+msgstr "Истории задач"
+
+# Status choices
+msgid "Available"
+msgstr "Доступен"
+
+msgid "Reserved"
+msgstr "Зарезервирован"
+
+msgid "Sold"
+msgstr "Продан"
+
+msgid "Maintenance"
+msgstr "На обслуживании"
+
+msgid "Damaged"
+msgstr "Поврежден"
+
+msgid "Pending"
+msgstr "В ожидании"
+
+msgid "Completed"
+msgstr "Завершено"
+
+msgid "Cancelled"
+msgstr "Отменено"
+
+msgid "Refunded"
+msgstr "Возврат"
+
+msgid "Scheduled"
+msgstr "Запланирован"
+
+msgid "In progress"
+msgstr "В работе"
+
+msgid "Low"
+msgstr "Низкий"
+
+msgid "Medium"
+msgstr "Средний"
+
+msgid "High"
+msgstr "Высокий"
+
+msgid "Urgent"
+msgstr "Срочный"
+
+# Operation types
+msgid "Income"
+msgstr "Доход"
+
+msgid "Expense"
+msgstr "Расход"
+
+msgid "Investment"
+msgstr "Инвестиция"
+
+msgid "Loan"
+msgstr "Кредит"
+
+msgid "Refund"
+msgstr "Возврат"
+
+# Board types
+msgid "Sales"
+msgstr "Продажи"
+
+msgid "Service"
+msgstr "Сервис"
+
+msgid "Inventory"
+msgstr "Склад"
+
+msgid "General"
+msgstr "Общий"
+
+# Common fields
+msgid "Created at"
+msgstr "Создано"
+
+msgid "Updated at"
+msgstr "Обновлено"
+
+msgid "Created by"
+msgstr "Создано пользователем"
+
+msgid "Updated by"
+msgstr "Обновлено пользователем"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Priority"
+msgstr "Приоритет"
+
+msgid "Due date"
+msgstr "Срок выполнения"
+
+msgid "Assignee"
+msgstr "Исполнитель"
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "Notes"
+msgstr "Заметки"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Amount"
+msgstr "Сумма"
+
+msgid "Quantity"
+msgstr "Количество"
+
+msgid "Cost price"
+msgstr "Себестоимость"
+
+msgid "Selling price"
+msgstr "Цена продажи"
+
+msgid "Commission"
+msgstr "Комиссия"
+
+msgid "Total price"
+msgstr "Общая цена"
+
+msgid "Sale date"
+msgstr "Дата продажи"
+
+msgid "Scheduled date"
+msgstr "Запланированная дата"
+
+msgid "Completed date"
+msgstr "Дата завершения"
+
+msgid "Duration"
+msgstr "Продолжительность"
+
+msgid "Location"
+msgstr "Местоположение"
+
+msgid "Is active"
+msgstr "Активен"
+
+msgid "Is archived"
+msgstr "Архивирован"
+
+msgid "Is premium"
+msgstr "Премиум"
+
+msgid "Is sent"
+msgstr "Отправлено"
+
+msgid "Sent at"
+msgstr "Отправлено в"
+
+# Telegram
+msgid "Telegram user"
+msgstr "Пользователь Telegram"
+
+msgid "Telegram users"
+msgstr "Пользователи Telegram"
+
+msgid "Telegram chat"
+msgstr "Чат Telegram"
+
+msgid "Telegram chats"
+msgstr "Чаты Telegram"
+
+msgid "Telegram message"
+msgstr "Сообщение Telegram"
+
+msgid "Telegram messages"
+msgstr "Сообщения Telegram"
+
+msgid "Telegram notification"
+msgstr "Уведомление Telegram"
+
+msgid "Telegram notifications"
+msgstr "Уведомления Telegram"
+
+msgid "Telegram bot settings"
+msgstr "Настройки бота Telegram"
+
+msgid "Telegram mini app session"
+msgstr "Сессия Mini App Telegram"
+
+msgid "Telegram mini app sessions"
+msgstr "Сессии Mini App Telegram"
+
+msgid "Telegram command"
+msgstr "Команда Telegram"
+
+msgid "Telegram commands"
+msgstr "Команды Telegram"
+
+msgid "Telegram inline keyboard"
+msgstr "Inline клавиатура Telegram"
+
+msgid "Telegram inline keyboards"
+msgstr "Inline клавиатуры Telegram"
+
+msgid "Telegram user state"
+msgstr "Состояние пользователя Telegram"
+
+msgid "Telegram user states"
+msgstr "Состояния пользователей Telegram"
+
+# Integration
+msgid "System metric"
+msgstr "Системная метрика"
+
+msgid "System metrics"
+msgstr "Системные метрики"
+
+msgid "System event"
+msgstr "Системное событие"
+
+msgid "System events"
+msgstr "Системные события"
+
+msgid "Integration config"
+msgstr "Конфигурация интеграции"
+
+msgid "Integration configs"
+msgstr "Конфигурации интеграции"
+
+msgid "Data sync"
+msgstr "Синхронизация данных"
+
+msgid "Data syncs"
+msgstr "Синхронизации данных"
+
+msgid "Cache entry"
+msgstr "Кэш запись"
+
+msgid "Cache entries"
+msgstr "Кэш записи"
+
+msgid "Health check"
+msgstr "Проверка здоровья"
+
+msgid "Health checks"
+msgstr "Проверки здоровья"
+
+msgid "System alert"
+msgstr "Системный алерт"
+
+msgid "System alerts"
+msgstr "Системные алерты"
+
+msgid "Integration log"
+msgstr "Лог интеграции"
+
+msgid "Integration logs"
+msgstr "Логи интеграции"
+
+# Dashboard
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Overview"
+msgstr "Обзор"
+
+msgid "Statistics"
+msgstr "Статистика"
+
+msgid "Analytics"
+msgstr "Аналитика"
+
+msgid "Reports"
+msgstr "Отчеты"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Login"
+msgstr "Войти"
+
+msgid "Register"
+msgstr "Регистрация"
+
+msgid "Password reset"
+msgstr "Сброс пароля"
+
+msgid "Password change"
+msgstr "Изменение пароля"
+
+# Messages
+msgid "Successfully saved."
+msgstr "Успешно сохранено."
+
+msgid "Successfully deleted."
+msgstr "Успешно удалено."
+
+msgid "Please correct the error below."
+msgstr "Пожалуйста, исправьте ошибку ниже."
+
+msgid "Please correct the errors below."
+msgstr "Пожалуйста, исправьте ошибки ниже."
+
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+msgid "This action cannot be undone."
+msgstr "Это действие нельзя отменить."
+
+msgid "No items selected."
+msgstr "Элементы не выбраны."
+
+msgid "No results found."
+msgstr "Результаты не найдены."
+
+msgid "Loading..."
+msgstr "Загрузка..."
+
+msgid "Error occurred."
+msgstr "Произошла ошибка."
+
+msgid "Operation completed successfully."
+msgstr "Операция успешно завершена."
+
+msgid "Operation failed."
+msgstr "Операция не удалась."
+
+# Time and dates
+msgid "Today"
+msgstr "Сегодня"
+
+msgid "Yesterday"
+msgstr "Вчера"
+
+msgid "Tomorrow"
+msgstr "Завтра"
+
+msgid "This week"
+msgstr "На этой неделе"
+
+msgid "Last week"
+msgstr "На прошлой неделе"
+
+msgid "This month"
+msgstr "В этом месяце"
+
+msgid "Last month"
+msgstr "В прошлом месяце"
+
+msgid "This year"
+msgstr "В этом году"
+
+msgid "Last year"
+msgstr "В прошлом году"
+
+# Units
+msgid "km"
+msgstr "км"
+
+msgid "miles"
+msgstr "миль"
+
+msgid "liters"
+msgstr "литров"
+
+msgid "gallons"
+msgstr "галлонов"
+
+msgid "rubles"
+msgstr "рублей"
+
+msgid "dollars"
+msgstr "долларов"
+
+msgid "euros"
+msgstr "евро"
+
+msgid "pieces"
+msgstr "штук"
+
+msgid "items"
+msgstr "элементов"
+
+msgid "users"
+msgstr "пользователей"
+
+msgid "cars"
+msgstr "автомобилей"
+
+msgid "companies"
+msgstr "компаний"
+
+msgid "sales"
+msgstr "продаж"
+
+msgid "services"
+msgstr "услуг"
+
+msgid "tasks"
+msgstr "задач"
+
+msgid "projects"
+msgstr "проектов"
+
+msgid "notifications"
+msgstr "уведомлений"
+
+msgid "errors"
+msgstr "ошибок"
+
+msgid "requests"
+msgstr "запросов"
+
+msgid "events"
+msgstr "событий"
+
+msgid "logs"
+msgstr "логов"
+
+msgid "alerts"
+msgstr "алертов"
+
+msgid "metrics"
+msgstr "метрик"
+
+msgid "operations"
+msgstr "операций"
+
+msgid "orders"
+msgstr "заказов"
+
+msgid "reviews"
+msgstr "отзывов"
+
+msgid "messages"
+msgstr "сообщений"
+
+msgid "sessions"
+msgstr "сессий"
+
+msgid "commands"
+msgstr "команд"
+
+msgid "keyboards"
+msgstr "клавиатур"
+
+msgid "states"
+msgstr "состояний"
+
+msgid "configs"
+msgstr "конфигураций"
+
+msgid "syncs"
+msgstr "синхронизаций"
+
+msgid "entries"
+msgstr "записей"
+
+msgid "checks"
+msgstr "проверок"
+
+msgid "boards"
+msgstr "досок"
+
+msgid "columns"
+msgstr "колонок"
+
+msgid "labels"
+msgstr "меток"
+
+msgid "comments"
+msgstr "комментариев"
+
+msgid "attachments"
+msgstr "вложений"
+
+msgid "histories"
+msgstr "историй"
+
+msgid "chats"
+msgstr "чатов"
+
+msgid "minutes"
+msgstr "минут"
+
+msgid "hours"
+msgstr "часов"
+
+msgid "days"
+msgstr "дней"
+
+msgid "weeks"
+msgstr "недель"
+
+msgid "months"
+msgstr "месяцев"
+
+msgid "years"
+msgstr "лет"
+
+msgid "seconds"
+msgstr "секунд"
+
+msgid "milliseconds"
+msgstr "миллисекунд"
+
+msgid "percent"
+msgstr "процентов"
+
+msgid "ratio"
+msgstr "соотношение"
+
+msgid "count"
+msgstr "количество"
+
+msgid "average"
+msgstr "среднее"
+
+msgid "total"
+msgstr "всего"
+
+msgid "maximum"
+msgstr "максимум"
+
+msgid "minimum"
+msgstr "минимум"
+
+msgid "sum"
+msgstr "сумма"
+
+msgid "difference"
+msgstr "разность"
+
+msgid "product"
+msgstr "произведение"
+
+msgid "quotient"
+msgstr "частное"
+
+msgid "remainder"
+msgstr "остаток"
+
+msgid "power"
+msgstr "степень"
+
+msgid "root"
+msgstr "корень"
+
+msgid "logarithm"
+msgstr "логарифм"
+
+msgid "sine"
+msgstr "синус"
+
+msgid "cosine"
+msgstr "косинус"
+
+msgid "tangent"
+msgstr "тангенс"
+
+msgid "arcsine"
+msgstr "арксинус"
+
+msgid "arccosine"
+msgstr "арккосинус"
+
+msgid "arctangent"
+msgstr "арктангенс"
+
+msgid "hyperbolic sine"
+msgstr "гиперболический синус"
+
+msgid "hyperbolic cosine"
+msgstr "гиперболический косинус"
+
+msgid "hyperbolic tangent"
+msgstr "гиперболический тангенс"
+
+msgid "inverse hyperbolic sine"
+msgstr "обратный гиперболический синус"
+
+msgid "inverse hyperbolic cosine"
+msgstr "обратный гиперболический косинус"
+
+msgid "inverse hyperbolic tangent"
+msgstr "обратный гиперболический тангенс"
+
+msgid "absolute value"
+msgstr "абсолютное значение"
+
+msgid "floor"
+msgstr "пол"
+
+msgid "ceiling"
+msgstr "потолок"
+
+msgid "round"
+msgstr "округление"
+
+msgid "truncate"
+msgstr "усечение"
+
+msgid "modulo"
+msgstr "модуло"
+
+msgid "factorial"
+msgstr "факториал"
+
+msgid "gamma"
+msgstr "гамма"
+
+msgid "beta"
+msgstr "бета"
+
+msgid "zeta"
+msgstr "дзета"
+
+msgid "eta"
+msgstr "эта"
+
+msgid "theta"
+msgstr "тета"
+
+msgid "lambda"
+msgstr "лямбда"
+
+msgid "mu"
+msgstr "мю"
+
+msgid "nu"
+msgstr "ню"
+
+msgid "xi"
+msgstr "кси"
+
+msgid "pi"
+msgstr "пи"
+
+msgid "rho"
+msgstr "ро"
+
+msgid "sigma"
+msgstr "сигма"
+
+msgid "tau"
+msgstr "тау"
+
+msgid "upsilon"
+msgstr "ипсилон"
+
+msgid "phi"
+msgstr "фи"
+
+msgid "chi"
+msgstr "хи"
+
+msgid "psi"
+msgstr "пси"
+
+msgid "omega"
+msgstr "омега"
+
+msgid "alpha"
+msgstr "альфа"
+
+msgid "beta"
+msgstr "бета"
+
+msgid "gamma"
+msgstr "гамма"
+
+msgid "delta"
+msgstr "дельта"
+
+msgid "epsilon"
+msgstr "эпсилон"
+
+msgid "zeta"
+msgstr "дзета"
+
+msgid "eta"
+msgstr "эта"
+
+msgid "theta"
+msgstr "тета"
+
+msgid "iota"
+msgstr "йота"
+
+msgid "kappa"
+msgstr "каппа"
+
+msgid "lambda"
+msgstr "лямбда"
+
+msgid "mu"
+msgstr "мю"
+
+msgid "nu"
+msgstr "ню"
+
+msgid "xi"
+msgstr "кси"
+
+msgid "omicron"
+msgstr "омикрон"
+
+msgid "pi"
+msgstr "пи"
+
+msgid "rho"
+msgstr "ро"
+
+msgid "sigma"
+msgstr "сигма"
+
+msgid "tau"
+msgstr "тау"
+
+msgid "upsilon"
+msgstr "ипсилон"
+
+msgid "phi"
+msgstr "фи"
+
+msgid "chi"
+msgstr "хи"
+
+msgid "psi"
+msgstr "пси"
+
+msgid "omega"
+msgstr "омега" 

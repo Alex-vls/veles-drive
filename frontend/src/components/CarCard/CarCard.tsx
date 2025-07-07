@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SchemaOrg from '../SchemaOrg/SchemaOrg';
+import { generateCarSchema } from '../../utils/schemaOrg';
 import './CarCard.css';
 
 const CarCard = ({
@@ -16,8 +18,25 @@ const CarCard = ({
   isNew,
   isPromoted,
 }) => {
+  // Генерируем Schema.org микроразметку для автомобиля
+  const carSchema = generateCarSchema({
+    id,
+    brand,
+    model,
+    year,
+    price,
+    mileage,
+    engine,
+    transmission,
+    images,
+    company
+  });
+
   return (
     <div className="car-card">
+      {/* Schema.org микроразметка */}
+      <SchemaOrg schema={carSchema} />
+      
       <div className="car-card__image-container">
         <img
           src={images[0]}

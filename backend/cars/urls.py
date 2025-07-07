@@ -1,19 +1,29 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
 
+# Создаем роутеры для ViewSet'ов
+router = DefaultRouter()
+router.register(r'brands', views.BrandViewSet)
+router.register(r'models', views.ModelViewSet)
+router.register(r'vehicles', views.VehicleViewSet)
+router.register(r'motorcycles', views.MotorcycleViewSet)
+router.register(r'boats', views.BoatViewSet)
+router.register(r'aircraft', views.AircraftViewSet)
+
 urlpatterns = [
-    # Car URLs
-    path('', views.CarListView.as_view(), name='car-list'),
-    path('<int:pk>/', views.CarDetailView.as_view(), name='car-detail'),
-    path('create/', views.CarCreateView.as_view(), name='car-create'),
-    path('<int:pk>/update/', views.CarUpdateView.as_view(), name='car-update'),
-    path('<int:pk>/delete/', views.CarDeleteView.as_view(), name='car-delete'),
-    path('<int:pk>/availability/', views.CarAvailabilityView.as_view(), name='car-availability'),
+    # ViewSet URLs
+    path('api/', include(router.urls)),
+    
+    # Vehicle URLs
+    path('vehicles/', views.VehicleListView.as_view(), name='vehicle-list'),
+    path('vehicles/<int:pk>/', views.VehicleDetailView.as_view(), name='vehicle-detail'),
+    path('vehicles/create/', views.VehicleCreateView.as_view(), name='vehicle-create'),
+    path('vehicles/<int:pk>/update/', views.VehicleUpdateView.as_view(), name='vehicle-update'),
+    path('vehicles/<int:pk>/delete/', views.VehicleDeleteView.as_view(), name='vehicle-delete'),
+    path('vehicles/<int:pk>/availability/', views.VehicleAvailabilityView.as_view(), name='vehicle-availability'),
 
-    # Car Image URLs
-    path('<int:car_id>/images/', views.CarImageListView.as_view(), name='car-image-list'),
-    path('<int:car_id>/images/<int:pk>/', views.CarImageDetailView.as_view(), name='car-image-detail'),
-
-    # Car Review URLs
-    path('<int:car_id>/reviews/', views.CarReviewCreateView.as_view(), name='car-review-create'),
+    # Vehicle Image URLs
+    path('vehicles/<int:vehicle_id>/images/', views.VehicleImageListView.as_view(), name='vehicle-image-list'),
+    path('vehicles/<int:vehicle_id>/images/<int:pk>/', views.VehicleImageDetailView.as_view(), name='vehicle-image-detail'),
 ] 

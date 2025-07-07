@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'users',
     'cars',
     'companies',
+    'erp',
     'veles_auto',
 ]
 
@@ -80,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'veles_auto'),
-        'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        'USER': os.getenv('POSTGRES_USER', 'veles_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'veles_password_2024'),
         'HOST': os.getenv('POSTGRES_HOST', 'db'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }

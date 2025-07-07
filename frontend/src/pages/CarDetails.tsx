@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -14,122 +14,336 @@ import {
   Button,
   Divider,
   Avatar,
+  Container,
 } from '@mui/material';
-import { carsService } from '../services/cars';
-import { Car, Review } from '../types';
+import { useGetVehicleQuery } from '@/services/api';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useAuth } from '../contexts/AuthContext';
-import { getCarById } from '../data/mockData';
 
 const CarDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [car, setCar] = useState<Car | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    if (!id) return;
-    const carData = getCarById(id);
-    setCar(carData || null);
-    setLoading(false);
-  }, [id]);
+  const { data: vehicle, isLoading, error } = useGetVehicleQuery(
+    parseInt(id || '0'),
+    { skip: !id }
+  );
 
-  if (loading) {
-    return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
-  if (error || !car) {
-    return <Alert severity="error">{error || 'Автомобиль не найден'}</Alert>;
+
+  if (error || !vehicle) {
+    return (
+      <Alert severity="error">
+        {error ? 'Ошибка загрузки автомобиля' : 'Автомобиль не найден'}
+      </Alert>
+    );
   }
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'RUB'
+    }).format(price);
+  };
+
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), 'dd MMMM yyyy', { locale: ru });
+  };
 
   return (
-    <Box>
-      <Paper sx={{ p: 3, mb: 4 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            {car.images && car.images.length > 0 ? (
-              <CardMedia
-                component="img"
-                height="340"
-                image={car.images.find((img) => img.is_main)?.image || car.images[0].image}
-                alt={car.brand + ' ' + car.model}
-                sx={{ borderRadius: 2, mb: 2 }}
-              />
-            ) : (
-              <Box sx={{ height: 340, bgcolor: 'grey.200', borderRadius: 2 }} />
-            )}
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
-              {car.images && car.images.map((img) => (
-                <Avatar
-                  key={img.id}
-                  src={img.image}
-                  alt=""
-                  variant="rounded"
-                  sx={{ width: 56, height: 56, cursor: 'pointer', border: img.is_main ? '2px solid #1976d2' : undefined }}
-                />
-              ))}
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" gutterBottom>
-              {car.brand} {car.model} {car.year}
-            </Typography>
-            <Typography variant="h6" color="primary" gutterBottom>
-              {car.price.toLocaleString()} ₽
-            </Typography>
-            <Box sx={{ mb: 2 }}>
-              <Chip label={car.is_available ? 'В наличии' : 'Нет в наличии'} color={car.is_available ? 'success' : 'default'} sx={{ mr: 1 }} />
-              <Chip label={car.transmission} sx={{ mr: 1 }} />
-              <Chip label={car.fuel_type} sx={{ mr: 1 }} />
-              <Chip label={car.color} />
-            </Box>
-            <Typography variant="body1" gutterBottom>
-              <b>Пробег:</b> {car.mileage.toLocaleString()} км
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <b>Двигатель:</b> {car.engine_volume || car.engine} л, {car.power || 'N/A'} л.с.
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <b>Описание:</b> {car.description}
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Typography variant="body2" color="text.secondary">
-              Добавлено: {car.created_at ? format(new Date(car.created_at), 'PP', { locale: ru }) : 'Дата не указана'}
-            </Typography>
-            <Button variant="outlined" sx={{ mt: 2 }} onClick={() => navigate(`/companies/${car.company.id}`)}>
-              Компания: {car.company.name}
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom>
-          Отзывы
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box sx={{ mb: 4 }}>
+        <Button onClick={() => navigate('/cars')} sx={{ mb: 2 }}>
+          ← Назад к списку
+        </Button>
+        
+        <Typography variant="h4" component="h1" gutterBottom>
+          {vehicle.brand?.name} {vehicle.model?.name}
         </Typography>
-        {reviews.length === 0 ? (
-          <Typography color="text.secondary">Пока нет отзывов</Typography>
-        ) : (
-          <Box>
-            {reviews.map((review) => (
-              <Box key={review.id} sx={{ mb: 2 }}>
-                <Typography variant="subtitle2">
-                  {review.user.username} — {format(new Date(review.created_at), 'PP', { locale: ru })}
+        
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          {vehicle.year} • {vehicle.mileage} км • {vehicle.fuel_type_display}
+        </Typography>
+      </Box>
+
+      <Grid container spacing={4}>
+        {/* Main Image */}
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardMedia
+              component="img"
+              height="400"
+              image={vehicle.main_image || vehicle.images?.[0]?.image || 'https://via.placeholder.com/600x400'}
+              alt={`${vehicle.brand?.name} ${vehicle.model?.name}`}
+              sx={{ objectFit: 'cover' }}
+            />
+          </Card>
+        </Grid>
+
+        {/* Price and Actions */}
+        <Grid item xs={12} md={4}>
+          <Card sx={{ p: 3, height: 'fit-content' }}>
+            <Typography variant="h4" color="primary" gutterBottom>
+              {formatPrice(vehicle.price)}
+            </Typography>
+            
+            <Box sx={{ mb: 3 }}>
+              <Chip 
+                label={vehicle.is_available ? 'Доступен' : 'Недоступен'} 
+                color={vehicle.is_available ? 'success' : 'error'}
+                sx={{ mr: 1 }}
+              />
+              <Chip label={vehicle.condition || 'Новый'} variant="outlined" />
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Button variant="contained" size="large" fullWidth>
+                Связаться с продавцом
+              </Button>
+              <Button variant="outlined" size="large" fullWidth>
+                Добавить в избранное
+              </Button>
+              {user && (
+                <Button 
+                  variant="outlined" 
+                  size="large" 
+                  fullWidth
+                  onClick={() => navigate(`/cars/${vehicle.id}/edit`)}
+                >
+                  Редактировать
+                </Button>
+              )}
+            </Box>
+          </Card>
+        </Grid>
+
+        {/* Vehicle Details */}
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Характеристики
+              </Typography>
+              
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Марка
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.brand?.name}
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Модель
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.model?.name}
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Год выпуска
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.year}
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Пробег
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.mileage} км
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Тип топлива
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.fuel_type_display}
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Трансмиссия
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.transmission_display}
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Объем двигателя
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.engine_volume} л
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Мощность
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.power} л.с.
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                  <Typography variant="body2" color="text.secondary">
+                    Цвет
+                  </Typography>
+                  <Typography variant="body1">
+                    {vehicle.color}
+                  </Typography>
+                </Grid>
+                
+                {vehicle.vin && (
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Typography variant="body2" color="text.secondary">
+                      VIN
+                    </Typography>
+                    <Typography variant="body1">
+                      {vehicle.vin}
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Description */}
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Описание
+              </Typography>
+              <Typography variant="body1">
+                {vehicle.description}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Company Information */}
+        {vehicle.company && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Информация о продавце
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Оценка: {review.rating} / 5
-                </Typography>
-                <Typography variant="body1">{review.text}</Typography>
-                <Divider sx={{ my: 1 }} />
-              </Box>
-            ))}
-          </Box>
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <Avatar 
+                    src={vehicle.company.logo} 
+                    sx={{ width: 60, height: 60, mr: 2 }}
+                  >
+                    {vehicle.company.name.charAt(0)}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h6">
+                      {vehicle.company.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {vehicle.company.city}
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Адрес
+                    </Typography>
+                    <Typography variant="body1">
+                      {vehicle.company.address}
+                    </Typography>
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Телефон
+                    </Typography>
+                    <Typography variant="body1">
+                      {vehicle.company.phone}
+                    </Typography>
+                  </Grid>
+                  
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Email
+                    </Typography>
+                    <Typography variant="body1">
+                      {vehicle.company.email}
+                    </Typography>
+                  </Grid>
+                  
+                  {vehicle.company.website && (
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="body2" color="text.secondary">
+                        Веб-сайт
+                      </Typography>
+                      <Typography variant="body1">
+                        <a href={vehicle.company.website} target="_blank" rel="noopener noreferrer">
+                          {vehicle.company.website}
+                        </a>
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
         )}
-      </Paper>
-    </Box>
+
+        {/* Additional Images */}
+        {vehicle.images && vehicle.images.length > 1 && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Дополнительные фотографии
+                </Typography>
+                
+                <Grid container spacing={2}>
+                  {vehicle.images.slice(1).map((image, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={image.image}
+                        alt={`${vehicle.brand?.name} ${vehicle.model?.name} - фото ${index + 2}`}
+                        sx={{ objectFit: 'cover', borderRadius: 1 }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+      </Grid>
+    </Container>
   );
 };
 

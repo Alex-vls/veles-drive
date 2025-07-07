@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -14,137 +14,355 @@ import {
   Divider,
   Avatar,
   Button,
+  Container,
 } from '@mui/material';
-import { companiesService } from '../services/companies';
-import { carsService } from '../services/cars';
-import { Company, Review, Car } from '../types';
+import { useGetCompanyQuery, useGetVehiclesQuery } from '@/services/api';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useAuth } from '../contexts/AuthContext';
-import { getCompanyById, getCarsByCompany } from '../data/mockData';
 
 const CompanyDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [company, setCompany] = useState<Company | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [cars, setCars] = useState<Car[]>([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    if (!id) return;
-    const companyData = getCompanyById(id);
-    setCompany(companyData || null);
-    setCars(companyData ? getCarsByCompany(id) : []);
-    setLoading(false);
-  }, [id]);
+  const { data: company, isLoading: companyLoading, error: companyError } = useGetCompanyQuery(
+    parseInt(id || '0'),
+    { skip: !id }
+  );
 
-  if (loading) {
-    return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
+  const { data: vehiclesData, isLoading: vehiclesLoading } = useGetVehiclesQuery({
+    company: parseInt(id || '0'),
+    limit: 6
+  }, { skip: !id });
+
+  if (companyLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
-  if (error || !company) {
-    return <Alert severity="error">{error || 'Компания не найдена'}</Alert>;
+
+  if (companyError || !company) {
+    return (
+      <Alert severity="error">
+        {companyError ? 'Ошибка загрузки компании' : 'Компания не найдена'}
+      </Alert>
+    );
   }
+
+  const vehicles = vehiclesData?.results || [];
+
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), 'dd MMMM yyyy', { locale: ru });
+  };
 
   return (
-    <Box>
-      <Paper sx={{ p: 3, mb: 4 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            {company.logo && (
-              <CardMedia
-                component="img"
-                height="180"
-                image={company.logo}
-                alt={company.name}
-                sx={{ borderRadius: 2, mb: 2 }}
-              />
-            )}
-            <Typography variant="h5" gutterBottom>
-              {company.name}
-            </Typography>
-            <Chip label={company.is_verified ? 'Проверена' : 'Не проверена'} color={company.is_verified ? 'success' : 'default'} sx={{ mb: 1 }} />
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              {company.address}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Рейтинг: {company.rating.toFixed(1)}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Добавлено: {format(new Date(company.created_at), 'PP', { locale: ru })}
-            </Typography>
-            <Typography variant="body1" sx={{ mt: 2 }}>
-              {company.description}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h6" gutterBottom>
-              Автомобили компании
-            </Typography>
-            {cars.length === 0 ? (
-              <Typography color="text.secondary">Нет автомобилей</Typography>
-            ) : (
-              <Grid container spacing={2}>
-                {cars.map((car) => (
-                  <Grid item xs={12} sm={6} md={4} key={car.id}>
-                    <Card>
-                      <CardContent sx={{ p: 1 }}>
-                        <Button onClick={() => navigate(`/cars/${car.id}`)} sx={{ p: 0, textTransform: 'none' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            {car.images && car.images.length > 0 && (
-                              <Avatar
-                                src={car.images.find((img) => img.is_main)?.image || car.images[0].image}
-                                alt={car.brand + ' ' + car.model}
-                                variant="rounded"
-                                sx={{ width: 56, height: 56, mr: 2 }}
-                              />
-                            )}
-                            <Box>
-                              <Typography variant="subtitle1">
-                                {car.brand} {car.model}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {car.year} • {car.price.toLocaleString()} ₽
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-      </Paper>
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom>
-          Отзывы о компании
-        </Typography>
-        {reviews.length === 0 ? (
-          <Typography color="text.secondary">Пока нет отзывов</Typography>
-        ) : (
-          <Box>
-            {reviews.map((review) => (
-              <Box key={review.id} sx={{ mb: 2 }}>
-                <Typography variant="subtitle2">
-                  {review.user.username} — {format(new Date(review.created_at), 'PP', { locale: ru })}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Оценка: {review.rating} / 5
-                </Typography>
-                <Typography variant="body1">{review.text}</Typography>
-                <Divider sx={{ my: 1 }} />
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Box sx={{ mb: 4 }}>
+        <Button onClick={() => navigate('/companies')} sx={{ mb: 2 }}>
+          ← Назад к списку
+        </Button>
+      </Box>
+
+      <Grid container spacing={4}>
+        {/* Company Header */}
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <Avatar 
+                  src={company.logo} 
+                  sx={{ width: 80, height: 80, mr: 3 }}
+                >
+                  {company.name.charAt(0)}
+                </Avatar>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h4" component="h1" gutterBottom>
+                    {company.name}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                    <Chip 
+                      label={`${company.rating} ★`} 
+                      color="primary" 
+                      variant="outlined"
+                    />
+                    {company.is_verified && (
+                      <Chip label="Проверена" color="success" size="small" />
+                    )}
+                  </Box>
+                  <Typography variant="body1" color="text.secondary">
+                    {company.city} • {company.address}
+                  </Typography>
+                </Box>
+                {user && (
+                  <Button 
+                    variant="outlined"
+                    onClick={() => navigate(`/companies/${company.id}/edit`)}
+                  >
+                    Редактировать
+                  </Button>
+                )}
               </Box>
-            ))}
-          </Box>
+              
+              <Typography variant="body1" paragraph>
+                {company.description}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Company Details */}
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Контактная информация
+              </Typography>
+              
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="body2" color="text.secondary">
+                    Телефон
+                  </Typography>
+                  <Typography variant="body1">
+                    {company.phone}
+                  </Typography>
+                </Grid>
+                
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="body2" color="text.secondary">
+                    Email
+                  </Typography>
+                  <Typography variant="body1">
+                    {company.email}
+                  </Typography>
+                </Grid>
+                
+                {company.website && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Веб-сайт
+                    </Typography>
+                    <Typography variant="body1">
+                      <a href={company.website} target="_blank" rel="noopener noreferrer">
+                        {company.website}
+                      </a>
+                    </Typography>
+                  </Grid>
+                )}
+                
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="body2" color="text.secondary">
+                    Дата регистрации
+                  </Typography>
+                  <Typography variant="body1">
+                    {formatDate(company.created_at)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Company Stats */}
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Статистика
+              </Typography>
+              
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Рейтинг
+                </Typography>
+                <Typography variant="h4" color="primary">
+                  {company.rating}
+                </Typography>
+              </Box>
+              
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Автомобилей в продаже
+                </Typography>
+                <Typography variant="h4">
+                  {vehicles.length}
+                </Typography>
+              </Box>
+              
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  На сайте с
+                </Typography>
+                <Typography variant="body1">
+                  {formatDate(company.created_at)}
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Company Images */}
+        {company.images && company.images.length > 0 && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Фотографии компании
+                </Typography>
+                
+                <Grid container spacing={2}>
+                  {company.images.map((image, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={image.image}
+                        alt={`${company.name} - фото ${index + 1}`}
+                        sx={{ objectFit: 'cover', borderRadius: 1 }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
         )}
-      </Paper>
-    </Box>
+
+        {/* Company Features */}
+        {company.features && company.features.length > 0 && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Особенности
+                </Typography>
+                
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  {company.features.map((feature, index) => (
+                    <Chip
+                      key={index}
+                      label={`${feature.name}: ${feature.value}`}
+                      variant="outlined"
+                      size="small"
+                    />
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
+        {/* Company Vehicles */}
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h6">
+                  Автомобили в продаже
+                </Typography>
+                <Button 
+                  variant="outlined"
+                  onClick={() => navigate(`/cars?company=${company.id}`)}
+                >
+                  Смотреть все
+                </Button>
+              </Box>
+              
+              {vehiclesLoading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                  <CircularProgress />
+                </Box>
+              ) : vehicles.length === 0 ? (
+                <Typography variant="body1" color="text.secondary" textAlign="center" py={4}>
+                  У компании пока нет автомобилей в продаже
+                </Typography>
+              ) : (
+                <Grid container spacing={3}>
+                  {vehicles.map((vehicle) => (
+                    <Grid item xs={12} sm={6} md={4} key={vehicle.id}>
+                      <Card 
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/cars/${vehicle.id}`)}
+                      >
+                        <CardMedia
+                          component="img"
+                          height="200"
+                          image={vehicle.main_image || vehicle.images?.[0]?.image || 'https://via.placeholder.com/400x200'}
+                          alt={`${vehicle.brand?.name} ${vehicle.model?.name}`}
+                          sx={{ objectFit: 'cover' }}
+                        />
+                        <CardContent>
+                          <Typography variant="h6" gutterBottom>
+                            {vehicle.brand?.name} {vehicle.model?.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            {vehicle.year} • {vehicle.mileage} км • {vehicle.fuel_type_display}
+                          </Typography>
+                          <Typography variant="h6" color="primary">
+                            {new Intl.NumberFormat('ru-RU', {
+                              style: 'currency',
+                              currency: 'RUB'
+                            }).format(vehicle.price)}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Company Reviews */}
+        {company.company_reviews && company.company_reviews.length > 0 && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Отзывы о компании
+                </Typography>
+                
+                {company.company_reviews.map((review, index) => (
+                  <Box key={index} sx={{ mb: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <Avatar sx={{ width: 32, height: 32, mr: 2 }}>
+                        {review.user?.username?.charAt(0) || 'U'}
+                      </Avatar>
+                      <Box>
+                        <Typography variant="subtitle2">
+                          {review.user?.username || 'Аноним'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {formatDate(review.created_at)}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ ml: 'auto' }}>
+                        <Chip 
+                          label={`${review.rating} ★`} 
+                          size="small" 
+                          color="primary" 
+                          variant="outlined"
+                        />
+                      </Box>
+                    </Box>
+                    <Typography variant="body1">
+                      {review.text}
+                    </Typography>
+                    {index < company.company_reviews.length - 1 && (
+                      <Divider sx={{ mt: 2 }} />
+                    )}
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+      </Grid>
+    </Container>
   );
 };
 

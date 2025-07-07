@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { User, Car, Company, Review, CarFilters, CompanyFilters, PaginatedResponse } from '@/types';
+import { User, Car, Company, Review, CarFilters, CompanyFilters, PaginatedResponse, Vehicle, VehicleFilters } from '@/types';
 
 export const api = createApi({
   reducerPath: 'api',
@@ -13,7 +13,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ['User', 'Car', 'Company', 'Review'],
+  tagTypes: ['User', 'Car', 'Company', 'Review', 'Vehicle', 'ERP', 'Auction', 'Leasing', 'Insurance'],
   endpoints: (builder) => ({
     // Auth endpoints
     login: builder.mutation<{ access: string; user: User }, { email: string; password: string }>({
@@ -58,7 +58,50 @@ export const api = createApi({
       }),
     }),
 
-    // Car endpoints
+    // Vehicle endpoints (новые)
+    getVehicles: builder.query<PaginatedResponse<Vehicle>, VehicleFilters>({
+      query: (filters) => ({
+        url: 'vehicles/',
+        params: filters,
+      }),
+      providesTags: ['Vehicle'],
+    }),
+    getVehicle: builder.query<Vehicle, number>({
+      query: (id) => `vehicles/${id}/`,
+      providesTags: (result, error, id) => [{ type: 'Vehicle', id }],
+    }),
+    createVehicle: builder.mutation<Vehicle, Partial<Vehicle>>({
+      query: (vehicleData) => ({
+        url: 'vehicles/',
+        method: 'POST',
+        body: vehicleData,
+      }),
+      invalidatesTags: ['Vehicle'],
+    }),
+    updateVehicle: builder.mutation<Vehicle, { id: number; data: Partial<Vehicle> }>({
+      query: ({ id, data }) => ({
+        url: `vehicles/${id}/`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Vehicle', id }],
+    }),
+    deleteVehicle: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `vehicles/${id}/`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Vehicle'],
+    }),
+    toggleVehicleAvailability: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `vehicles/${id}/availability/`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, error, id) => [{ type: 'Vehicle', id }],
+    }),
+
+    // Car endpoints (legacy)
     getCars: builder.query<PaginatedResponse<Car>, CarFilters>({
       query: (filters) => ({
         url: 'cars/',
@@ -144,6 +187,105 @@ export const api = createApi({
       invalidatesTags: ['Company'],
     }),
 
+    // ERP endpoints
+    getErpDashboard: builder.query<any, void>({
+      query: () => 'erp/dashboard/',
+      providesTags: ['ERP'],
+    }),
+    getProjects: builder.query<any, void>({
+      query: () => 'erp/projects/',
+      providesTags: ['ERP'],
+    }),
+    getProject: builder.query<any, number>({
+      query: (id) => `erp/projects/${id}/`,
+      providesTags: (result, error, id) => [{ type: 'ERP', id }],
+    }),
+    createProject: builder.mutation<any, any>({
+      query: (projectData) => ({
+        url: 'erp/projects/',
+        method: 'POST',
+        body: projectData,
+      }),
+      invalidatesTags: ['ERP'],
+    }),
+    updateProject: builder.mutation<any, { id: number; data: any }>({
+      query: ({ id, data }) => ({
+        url: `erp/projects/${id}/`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'ERP', id }],
+    }),
+    deleteProject: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `erp/projects/${id}/`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['ERP'],
+    }),
+
+    // Auction endpoints
+    getAuctions: builder.query<any, void>({
+      query: () => 'auctions/',
+      providesTags: ['Auction'],
+    }),
+    getAuction: builder.query<any, number>({
+      query: (id) => `auctions/${id}/`,
+      providesTags: (result, error, id) => [{ type: 'Auction', id }],
+    }),
+    createAuction: builder.mutation<any, any>({
+      query: (auctionData) => ({
+        url: 'auctions/',
+        method: 'POST',
+        body: auctionData,
+      }),
+      invalidatesTags: ['Auction'],
+    }),
+    placeBid: builder.mutation<any, { auctionId: number; amount: number }>({
+      query: ({ auctionId, amount }) => ({
+        url: `auctions/${auctionId}/bids/`,
+        method: 'POST',
+        body: { amount },
+      }),
+      invalidatesTags: (result, error, { auctionId }) => [{ type: 'Auction', id: auctionId }],
+    }),
+
+    // Leasing endpoints
+    getLeasingPrograms: builder.query<any, void>({
+      query: () => 'leasing/programs/',
+      providesTags: ['Leasing'],
+    }),
+    getLeasingApplication: builder.query<any, number>({
+      query: (id) => `leasing/applications/${id}/`,
+      providesTags: (result, error, id) => [{ type: 'Leasing', id }],
+    }),
+    createLeasingApplication: builder.mutation<any, any>({
+      query: (applicationData) => ({
+        url: 'leasing/applications/',
+        method: 'POST',
+        body: applicationData,
+      }),
+      invalidatesTags: ['Leasing'],
+    }),
+
+    // Insurance endpoints
+    getInsurancePolicies: builder.query<any, void>({
+      query: () => 'insurance/policies/',
+      providesTags: ['Insurance'],
+    }),
+    getInsurancePolicy: builder.query<any, number>({
+      query: (id) => `insurance/policies/${id}/`,
+      providesTags: (result, error, id) => [{ type: 'Insurance', id }],
+    }),
+    createInsurancePolicy: builder.mutation<any, any>({
+      query: (policyData) => ({
+        url: 'insurance/policies/',
+        method: 'POST',
+        body: policyData,
+      }),
+      invalidatesTags: ['Insurance'],
+    }),
+
     // Review endpoints
     getCarReviews: builder.query<PaginatedResponse<Review>, number>({
       query: (carId) => `cars/${carId}/reviews/`,
@@ -200,6 +342,12 @@ export const {
   useGetCurrentUserQuery,
   useUpdateUserProfileMutation,
   useChangePasswordMutation,
+  useGetVehiclesQuery,
+  useGetVehicleQuery,
+  useCreateVehicleMutation,
+  useUpdateVehicleMutation,
+  useDeleteVehicleMutation,
+  useToggleVehicleAvailabilityMutation,
   useGetCarsQuery,
   useGetCarQuery,
   useCreateCarMutation,
@@ -212,6 +360,22 @@ export const {
   useCreateCompanyMutation,
   useUpdateCompanyMutation,
   useDeleteCompanyMutation,
+  useGetErpDashboardQuery,
+  useGetProjectsQuery,
+  useGetProjectQuery,
+  useCreateProjectMutation,
+  useUpdateProjectMutation,
+  useDeleteProjectMutation,
+  useGetAuctionsQuery,
+  useGetAuctionQuery,
+  useCreateAuctionMutation,
+  usePlaceBidMutation,
+  useGetLeasingProgramsQuery,
+  useGetLeasingApplicationQuery,
+  useCreateLeasingApplicationMutation,
+  useGetInsurancePoliciesQuery,
+  useGetInsurancePolicyQuery,
+  useCreateInsurancePolicyMutation,
   useGetCarReviewsQuery,
   useGetCompanyReviewsQuery,
   useCreateCarReviewMutation,

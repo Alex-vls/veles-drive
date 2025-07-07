@@ -1,0 +1,1 @@
+# Integration Application - Объединяет все компоненты системы 

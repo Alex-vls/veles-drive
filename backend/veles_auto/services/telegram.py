@@ -91,6 +91,46 @@ class TelegramService:
                 return self.send_media_group(media)
                 
         return True
+
+    def send_vehicle_announcement(self, vehicle_data: dict) -> bool:
+        """Send vehicle announcement to channel"""
+        vehicle_icons = {
+            'car': '🚗',
+            'motorcycle': '🏍️',
+            'boat': '🚤',
+            'aircraft': '✈️'
+        }
+        
+        icon = vehicle_icons.get(vehicle_data.get('vehicle_type', 'car'), '🚗')
+        
+        text = f"""
+{icon} <b>Новое объявление!</b>
+
+<b>{vehicle_data['brand']} {vehicle_data['model']}</b>
+Тип: {vehicle_data['vehicle_type']}
+Год: {vehicle_data['year']}
+Цена: {vehicle_data['price']} ₽
+
+{vehicle_data['description']}
+
+Подробнее: {vehicle_data['url']}
+"""
+        # Send text
+        if not self.send_message(text):
+            return False
+            
+        # Send photos if available
+        if vehicle_data.get('photos'):
+            media = []
+            for photo_url in vehicle_data['photos']:
+                media.append({
+                    'type': 'photo',
+                    'media': photo_url
+                })
+            if media:
+                return self.send_media_group(media)
+                
+        return True
         
     def send_company_announcement(self, company_data: dict) -> bool:
         """Send company announcement to channel"""
@@ -113,4 +153,91 @@ class TelegramService:
         if company_data.get('logo'):
             return self.send_photo(company_data['logo'], caption=text)
             
-        return True 
+        return True
+
+    def send_auction_announcement(self, auction_data: dict) -> bool:
+        """Send auction announcement to channel"""
+        text = f"""
+🏁 <b>Новый аукцион!</b>
+
+<b>{auction_data['vehicle']['brand']} {auction_data['vehicle']['model']}</b>
+Тип аукциона: {auction_data['auction_type']}
+Стартовая цена: {auction_data['start_price']} ₽
+Текущая цена: {auction_data['current_price']} ₽
+
+Начало: {auction_data['start_date']}
+Окончание: {auction_data['end_date']}
+
+{auction_data['description']}
+
+Подробнее: {auction_data['url']}
+"""
+        return self.send_message(text)
+
+    def send_leasing_announcement(self, leasing_data: dict) -> bool:
+        """Send leasing announcement to channel"""
+        text = f"""
+📋 <b>Новое предложение лизинга!</b>
+
+<b>{leasing_data['vehicle']['brand']} {leasing_data['vehicle']['model']}</b>
+Тип лизинга: {leasing_data['leasing_type']}
+Ежемесячный платеж: {leasing_data['monthly_payment']} ₽
+Общая сумма: {leasing_data['total_amount']} ₽
+
+Срок: {leasing_data['duration']} месяцев
+Первоначальный взнос: {leasing_data['down_payment']} ₽
+
+{leasing_data['description']}
+
+Подробнее: {leasing_data['url']}
+"""
+        return self.send_message(text)
+
+    def send_insurance_announcement(self, insurance_data: dict) -> bool:
+        """Send insurance announcement to channel"""
+        text = f"""
+🛡️ <b>Новое предложение страхования!</b>
+
+<b>{insurance_data['vehicle']['brand']} {insurance_data['vehicle']['model']}</b>
+Тип страхования: {insurance_data['insurance_type']}
+Ежемесячная премия: {insurance_data['monthly_premium']} ₽
+Общая премия: {insurance_data['total_premium']} ₽
+
+Срок действия: {insurance_data['start_date']} - {insurance_data['end_date']}
+Покрытие: {insurance_data['coverage_amount']} ₽
+
+{insurance_data['description']}
+
+Подробнее: {insurance_data['url']}
+"""
+        return self.send_message(text)
+
+    def send_notification(self, user_id: int, message: str, parse_mode: str = 'HTML') -> bool:
+        """Send notification to specific user"""
+        data = {
+            'chat_id': user_id,
+            'text': message,
+            'parse_mode': parse_mode
+        }
+        result = self._make_request('sendMessage', data)
+        return bool(result and result.get('ok'))
+
+    def send_broadcast(self, user_ids: List[int], message: str, parse_mode: str = 'HTML') -> dict:
+        """Send broadcast message to multiple users"""
+        results = {
+            'success': 0,
+            'failed': 0,
+            'errors': []
+        }
+        
+        for user_id in user_ids:
+            try:
+                if self.send_notification(user_id, message, parse_mode):
+                    results['success'] += 1
+                else:
+                    results['failed'] += 1
+            except Exception as e:
+                results['failed'] += 1
+                results['errors'].append(f'User {user_id}: {str(e)}')
+                
+        return results 

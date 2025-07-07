@@ -22,94 +22,10 @@ class Brand(models.Model):
     class Meta:
         ordering = ['name']
 
-class Company(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    description = models.TextField()
-    logo = models.ImageField(upload_to='companies/', null=True, blank=True)
-    city = models.CharField(max_length=100)
-    address = models.CharField(max_length=200)
-    phone = models.CharField(max_length=20)
-    email = models.EmailField()
-    website = models.URLField(blank=True)
-    is_verified = models.BooleanField(default=False)
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = "Companies"
-        ordering = ['-rating', '-created_at']
-
-class Car(models.Model):
-    TRANSMISSION_CHOICES = [
-        ('manual', 'Manual'),
-        ('automatic', 'Automatic'),
-        ('robot', 'Robot'),
-        ('variator', 'Variator'),
-    ]
-
-    FUEL_TYPE_CHOICES = [
-        ('petrol', 'Petrol'),
-        ('diesel', 'Diesel'),
-        ('gas', 'Gas'),
-        ('hybrid', 'Hybrid'),
-        ('electric', 'Electric'),
-    ]
-
-    BODY_TYPE_CHOICES = [
-        ('sedan', 'Седан'),
-        ('hatchback', 'Хэтчбек'),
-        ('suv', 'Внедорожник'),
-        ('coupe', 'Купе'),
-        ('wagon', 'Универсал'),
-    ]
-
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='cars')
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    model = models.CharField(max_length=100)
-    year = models.IntegerField()
-    mileage = models.IntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)
-    fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES)
-    body_type = models.CharField(max_length=10, choices=BODY_TYPE_CHOICES, default='sedan')
-    engine_volume = models.DecimalField(max_digits=3, decimal_places=1)
-    power = models.IntegerField()
-    color = models.CharField(max_length=50)
-    description = models.TextField()
-    is_available = models.BooleanField(default=True)
-    rating = models.DecimalField(max_digits=3, decimal_places=1, default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.brand} {self.model} ({self.year})'
-
-    class Meta:
-        ordering = ['-created_at']
-
-class CarImage(models.Model):
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='cars/')
-    image_webp = models.ImageField(upload_to='cars/webp/', null=True, blank=True)
-    is_main = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'Image for {self.car}'
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True, blank=True)
+    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE, null=True, blank=True)
+    car = models.ForeignKey('cars.Car', on_delete=models.CASCADE, null=True, blank=True)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -122,25 +38,6 @@ class Review(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-
-class CompanySchedule(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='schedule')
-    day_of_week = models.IntegerField(choices=[(i, i) for i in range(7)])
-    open_time = models.TimeField()
-    close_time = models.TimeField()
-    is_closed = models.BooleanField(default=False)
-
-    class Meta:
-        ordering = ['day_of_week']
-        unique_together = ['company', 'day_of_week']
-
-class CompanyFeature(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='features')
-    name = models.CharField(max_length=100)
-    value = models.CharField(max_length=200)
-
-    def __str__(self):
-        return f"{self.name}: {self.value}"
 
 class Category(models.Model):
     """Category for articles and news"""
@@ -198,7 +95,6 @@ class ContentBase(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     featured_image = models.ImageField(upload_to='content/', null=True, blank=True)
     featured_image_webp = models.ImageField(upload_to='content/webp/', null=True, blank=True)
-    views_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)
@@ -212,30 +108,29 @@ class ContentBase(models.Model):
         ordering = ['-published_at', '-created_at']
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
         if self.status == 'published' and not self.published_at:
             self.published_at = timezone.now()
         super().save(*args, **kwargs)
 
     def update_counts(self):
-        """Update content counts"""
+        """Update comment and reaction counts"""
+        content_type = ContentType.objects.get_for_model(self)
         self.comments_count = Comment.objects.filter(
-            content_type=ContentType.objects.get_for_model(self),
-            object_id=self.id
+            content_type=content_type,
+            object_id=self.id,
+            is_approved=True
         ).count()
-        
         self.reactions_count = Reaction.objects.filter(
-            content_type=ContentType.objects.get_for_model(self),
+            content_type=content_type,
             object_id=self.id
         ).count()
-        
-        self.save()
+        self.save(update_fields=['comments_count', 'reactions_count'])
 
 class Article(ContentBase):
     """Article model"""
     reading_time = models.PositiveIntegerField(help_text='Estimated reading time in minutes')
     is_featured = models.BooleanField(default=False)
+    views_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -244,6 +139,7 @@ class News(ContentBase):
     """News model"""
     source = models.CharField(max_length=200, blank=True)
     source_url = models.URLField(blank=True)
+    views_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -258,6 +154,9 @@ class ContentImage(models.Model):
     caption = models.CharField(max_length=200, blank=True)
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.content_object}"
 
     class Meta:
         ordering = ['order', 'created_at']
@@ -274,13 +173,13 @@ class Subscription(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        unique_together = ['user', 'category']
-
     def __str__(self):
         if self.category:
-            return f"{self.user.username} - {self.category.name}"
-        return f"{self.user.username} - All content"
+            return f"{self.user.username} subscribed to {self.category.name}"
+        return f"{self.user.username} subscribed to tags"
+
+    class Meta:
+        unique_together = ['user', 'category']
 
 class ContentView(models.Model):
     """Model for tracking content views"""
@@ -290,6 +189,9 @@ class ContentView(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     ip_address = models.GenericIPAddressField()
     viewed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"View of {self.content_object} by {self.ip_address}"
 
     class Meta:
         ordering = ['-viewed_at']
@@ -306,11 +208,11 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.content_object}"
+
     class Meta:
         ordering = ['-created_at']
-
-    def __str__(self):
-        return f'Comment by {self.user.username} on {self.content_object}'
 
 class Reaction(models.Model):
     """Reaction model for content (likes, etc.)"""
@@ -331,12 +233,12 @@ class Reaction(models.Model):
     reaction_type = models.CharField(max_length=10, choices=REACTION_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.reaction_type} by {self.user.username} on {self.content_object}"
+
     class Meta:
         unique_together = ['content_type', 'object_id', 'user']
         ordering = ['-created_at']
-
-    def __str__(self):
-        return f'{self.user.username} {self.reaction_type} on {self.content_object}'
 
 class ContentRating(models.Model):
     """Rating model for content"""
@@ -348,12 +250,12 @@ class ContentRating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Rating {self.rating} by {self.user.username} on {self.content_object}"
+
     class Meta:
         unique_together = ['content_type', 'object_id', 'user']
         ordering = ['-created_at']
-
-    def __str__(self):
-        return f'{self.user.username} rated {self.content_object} {self.rating}'
 
 class YouTubeChannel(models.Model):
     """YouTube channel model"""
@@ -421,12 +323,12 @@ class YouTubePlaylistVideo(models.Model):
     position = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.video.title} in {self.playlist.title}"
+
     class Meta:
         ordering = ['position']
         unique_together = ['playlist', 'video']
-
-    def __str__(self):
-        return f'{self.video.title} in {self.playlist.title}'
 
 class SEOMetadata(models.Model):
     """SEO metadata for content"""
@@ -444,11 +346,11 @@ class SEOMetadata(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"SEO for {self.content_object}"
+
     class Meta:
         unique_together = ['content_type', 'object_id']
-
-    def __str__(self):
-        return f'SEO for {self.content_object}'
 
 class PageView(models.Model):
     """Page view analytics"""
@@ -462,11 +364,11 @@ class PageView(models.Model):
     duration = models.PositiveIntegerField(default=0)  # Time spent on page in seconds
     is_bounce = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Page view: {self.path} by {self.ip_address}"
+
     class Meta:
         ordering = ['-timestamp']
-
-    def __str__(self):
-        return f'{self.path} - {self.timestamp}'
 
 class UserSession(models.Model):
     """User session analytics"""
@@ -480,11 +382,11 @@ class UserSession(models.Model):
     total_duration = models.PositiveIntegerField(default=0)  # Total session duration in seconds
     is_bounce = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"Session {self.session_id} by {self.ip_address}"
+
     class Meta:
         ordering = ['-start_time']
-
-    def __str__(self):
-        return f'Session {self.session_id} - {self.start_time}'
 
 class SearchQuery(models.Model):
     """Search query analytics"""
@@ -495,12 +397,12 @@ class SearchQuery(models.Model):
     results_count = models.PositiveIntegerField(default=0)
     is_successful = models.BooleanField(default=True)  # Whether user clicked on any result
 
+    def __str__(self):
+        return f"Search: {self.query} by {self.ip_address}"
+
     class Meta:
         ordering = ['-timestamp']
         verbose_name_plural = 'Search queries'
-
-    def __str__(self):
-        return f'{self.query} - {self.timestamp}'
 
 class Conversion(models.Model):
     """Conversion tracking"""
@@ -521,11 +423,11 @@ class Conversion(models.Model):
     campaign = models.CharField(max_length=100, blank=True)  # Marketing campaign
     metadata = models.JSONField(default=dict)  # Additional conversion data
 
+    def __str__(self):
+        return f"{self.conversion_type} by {self.ip_address}"
+
     class Meta:
         ordering = ['-timestamp']
-
-    def __str__(self):
-        return f'{self.conversion_type} - {self.timestamp}'
 
 class ABTest(models.Model):
     name = models.CharField(max_length=255)
@@ -560,8 +462,8 @@ class ABTestResult(models.Model):
     conversion_value = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ('test', 'variant', 'user', 'session_id', 'conversion_type')
-
     def __str__(self):
-        return f"{self.test.name} - {self.variant.name} - {self.conversion_type}" 
+        return f"{self.test.name} - {self.variant.name} - {self.conversion_type}"
+
+    class Meta:
+        unique_together = ('test', 'variant', 'user', 'session_id', 'conversion_type') 

@@ -129,87 +129,6 @@ class ModerationLog(models.Model):
                 content_object.is_published = self.status == ModerationStatus.APPROVED
                 content_object.save(update_fields=['is_published'])
 
-class Car(models.Model):
-    """Модель автомобиля"""
-    TRANSMISSION_CHOICES = [
-        ('manual', 'Механическая'),
-        ('automatic', 'Автоматическая'),
-        ('robot', 'Робот'),
-        ('variator', 'Вариатор'),
-    ]
-
-    FUEL_TYPE_CHOICES = [
-        ('petrol', 'Бензин'),
-        ('diesel', 'Дизель'),
-        ('gas', 'Газ'),
-        ('hybrid', 'Гибрид'),
-        ('electric', 'Электро'),
-    ]
-
-    brand = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-    year = models.PositiveIntegerField()
-    mileage = models.PositiveIntegerField(help_text='Пробег в километрах')
-    transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)
-    fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES)
-    engine_volume = models.DecimalField(max_digits=3, decimal_places=1, help_text='Объем двигателя в литрах')
-    power = models.PositiveIntegerField(help_text='Мощность в л.с.')
-    color = models.CharField(max_length=50)
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    description = models.TextField()
-    is_available = models.BooleanField(default=True)
-    company = models.ForeignKey('Company', on_delete=models.CASCADE, related_name='cars')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_published = models.BooleanField(default=False)
-
-    class Meta:
-        verbose_name = _('Car')
-        verbose_name_plural = _('Cars')
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['brand', 'model']),
-            models.Index(fields=['price']),
-            models.Index(fields=['is_available']),
-            models.Index(fields=['is_published']),
-        ]
-
-    def __str__(self):
-        return f"{self.brand} {self.model} ({self.year})"
-
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None
-        super().save(*args, **kwargs)
-        
-        if is_new:
-            # Создаем запись в логе модерации при создании объявления
-            ModerationLog.objects.create(
-                content_type=ContentType.objects.get_for_model(self),
-                object_id=self.id,
-                status=ModerationStatus.PENDING
-            )
-
-class CarImage(models.Model):
-    """Модель изображения автомобиля"""
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='cars/')
-    is_main = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name = _('Car Image')
-        verbose_name_plural = _('Car Images')
-        ordering = ['-is_main', 'created_at']
-
-    def __str__(self):
-        return f"Image for {self.car}"
-
-    def save(self, *args, **kwargs):
-        if self.is_main:
-            # Сбрасываем флаг is_main у других изображений этого автомобиля
-            CarImage.objects.filter(car=self.car, is_main=True).update(is_main=False)
-        super().save(*args, **kwargs)
-
 class PageView(models.Model):
     """Модель для отслеживания просмотров страниц"""
     path = models.CharField(_('path'), max_length=255)
@@ -230,7 +149,7 @@ class PageView(models.Model):
             models.Index(fields=['path']),
             models.Index(fields=['timestamp']),
             models.Index(fields=['user']),
-            models.Index(fields=['session_id']),
+            models.Index(fields=['ip_address']),
         ]
 
     def __str__(self):

@@ -3,7 +3,8 @@ from django.utils import timezone
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
-from .models import Article, News, Review, Comment, Company
+from .models import Article, News, Review, Comment
+from companies.models import Company
 
 def approve_content(modeladmin, request, queryset):
     """Approve selected content items"""

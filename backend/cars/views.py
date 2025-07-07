@@ -5,29 +5,40 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
 from core.decorators import cache_response
 from core.services import NotificationService
-from .models import Car, CarImage, Brand, Model, CarFeature
+from .models import (
+    Brand, Model, Vehicle, Motorcycle, Boat, Aircraft,
+    VehicleImage, VehicleFeature
+)
 from .serializers import (
-    CarSerializer,
-    CarCreateSerializer,
-    CarUpdateSerializer,
-    CarImageSerializer,
-    CarImageCreateSerializer,
-    CarImageUpdateSerializer,
     BrandSerializer,
     ModelSerializer,
-    CarListSerializer,
-    CarDetailSerializer,
-    CarFeatureSerializer
+    VehicleSerializer,
+    VehicleCreateSerializer,
+    VehicleUpdateSerializer,
+    VehicleImageSerializer,
+    VehicleImageCreateSerializer,
+    VehicleImageUpdateSerializer,
+    VehicleFeatureSerializer,
+    MotorcycleSerializer,
+    MotorcycleCreateSerializer,
+    MotorcycleUpdateSerializer,
+    BoatSerializer,
+    BoatCreateSerializer,
+    BoatUpdateSerializer,
+    AircraftSerializer,
+    AircraftCreateSerializer,
+    AircraftUpdateSerializer
 )
 from companies.models import Company
 
-class CarListView(generics.ListAPIView):
-    queryset = Car.objects.all()
-    serializer_class = CarSerializer
+class VehicleListView(generics.ListAPIView):
+    """Список транспорта"""
+    queryset = Vehicle.objects.filter(is_active=True, is_available=True)
+    serializer_class = VehicleSerializer
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['brand', 'model', 'year', 'transmission', 'fuel_type', 'is_available']
-    search_fields = ['brand', 'model', 'description']
+    filterset_fields = ['vehicle_type', 'brand', 'model', 'year', 'transmission', 'fuel_type', 'company']
+    search_fields = ['brand__name', 'model__name', 'description']
     ordering_fields = ['price', 'year', 'mileage', 'created_at']
     ordering = ['-created_at']
 
@@ -35,137 +46,132 @@ class CarListView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-class CarDetailView(generics.RetrieveAPIView):
-    queryset = Car.objects.all()
-    serializer_class = CarSerializer
+class VehicleDetailView(generics.RetrieveAPIView):
+    """Детали транспорта"""
+    queryset = Vehicle.objects.filter(is_active=True)
+    serializer_class = VehicleSerializer
     permission_classes = (permissions.AllowAny,)
 
     @cache_response(timeout=300)  # Кэшируем на 5 минут
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-class CarCreateView(generics.CreateAPIView):
-    queryset = Car.objects.all()
-    serializer_class = CarCreateSerializer
+class VehicleCreateView(generics.CreateAPIView):
+    """Создание транспорта"""
+    queryset = Vehicle.objects.all()
+    serializer_class = VehicleCreateSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
         company = Company.objects.get(user=self.request.user)
         serializer.save(company=company)
-        # Очищаем кэш списка автомобилей
-        cache.delete_pattern("view_cache_/api/cars/*")
+        # Очищаем кэш списка транспорта
+        cache.delete_pattern("view_cache_/api/vehicles/*")
 
-class CarUpdateView(generics.UpdateAPIView):
-    queryset = Car.objects.all()
-    serializer_class = CarUpdateSerializer
+class VehicleUpdateView(generics.UpdateAPIView):
+    """Обновление транспорта"""
+    queryset = Vehicle.objects.all()
+    serializer_class = VehicleUpdateSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return Car.objects.filter(company__user=self.request.user)
+        return Vehicle.objects.filter(company__user=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save()
-        # Очищаем кэш для обновленного автомобиля
-        cache.delete_pattern(f"view_cache_/api/cars/{self.kwargs['pk']}/*")
-        cache.delete_pattern("view_cache_/api/cars/*")
+        # Очищаем кэш для обновленного транспорта
+        cache.delete_pattern(f"view_cache_/api/vehicles/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/vehicles/*")
 
-class CarDeleteView(generics.DestroyAPIView):
-    queryset = Car.objects.all()
+class VehicleDeleteView(generics.DestroyAPIView):
+    """Удаление транспорта"""
+    queryset = Vehicle.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        return Car.objects.filter(company__user=self.request.user)
+        return Vehicle.objects.filter(company__user=self.request.user)
 
     def perform_destroy(self, instance):
         instance.delete()
-        # Очищаем кэш для удаленного автомобиля
-        cache.delete_pattern(f"view_cache_/api/cars/{self.kwargs['pk']}/*")
-        cache.delete_pattern("view_cache_/api/cars/*")
+        # Очищаем кэш для удаленного транспорта
+        cache.delete_pattern(f"view_cache_/api/vehicles/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/vehicles/*")
 
-class CarImageListView(generics.ListCreateAPIView):
-    serializer_class = CarImageSerializer
+class VehicleImageListView(generics.ListCreateAPIView):
+    """Список изображений транспорта"""
+    serializer_class = VehicleImageSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        car_id = self.kwargs.get('car_id')
-        return CarImage.objects.filter(car_id=car_id)
+        vehicle_id = self.kwargs.get('vehicle_id')
+        return VehicleImage.objects.filter(vehicle_id=vehicle_id)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return CarImageCreateSerializer
-        return CarImageSerializer
+            return VehicleImageCreateSerializer
+        return VehicleImageSerializer
 
     def perform_create(self, serializer):
-        car_id = self.kwargs.get('car_id')
-        car = Car.objects.get(id=car_id)
-        if car.company.user != self.request.user:
-            raise permissions.PermissionDenied("Вы не можете добавлять изображения к чужому автомобилю")
-        serializer.save(car=car)
-        # Очищаем кэш для автомобиля
-        cache.delete_pattern(f"view_cache_/api/cars/{car_id}/*")
+        vehicle_id = self.kwargs.get('vehicle_id')
+        vehicle = Vehicle.objects.get(id=vehicle_id)
+        if vehicle.company.user != self.request.user:
+            raise permissions.PermissionDenied("Вы не можете добавлять изображения к чужому транспорту")
+        serializer.save(vehicle=vehicle)
+        # Очищаем кэш для транспорта
+        cache.delete_pattern(f"view_cache_/api/vehicles/{vehicle_id}/*")
 
-class CarImageDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CarImageSerializer
+class VehicleImageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Детали изображения транспорта"""
+    serializer_class = VehicleImageSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        car_id = self.kwargs.get('car_id')
-        return CarImage.objects.filter(car_id=car_id)
+        vehicle_id = self.kwargs.get('vehicle_id')
+        return VehicleImage.objects.filter(vehicle_id=vehicle_id)
 
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:
-            return CarImageUpdateSerializer
-        return CarImageSerializer
+            return VehicleImageUpdateSerializer
+        return VehicleImageSerializer
 
     def get_object(self):
         image = super().get_object()
         if self.request.method in ['PUT', 'PATCH', 'DELETE']:
-            if image.car.company.user != self.request.user:
-                raise permissions.PermissionDenied("Вы не можете редактировать изображения чужого автомобиля")
+            if image.vehicle.company.user != self.request.user:
+                raise permissions.PermissionDenied("Вы не можете редактировать изображения чужого транспорта")
         return image
 
     def perform_update(self, serializer):
         serializer.save()
-        # Очищаем кэш для автомобиля
-        cache.delete_pattern(f"view_cache_/api/cars/{self.kwargs['car_id']}/*")
+        # Очищаем кэш для транспорта
+        cache.delete_pattern(f"view_cache_/api/vehicles/{self.kwargs['vehicle_id']}/*")
 
     def perform_destroy(self, instance):
         instance.delete()
-        # Очищаем кэш для автомобиля
-        cache.delete_pattern(f"view_cache_/api/cars/{self.kwargs['car_id']}/*")
+        # Очищаем кэш для транспорта
+        cache.delete_pattern(f"view_cache_/api/vehicles/{self.kwargs['vehicle_id']}/*")
 
-class CarReviewCreateView(generics.CreateAPIView):
-    serializer_class = CarReviewSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def perform_create(self, serializer):
-        car = Car.objects.get(pk=self.kwargs['car_id'])
-        review = serializer.save(user=self.request.user, car=car)
-        # Отправляем уведомление владельцу автомобиля
-        NotificationService.notify_car_review(car.company.user, car, review)
-        # Очищаем кэш для автомобиля
-        cache.delete_pattern(f"view_cache_/api/cars/{car.id}/*")
-
-class CarAvailabilityView(APIView):
+class VehicleAvailabilityView(APIView):
+    """Изменение статуса доступности транспорта"""
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, pk):
         try:
-            car = Car.objects.get(pk=pk)
-            if car.company.user != request.user:
-                raise permissions.PermissionDenied("Вы не можете изменять статус чужого автомобиля")
+            vehicle = Vehicle.objects.get(pk=pk)
+            if vehicle.company.user != request.user:
+                raise permissions.PermissionDenied("Вы не можете изменять статус чужого транспорта")
             
-            car.is_available = not car.is_available
-            car.save()
+            vehicle.is_available = not vehicle.is_available
+            vehicle.save()
             # Отправляем уведомление об изменении статуса
-            NotificationService.notify_car_status(car.company.user, car)
-            # Очищаем кэш для автомобиля
-            cache.delete_pattern(f"view_cache_/api/cars/{pk}/*")
-            cache.delete_pattern("view_cache_/api/cars/*")
+            NotificationService.notify_vehicle_status(vehicle.company.user, vehicle)
+            # Очищаем кэш для транспорта
+            cache.delete_pattern(f"view_cache_/api/vehicles/{pk}/*")
+            cache.delete_pattern("view_cache_/api/vehicles/*")
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except Car.DoesNotExist:
+        except Vehicle.DoesNotExist:
             return Response(
-                {'error': 'Автомобиль не найден'},
+                {'error': 'Транспорт не найден'},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -188,50 +194,145 @@ class ModelViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'description']
     ordering_fields = ['name', 'created_at']
 
-class CarViewSet(viewsets.ModelViewSet):
-    """ViewSet for Car model"""
-    queryset = Car.objects.all()
+class VehicleViewSet(viewsets.ModelViewSet):
+    """ViewSet for Vehicle model"""
+    queryset = Vehicle.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['model', 'company', 'fuel_type', 'transmission',
-                       'body_type', 'is_active']
-    search_fields = ['model__name', 'model__brand__name', 'description']
+    filterset_fields = ['vehicle_type', 'brand', 'model', 'year', 'is_available', 'company']
+    search_fields = ['brand__name', 'model__name', 'description', 'vin']
     ordering_fields = ['price', 'year', 'mileage', 'created_at']
+    ordering = ['-created_at']
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return CarListSerializer
-        elif self.action == 'create':
-            return CarCreateSerializer
+        if self.action == 'create':
+            return VehicleCreateSerializer
         elif self.action in ['update', 'partial_update']:
-            return CarUpdateSerializer
-        return CarDetailSerializer
+            return VehicleUpdateSerializer
+        return VehicleSerializer
 
     def perform_create(self, serializer):
-        serializer.save(company=self.request.user.company)
+        if self.request.user.is_authenticated:
+            company = Company.objects.get(user=self.request.user)
+            serializer.save(company=company)
+        else:
+            serializer.save()
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if self.action == 'list':
-            return queryset.select_related('model', 'model__brand', 'company')
-        return queryset.select_related('model', 'model__brand', 'company').prefetch_related(
-            'images', 'features'
-        )
+    def perform_update(self, serializer):
+        serializer.save()
+        # Очищаем кэш
+        cache.delete_pattern("view_cache_/api/vehicles/*")
 
-class CarImageViewSet(viewsets.ModelViewSet):
-    """ViewSet for CarImage model"""
-    queryset = CarImage.objects.all()
-    serializer_class = CarImageSerializer
+    def perform_destroy(self, instance):
+        instance.delete()
+        # Очищаем кэш
+        cache.delete_pattern("view_cache_/api/vehicles/*")
+
+# ============================================================================
+# VEHICLE VIEWSETS
+# ============================================================================
+
+class MotorcycleViewSet(viewsets.ModelViewSet):
+    """ViewSet for Motorcycle model"""
+    queryset = Motorcycle.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['brand', 'model', 'year', 'engine_type', 'is_available', 'company']
+    search_fields = ['brand__name', 'model__name', 'description', 'vin']
+    ordering_fields = ['price', 'year', 'mileage', 'created_at']
+    ordering = ['-created_at']
 
-    def get_queryset(self):
-        return CarImage.objects.filter(car__company=self.request.user.company)
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return MotorcycleCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return MotorcycleUpdateSerializer
+        return MotorcycleSerializer
 
-class CarFeatureViewSet(viewsets.ModelViewSet):
-    """ViewSet for CarFeature model"""
-    queryset = CarFeature.objects.all()
-    serializer_class = CarFeatureSerializer
+    def perform_create(self, serializer):
+        company = Company.objects.get(user=self.request.user)
+        serializer.save(company=company)
+        # Очищаем кэш
+        cache.delete_pattern("view_cache_/api/motorcycles/*")
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # Очищаем кэш
+        cache.delete_pattern(f"view_cache_/api/motorcycles/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/motorcycles/*")
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        # Очищаем кэш
+        cache.delete_pattern(f"view_cache_/api/motorcycles/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/motorcycles/*")
+
+class BoatViewSet(viewsets.ModelViewSet):
+    """ViewSet for Boat model"""
+    queryset = Boat.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['brand', 'model', 'year', 'boat_type', 'is_available', 'company']
+    search_fields = ['brand__name', 'model__name', 'description', 'hull_number']
+    ordering_fields = ['price', 'year', 'length', 'created_at']
+    ordering = ['-created_at']
 
-    def get_queryset(self):
-        return CarFeature.objects.filter(car__company=self.request.user.company) 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return BoatCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return BoatUpdateSerializer
+        return BoatSerializer
+
+    def perform_create(self, serializer):
+        company = Company.objects.get(user=self.request.user)
+        serializer.save(company=company)
+        # Очищаем кэш
+        cache.delete_pattern("view_cache_/api/boats/*")
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # Очищаем кэш
+        cache.delete_pattern(f"view_cache_/api/boats/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/boats/*")
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        # Очищаем кэш
+        cache.delete_pattern(f"view_cache_/api/boats/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/boats/*")
+
+class AircraftViewSet(viewsets.ModelViewSet):
+    """ViewSet for Aircraft model"""
+    queryset = Aircraft.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['brand', 'model', 'year', 'aircraft_type', 'is_available', 'company']
+    search_fields = ['brand__name', 'model__name', 'description', 'registration_number']
+    ordering_fields = ['price', 'year', 'flight_hours', 'created_at']
+    ordering = ['-created_at']
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return AircraftCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return AircraftUpdateSerializer
+        return AircraftSerializer
+
+    def perform_create(self, serializer):
+        company = Company.objects.get(user=self.request.user)
+        serializer.save(company=company)
+        # Очищаем кэш
+        cache.delete_pattern("view_cache_/api/aircraft/*")
+
+    def perform_update(self, serializer):
+        serializer.save()
+        # Очищаем кэш
+        cache.delete_pattern(f"view_cache_/api/aircraft/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/aircraft/*")
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        # Очищаем кэш
+        cache.delete_pattern(f"view_cache_/api/aircraft/{self.kwargs['pk']}/*")
+        cache.delete_pattern("view_cache_/api/aircraft/*") 

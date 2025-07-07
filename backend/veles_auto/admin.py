@@ -4,13 +4,22 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.db.models import Count, Avg, Sum
 from .models import (
-    User, Brand, Company, Car, CarImage, Review, CompanySchedule,
-    CompanyFeature, Category, Tag, Article, News, ContentImage,
+    User, Brand, Review, Category, Tag, Article, News, ContentImage,
     Subscription, ContentView, Comment, Reaction, ContentRating,
     YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata,
     PageView, UserSession, SearchQuery, Conversion,
     ABTest, ABTestVariant, ABTestResult
 )
+from cars.models import (
+    Vehicle, Motorcycle, Boat, Aircraft, Model,
+    Auction, AuctionBid,
+    LeasingCompany, LeasingProgram, LeasingApplication,
+    InsuranceCompany, InsuranceType, InsurancePolicy, InsuranceClaim
+)
+from companies.models import (
+    Company, CompanySchedule, CompanyFeature
+)
+
 from .admin_actions import (
     approve_content, reject_content, verify_companies,
     unverify_companies, delete_spam, ban_users, unban_users,
@@ -63,13 +72,7 @@ class CompanyAdmin(admin.ModelAdmin):
         return obj.reviews.count()
     review_count.short_description = 'Reviews'
 
-@admin.register(Car)
-class CarAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'model', 'year', 'price', 'company', 'is_available', 'rating')
-    list_filter = ('brand', 'year', 'transmission', 'fuel_type', 'is_available')
-    search_fields = ('brand__name', 'model', 'company__name')
-    ordering = ('-created_at',)
-    raw_id_fields = ('brand', 'company')
+
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
@@ -240,7 +243,143 @@ class ABTestResultAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     actions = [export_as_json]
 
+# ============================================================================
+# VEHICLE ADMIN
+# ============================================================================
+
+@admin.register(Vehicle)
+class VehicleAdmin(admin.ModelAdmin):
+    list_display = ('brand', 'model', 'vehicle_type', 'year', 'price', 'company', 'is_available', 'created_at')
+    list_filter = ('vehicle_type', 'brand', 'year', 'is_available', 'created_at')
+    search_fields = ('brand__name', 'model__name', 'vin', 'company__name')
+    ordering = ('-created_at',)
+    raw_id_fields = ('brand', 'model', 'company')
+    list_per_page = 25
+
+@admin.register(Motorcycle)
+class MotorcycleAdmin(admin.ModelAdmin):
+    list_display = ('vehicle', 'engine_type', 'cylinders', 'cooling', 'fuel_capacity')
+    list_filter = ('engine_type',)
+    search_fields = ('vehicle__brand__name', 'vehicle__model__name')
+    raw_id_fields = ('vehicle',)
+    list_per_page = 25
+
+@admin.register(Boat)
+class BoatAdmin(admin.ModelAdmin):
+    list_display = ('vehicle', 'boat_type', 'length', 'beam', 'draft', 'capacity')
+    list_filter = ('boat_type',)
+    search_fields = ('vehicle__brand__name', 'vehicle__model__name')
+    raw_id_fields = ('vehicle',)
+    list_per_page = 25
+
+@admin.register(Aircraft)
+class AircraftAdmin(admin.ModelAdmin):
+    list_display = ('vehicle', 'aircraft_type', 'wingspan', 'length', 'max_altitude', 'range', 'flight_hours')
+    list_filter = ('aircraft_type',)
+    search_fields = ('vehicle__brand__name', 'vehicle__model__name')
+    raw_id_fields = ('vehicle',)
+    list_per_page = 25
+
+@admin.register(Model)
+class ModelAdmin(admin.ModelAdmin):
+    list_display = ('name', 'brand', 'created_at')
+    list_filter = ('brand', 'created_at')
+    search_fields = ('name', 'brand__name')
+    ordering = ('brand__name', 'name')
+    raw_id_fields = ('brand',)
+
+# ============================================================================
+# VEHICLE SERVICES ADMIN
+# ============================================================================
+
+# Удаляю регистрацию AuctionAdmin, LeasingAdmin, InsuranceAdmin, если они есть ниже по файлу
+
 # Настройка админ-панели
 admin.site.site_header = 'VELES AUTO Administration'
 admin.site.site_title = 'VELES AUTO Admin'
 admin.site.index_title = 'Welcome to VELES AUTO Admin Panel' 
+
+# ============================================================================
+# AUCTION ADMIN
+# ============================================================================
+
+@admin.register(Auction)
+class AuctionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'vehicle', 'auction_type', 'status', 'current_price', 'start_date', 'end_date')
+    list_filter = ('auction_type', 'status', 'start_date', 'end_date', 'created_at')
+    search_fields = ('title', 'vehicle__brand__name', 'vehicle__model__name', 'description')
+    ordering = ('-created_at',)
+    raw_id_fields = ('vehicle', 'created_by')
+    list_per_page = 25
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('vehicle__brand', 'vehicle__model', 'created_by')
+
+@admin.register(AuctionBid)
+class AuctionBidAdmin(admin.ModelAdmin):
+    list_display = ('auction', 'bidder', 'amount', 'is_winning', 'created_at')
+    list_filter = ('is_winning', 'created_at')
+    search_fields = ('auction__title', 'bidder__username')
+    ordering = ('-created_at',)
+    raw_id_fields = ('auction', 'bidder')
+
+# ============================================================================
+# LEASING ADMIN
+# ============================================================================
+
+@admin.register(LeasingCompany)
+class LeasingCompanyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'phone', 'email', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('name', 'phone', 'email')
+    ordering = ('name',)
+
+@admin.register(LeasingProgram)
+class LeasingProgramAdmin(admin.ModelAdmin):
+    list_display = ('name', 'company', 'min_down_payment', 'max_term', 'interest_rate', 'is_active')
+    list_filter = ('is_active', 'max_term', 'created_at')
+    search_fields = ('name', 'company__name')
+    ordering = ('company__name', 'name')
+    raw_id_fields = ('company',)
+
+@admin.register(LeasingApplication)
+class LeasingApplicationAdmin(admin.ModelAdmin):
+    list_display = ('program', 'vehicle', 'applicant', 'status', 'down_payment', 'term_months', 'monthly_payment')
+    list_filter = ('status', 'term_months', 'created_at')
+    search_fields = ('program__name', 'vehicle__brand__name', 'applicant__username')
+    ordering = ('-created_at',)
+    raw_id_fields = ('program', 'vehicle', 'applicant')
+
+# ============================================================================
+# INSURANCE ADMIN
+# ============================================================================
+
+@admin.register(InsuranceCompany)
+class InsuranceCompanyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'phone', 'email', 'license_number', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('name', 'phone', 'email', 'license_number')
+    ordering = ('name',)
+
+@admin.register(InsuranceType)
+class InsuranceTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_mandatory', 'created_at')
+    list_filter = ('is_mandatory', 'created_at')
+    search_fields = ('name',)
+    ordering = ('name',)
+
+@admin.register(InsurancePolicy)
+class InsurancePolicyAdmin(admin.ModelAdmin):
+    list_display = ('policy_number', 'company', 'vehicle', 'status', 'premium_amount', 'start_date', 'end_date')
+    list_filter = ('status', 'start_date', 'end_date', 'created_at')
+    search_fields = ('policy_number', 'company__name', 'vehicle__brand__name')
+    ordering = ('-created_at',)
+    raw_id_fields = ('company', 'insurance_type', 'vehicle', 'insured_person')
+
+@admin.register(InsuranceClaim)
+class InsuranceClaimAdmin(admin.ModelAdmin):
+    list_display = ('claim_number', 'policy', 'status', 'damage_amount', 'claim_amount', 'incident_date')
+    list_filter = ('status', 'incident_date', 'created_at')
+    search_fields = ('claim_number', 'policy__policy_number')
+    ordering = ('-created_at',)
+    raw_id_fields = ('policy', 'filed_by') 

@@ -1,0 +1,428 @@
+.erp-dashboard {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.erp-sider {
+  background: #001529;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.erp-logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #303030;
+  background: #002140;
+}
+
+.erp-menu {
+  background: #001529;
+  border-right: none;
+}
+
+.erp-menu .ant-menu-item {
+  margin: 4px 8px;
+  border-radius: 6px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.erp-menu .ant-menu-item:hover {
+  background: #1890ff !important;
+}
+
+.erp-menu .ant-menu-item-selected {
+  background: #1890ff !important;
+}
+
+.erp-menu .ant-menu-item-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.erp-header {
+  background: white;
+  padding: 0 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #f0f0f0;
+  height: 64px;
+  line-height: 64px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.erp-content {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stats-row {
+  margin-bottom: 24px;
+}
+
+.stats-row .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.stats-row .ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.quick-actions {
+  margin-bottom: 24px;
+}
+
+.quick-actions .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.project-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.project-stat-item:last-child {
+  border-bottom: none;
+}
+
+.project-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.no-project-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  text-align: center;
+}
+
+.team-content,
+.reports-content,
+.settings-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Статистика */
+.ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ant-statistic-content-prefix {
+  margin-right: 8px;
+}
+
+/* Прогресс бар */
+.ant-progress {
+  margin: 0;
+  min-width: 100px;
+}
+
+.ant-progress-text {
+  font-size: 12px !important;
+  color: #8c8c8c !important;
+}
+
+/* Кнопки */
+.ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ant-btn-primary {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* Карточки */
+.ant-card {
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 24px;
+}
+
+.ant-card-head-title {
+  font-weight: 600;
+  color: #262626;
+}
+
+.ant-card-body {
+  padding: 24px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .erp-sider {
+    position: fixed;
+    z-index: 1000;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .erp-sider.open {
+    transform: translateX(0);
+  }
+
+  .erp-content {
+    padding: 16px;
+  }
+
+  .dashboard-content {
+    padding: 0;
+  }
+
+  .stats-row {
+    margin-bottom: 16px;
+  }
+
+  .quick-actions {
+    margin-bottom: 16px;
+  }
+
+  .header-content {
+    padding: 0 16px;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+
+  .team-content,
+  .reports-content,
+  .settings-content {
+    padding: 16px;
+    margin: 0;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .erp-dashboard {
+    background: #141414;
+  }
+
+  .erp-sider {
+    background: #001529;
+  }
+
+  .erp-logo {
+    background: #002140;
+    border-bottom-color: #303030;
+  }
+
+  .erp-header {
+    background: #1f1f1f;
+    border-bottom-color: #303030;
+  }
+
+  .header-title {
+    color: #ffffff;
+  }
+
+  .erp-content {
+    background: #141414;
+  }
+
+  .stats-row .ant-card,
+  .quick-actions .ant-card {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .team-content,
+  .reports-content,
+  .settings-content {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .project-stat-item {
+    border-bottom-color: #303030;
+  }
+
+  .ant-card {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .ant-card-head {
+    border-bottom-color: #303030;
+  }
+
+  .ant-card-head-title {
+    color: #ffffff;
+  }
+
+  .ant-statistic-title {
+    color: #a6a6a6;
+  }
+
+  .ant-progress-text {
+    color: #a6a6a6 !important;
+  }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-content,
+.team-content,
+.reports-content,
+.settings-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Скроллбар */
+.erp-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.erp-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.erp-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.erp-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Темная тема для скроллбара */
+@media (prefers-color-scheme: dark) {
+  .erp-content::-webkit-scrollbar-track {
+    background: #262626;
+  }
+
+  .erp-content::-webkit-scrollbar-thumb {
+    background: #434343;
+  }
+
+  .erp-content::-webkit-scrollbar-thumb:hover {
+    background: #595959;
+  }
+}
+
+/* Стили для мобильного меню */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1001;
+  background: #1890ff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .erp-header {
+    padding-left: 60px;
+  }
+}
+
+/* Стили для оверлея */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .mobile-overlay.open {
+    display: block;
+  }
+} 

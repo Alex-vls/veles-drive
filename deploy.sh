@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# 🚀 VELES AUTO - Скрипт автоматического развертывания на VPS
-# Автор: VELES AUTO Team
-# Версия: 1.0
+# ============================================================================
+# VELES AUTO - Скрипт развертывания
+# ============================================================================
 
-set -e  # Остановка при ошибке
+set -e
 
 # Цвета для вывода
 RED='\033[0;31m'
@@ -30,223 +30,151 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Проверка прав администратора
-check_root() {
-    if [[ $EUID -eq 0 ]]; then
-        print_error "Этот скрипт не должен запускаться от root пользователя"
-        exit 1
-    fi
-}
-
-# Проверка операционной системы
-check_os() {
-    print_info "Проверка операционной системы..."
+# Проверка наличия Docker и Docker Compose
+check_dependencies() {
+    print_info "Проверка зависимостей..."
     
-    if [[ -f /etc/os-release ]]; then
-        . /etc/os-release
-        OS=$NAME
-        VER=$VERSION_ID
-    else
-        print_error "Не удалось определить операционную систему"
+    if ! command -v docker &> /dev/null; then
+        print_error "Docker не установлен. Установите Docker и попробуйте снова."
         exit 1
     fi
     
-    print_success "Обнаружена ОС: $OS $VER"
-}
-
-# Установка Docker
-install_docker() {
-    print_info "Установка Docker..."
-    
-    if command -v docker &> /dev/null; then
-        print_warning "Docker уже установлен"
-        return
+    if ! command -v docker-compose &> /dev/null; then
+        print_error "Docker Compose не установлен. Установите Docker Compose и попробуйте снова."
+        exit 1
     fi
     
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo usermod -aG docker $USER
-    
-    print_success "Docker установлен успешно"
+    print_success "Все зависимости установлены"
 }
 
-# Установка Docker Compose
-install_docker_compose() {
-    print_info "Установка Docker Compose..."
-    
-    if command -v docker-compose &> /dev/null; then
-        print_warning "Docker Compose уже установлен"
-        return
-    fi
-    
-    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    
-    print_success "Docker Compose установлен успешно"
-}
-
-# Установка дополнительных инструментов
-install_tools() {
-    print_info "Установка дополнительных инструментов..."
-    
-    sudo apt update
-    sudo apt install -y git curl wget htop nginx certbot python3-certbot-nginx
-    
-    print_success "Инструменты установлены успешно"
-}
-
-# Настройка переменных окружения
-setup_env() {
+# Создание файла .env
+setup_environment() {
     print_info "Настройка переменных окружения..."
     
-    if [[ ! -f .env ]]; then
-        if [[ -f .env.example ]]; then
-            cp .env.example .env
-            print_warning "Файл .env создан из .env.example. Пожалуйста, отредактируйте его!"
+    if [ ! -f .env ]; then
+        if [ -f env.example ]; then
+            cp env.example .env
+            print_warning "Создан файл .env из примера. Отредактируйте его перед запуском!"
         else
-            print_error "Файл .env.example не найден"
+            print_error "Файл env.example не найден!"
             exit 1
         fi
     else
-        print_warning "Файл .env уже существует"
+        print_info "Файл .env уже существует"
     fi
 }
 
-# Настройка Nginx
-setup_nginx() {
-    print_info "Настройка Nginx..."
+# Создание необходимых директорий
+create_directories() {
+    print_info "Создание необходимых директорий..."
     
-    read -p "Введите ваш домен (например: example.com): " DOMAIN
+    mkdir -p docker/nginx/ssl
+    mkdir -p docker/nginx/www
+    mkdir -p docker/grafana/provisioning/datasources
+    mkdir -p docker/grafana/provisioning/dashboards
+    mkdir -p docker/grafana/dashboards
+    mkdir -p docker/prometheus/rules
+    mkdir -p docker/minio/scripts
     
-    if [[ -z "$DOMAIN" ]]; then
-        print_warning "Домен не указан, пропускаем настройку Nginx"
-        return
-    fi
-    
-    # Создание конфигурации Nginx
-    sudo tee /etc/nginx/sites-available/veles-auto > /dev/null <<EOF
-server {
-    listen 80;
-    server_name $DOMAIN www.$DOMAIN;
-    
-    # Frontend
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-    }
-    
-    # Backend API
-    location /api/ {
-        proxy_pass http://localhost:8000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-    }
-    
-    # Admin panel
-    location /admin/ {
-        proxy_pass http://localhost:8000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-        proxy_cache_bypass \$http_upgrade;
-    }
+    print_success "Директории созданы"
 }
-EOF
+
+# Настройка SSL сертификатов
+setup_ssl() {
+    print_info "Настройка SSL сертификатов..."
     
-    # Активация конфигурации
-    sudo ln -sf /etc/nginx/sites-available/veles-auto /etc/nginx/sites-enabled/
-    sudo nginx -t
-    sudo systemctl restart nginx
-    
-    print_success "Nginx настроен для домена: $DOMAIN"
-    
-    # Получение SSL сертификата
-    read -p "Получить SSL сертификат для $DOMAIN? (y/n): " GET_SSL
-    if [[ $GET_SSL =~ ^[Yy]$ ]]; then
-        sudo certbot --nginx -d $DOMAIN -d www.$DOMAIN
-        print_success "SSL сертификат получен"
+    if [ ! -f docker/nginx/ssl/veles-auto.com/fullchain.pem ]; then
+        print_warning "SSL сертификаты не найдены. Запускаем Certbot..."
+        docker-compose run --rm certbot
+    else
+        print_success "SSL сертификаты уже существуют"
     fi
 }
 
-# Настройка файрвола
-setup_firewall() {
-    print_info "Настройка файрвола..."
-    
-    sudo ufw allow ssh
-    sudo ufw allow 80
-    sudo ufw allow 443
-    sudo ufw allow 3001  # Grafana
-    sudo ufw --force enable
-    
-    print_success "Файрвол настроен"
-}
-
-# Запуск приложения
-start_application() {
-    print_info "Запуск приложения..."
+# Сборка и запуск контейнеров
+build_and_start() {
+    print_info "Сборка и запуск контейнеров..."
     
     # Остановка существующих контейнеров
-    docker-compose down 2>/dev/null || true
+    docker-compose down
     
-    # Сборка и запуск
-    docker-compose up -d --build
-    
-    # Ожидание запуска
-    print_info "Ожидание запуска сервисов..."
-    sleep 30
-    
-    # Проверка статуса
-    if docker-compose ps | grep -q "Up"; then
-        print_success "Приложение запущено успешно"
-    else
-        print_error "Ошибка запуска приложения"
-        docker-compose logs
-        exit 1
+    # Удаление старых образов (опционально)
+    read -p "Удалить старые образы? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        docker-compose down --rmi all
+        docker system prune -f
     fi
+    
+    # Сборка образов
+    print_info "Сборка Docker образов..."
+    docker-compose build --no-cache
+    
+    # Запуск контейнеров
+    print_info "Запуск контейнеров..."
+    docker-compose up -d
+    
+    print_success "Контейнеры запущены"
 }
 
-# Инициализация базы данных
-init_database() {
-    print_info "Инициализация базы данных..."
+# Ожидание готовности сервисов
+wait_for_services() {
+    print_info "Ожидание готовности сервисов..."
     
-    # Ожидание готовности базы данных
-    print_info "Ожидание готовности базы данных..."
-    sleep 10
+    # Ожидание базы данных
+    print_info "Ожидание PostgreSQL..."
+    docker-compose exec -T db pg_isready -U veles_user -d veles_auto || sleep 10
     
-    # Применение миграций
+    # Ожидание Redis
+    print_info "Ожидание Redis..."
+    docker-compose exec -T redis redis-cli ping || sleep 5
+    
+    # Ожидание backend
+    print_info "Ожидание Django backend..."
+    until docker-compose exec -T backend curl -f http://localhost:8000/health/; do
+        sleep 5
+    done
+    
+    print_success "Все сервисы готовы"
+}
+
+# Выполнение миграций
+run_migrations() {
+    print_info "Выполнение миграций базы данных..."
+    
     docker-compose exec -T backend python manage.py migrate
     
-    # Сборка статических файлов
-    docker-compose exec -T backend python manage.py collectstatic --noinput
-    
-    print_success "База данных инициализирована"
+    print_success "Миграции выполнены"
 }
 
 # Создание суперпользователя
 create_superuser() {
     print_info "Создание суперпользователя..."
     
-    read -p "Создать суперпользователя Django? (y/n): " CREATE_SUPERUSER
-    if [[ $CREATE_SUPERUSER =~ ^[Yy]$ ]]; then
+    read -p "Создать суперпользователя? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
         docker-compose exec -T backend python manage.py createsuperuser
-        print_success "Суперпользователь создан"
+    fi
+}
+
+# Сборка статических файлов
+collect_static() {
+    print_info "Сборка статических файлов..."
+    
+    docker-compose exec -T backend python manage.py collectstatic --noinput
+    
+    print_success "Статические файлы собраны"
+}
+
+# Загрузка тестовых данных
+load_demo_data() {
+    print_info "Загрузка тестовых данных..."
+    
+    read -p "Загрузить тестовые данные? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        docker-compose exec -T backend python manage.py load_demo_data
     fi
 }
 
@@ -254,85 +182,108 @@ create_superuser() {
 setup_monitoring() {
     print_info "Настройка мониторинга..."
     
-    # Создание директории для бэкапов
-    sudo mkdir -p /backups/database
-    sudo chown $USER:$USER /backups/database
-    
-    # Создание скрипта бэкапа
-    sudo tee /usr/local/bin/backup-veles-auto.sh > /dev/null <<'EOF'
-#!/bin/bash
-BACKUP_DIR="/backups/database"
-DATE=$(date +%Y%m%d_%H%M%S)
-cd /path/to/veles-auto
+    # Создание конфигурации Prometheus
+    if [ ! -f docker/prometheus/prometheus.yml ]; then
+        cat > docker/prometheus/prometheus.yml << EOF
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
-# Бэкап базы данных
-docker-compose exec -T db pg_dump -U veles_user veles_auto > $BACKUP_DIR/backup_$DATE.sql
+rule_files:
+  - "rules/*.yml"
 
-# Бэкап конфигурации
-tar -czf /backups/config_$DATE.tar.gz .env docker-compose.yml
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
 
-# Удаление старых бэкапов (старше 30 дней)
-find $BACKUP_DIR -name "backup_*.sql" -mtime +30 -delete
-find /backups -name "config_*.tar.gz" -mtime +30 -delete
+  - job_name: 'veles-backend'
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/metrics/'
+
+  - job_name: 'veles-frontend'
+    static_configs:
+      - targets: ['frontend:3000']
+    metrics_path: '/health'
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    metrics_path: '/nginx_status'
 EOF
-    
-    sudo chmod +x /usr/local/bin/backup-veles-auto.sh
+    fi
     
     print_success "Мониторинг настроен"
 }
 
-# Вывод информации о доступе
-show_access_info() {
-    print_success "=== VELES AUTO УСПЕШНО РАЗВЕРНУТ! ==="
-    echo
-    print_info "Доступ к приложению:"
-    echo "  🌐 Frontend: http://localhost:3000"
-    echo "  🔧 Backend API: http://localhost:8000"
-    echo "  👨‍💼 Admin Panel: http://localhost:8000/admin/"
-    echo "  📊 Grafana: http://localhost:3001"
-    echo "  📈 Prometheus: http://localhost:9090"
-    echo "  🚨 AlertManager: http://localhost:9093"
-    echo
-    print_info "Полезные команды:"
-    echo "  📋 Статус: docker-compose ps"
-    echo "  📝 Логи: docker-compose logs -f"
-    echo "  🔄 Перезапуск: docker-compose restart"
-    echo "  🛑 Остановка: docker-compose down"
-    echo "  💾 Бэкап: /usr/local/bin/backup-veles-auto.sh"
-    echo
-    print_warning "Не забудьте отредактировать файл .env!"
+# Проверка статуса сервисов
+check_status() {
+    print_info "Проверка статуса сервисов..."
+    
+    docker-compose ps
+    
+    print_info "URL'ы сервисов:"
+    echo "🌐 Основной сайт: https://veles-auto.com"
+    echo "🔧 API: https://api.veles-auto.com"
+    echo "📱 Telegram Mini App: https://tg.veles-auto.com"
+    echo "⚙️ Админка + ERP: https://admin.veles-auto.com"
+    echo "📊 Grafana: http://localhost:3001 (admin/veles_admin_2024)"
+    echo "📈 Prometheus: http://localhost:9090"
+    echo "🚨 AlertManager: http://localhost:9093"
+    echo "🗄️ MinIO Console: http://localhost:9001 (veles_minio_user/veles_minio_password_2024)"
 }
 
-# Главная функция
+# Основная функция
 main() {
-    echo "🚀 VELES AUTO - Автоматическое развертывание на VPS"
-    echo "=================================================="
-    echo
+    print_info "Запуск развертывания VELES AUTO..."
     
-    check_root
-    check_os
-    
-    # Установка компонентов
-    install_docker
-    install_docker_compose
-    install_tools
-    
-    # Настройка
-    setup_env
-    setup_nginx
-    setup_firewall
-    
-    # Запуск приложения
-    start_application
-    init_database
+    check_dependencies
+    setup_environment
+    create_directories
+    setup_ssl
+    build_and_start
+    wait_for_services
+    run_migrations
+    collect_static
     create_superuser
+    load_demo_data
     setup_monitoring
+    check_status
     
-    # Результат
-    show_access_info
-    
-    print_success "Развертывание завершено успешно! 🎉"
+    print_success "Развертывание VELES AUTO завершено успешно!"
+    print_info "Не забудьте настроить DNS записи для домена veles-auto.com"
 }
 
-# Запуск скрипта
-main "$@" 
+# Обработка аргументов командной строки
+case "${1:-}" in
+    "build")
+        check_dependencies
+        build_and_start
+        ;;
+    "migrate")
+        run_migrations
+        ;;
+    "static")
+        collect_static
+        ;;
+    "status")
+        check_status
+        ;;
+    "logs")
+        docker-compose logs -f
+        ;;
+    "restart")
+        docker-compose restart
+        ;;
+    "stop")
+        docker-compose down
+        ;;
+    "clean")
+        docker-compose down -v --rmi all
+        docker system prune -f
+        ;;
+    *)
+        main
+        ;;
+esac 
