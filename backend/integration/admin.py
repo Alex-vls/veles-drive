@@ -256,4 +256,4 @@ class IntegrationDashboardAdmin(admin.ModelAdmin):
 
 
 # Регистрация кастомной админки
-admin.site.register_view('integration/dashboard/', IntegrationDashboardAdmin.as_view(), 'Интеграция - Дашборд') 
+# admin.site.register_view('integration/dashboard/', IntegrationDashboardAdmin.as_view(), 'Интеграция - Дашборд') 
