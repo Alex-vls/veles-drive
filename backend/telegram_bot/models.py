@@ -1,12 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
 class TelegramUser(models.Model):
     """Модель для связи пользователей с Telegram"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='telegram_profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='telegram_profile')
     telegram_id = models.BigIntegerField(unique=True, verbose_name=_('Telegram ID'))
     username = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Username'))
     first_name = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('First Name'))

@@ -135,15 +135,6 @@ class Article(ContentBase):
     def __str__(self):
         return self.title
 
-class News(ContentBase):
-    """News model"""
-    source = models.CharField(max_length=200, blank=True)
-    source_url = models.URLField(blank=True)
-    views_count = models.PositiveIntegerField(default=0)
-
-    def __str__(self):
-        return self.title
-
 class ContentImage(models.Model):
     """Image model for articles and news"""
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
