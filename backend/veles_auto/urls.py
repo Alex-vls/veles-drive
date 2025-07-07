@@ -22,6 +22,12 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('erp/', include('erp.urls')),
+    path('api/auth/', include('users.urls')),
+    path('api/companies/', include('companies.urls')),
+    path('api/cars/', include('cars.urls')),
+    path('api/', include('core.urls')),
+    path('api/erp/', include('erp.urls')),  # ERP API
+    path('telegram/', include('telegram_bot.urls')),  # Telegram Bot API
 ]
 
 # Добавляем статические файлы для разработки
