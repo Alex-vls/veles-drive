@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.db.models import Count, Avg, Sum
 from .models import (
-    User, Brand, Review, Category, Tag, Article, News, ContentImage,
+    User, Brand, Review, Category, Tag, Article, ContentImage,
     Subscription, ContentView, Comment, Reaction, ContentRating,
     YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata,
     PageView, UserSession, SearchQuery, Conversion,
@@ -91,14 +91,14 @@ class ArticleAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     actions = [approve_content, reject_content, delete_spam, export_as_json]
 
-@admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'source', 'status', 'views_count', 'created_at')
-    list_filter = ('status', 'source', 'created_at')
-    search_fields = ('title', 'content', 'author__username')
-    ordering = ('-created_at',)
-    prepopulated_fields = {'slug': ('title',)}
-    actions = [approve_content, reject_content, delete_spam, export_as_json]
+# @admin.register(News)
+# class NewsAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'author', 'source', 'status', 'views_count', 'created_at')
+#     list_filter = ('status', 'source', 'created_at')
+#     search_fields = ('title', 'content', 'author__username')
+#     ordering = ('-created_at',)
+#     prepopulated_fields = {'slug': ('title',)}
+#     actions = [approve_content, reject_content, delete_spam, export_as_json]
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
