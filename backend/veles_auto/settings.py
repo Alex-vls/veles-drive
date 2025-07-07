@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'cars',
     'companies',
     'erp',
+    'integration',
+    'telegram_bot',
+    'universal_admin',
     'veles_auto',
 ]
 
