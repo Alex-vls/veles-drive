@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.cache import cache
 from core.decorators import cache_response
-from .models import News, Article, Notification, ModerationLog, ModerationStatus, Car
+from .models import News, Article, Notification, ModerationLog, ModerationStatus
+from cars.models import Car
 from .serializers import (
     NewsSerializer,
     NewsCreateSerializer,
@@ -23,6 +24,8 @@ from .serializers import (
     CarUpdateSerializer
 )
 from .permissions import IsModerator
+from django.contrib.contenttypes.models import ContentType
+from rest_framework.decorators import action
 
 class NewsListView(generics.ListAPIView):
     queryset = News.objects.filter(is_published=True)
