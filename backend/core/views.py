@@ -96,15 +96,14 @@ class ArticleListView(generics.ListAPIView):
     serializer_class = ArticleListSerializer
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['is_published', 'is_premium']
+    filterset_fields = ['is_published']
     search_fields = ['title', 'content']
     ordering_fields = ['created_at']
     ordering = ['-created_at']
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if not self.request.user.is_authenticated:
-            return queryset.filter(is_premium=False)
+        # Убираем фильтр по is_premium, так как такого поля нет в модели Article
         return queryset
 
     @cache_response(timeout=300)  # Кэшируем на 5 минут
@@ -118,8 +117,7 @@ class ArticleDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if not self.request.user.is_authenticated:
-            return queryset.filter(is_premium=False)
+        # Убираем фильтр по is_premium, так как такого поля нет в модели Article
         return queryset
 
     @cache_response(timeout=300)  # Кэшируем на 5 минут

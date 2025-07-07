@@ -17,8 +17,8 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(CompanyImage)
 class CompanyImageAdmin(admin.ModelAdmin):
-    list_display = ('company', 'image_preview', 'is_primary', 'created_at')
-    list_filter = ('is_primary', 'created_at')
+    list_display = ('company', 'image_preview', 'is_main', 'created_at')
+    list_filter = ('is_main', 'created_at')
     search_fields = ('company__name',)
 
     def image_preview(self, obj):
@@ -30,12 +30,12 @@ class CompanyImageAdmin(admin.ModelAdmin):
 
 @admin.register(CompanyFeature)
 class CompanyFeatureAdmin(admin.ModelAdmin):
-    list_display = ('company', 'feature_name', 'feature_value')
-    list_filter = ('feature_name',)
-    search_fields = ('company__name', 'feature_name')
+    list_display = ('company', 'name', 'value')
+    list_filter = ('name',)
+    search_fields = ('company__name', 'name')
 
 @admin.register(CompanySchedule)
 class CompanyScheduleAdmin(admin.ModelAdmin):
-    list_display = ('company', 'day_of_week', 'open_time', 'close_time', 'is_working_day')
-    list_filter = ('day_of_week', 'is_working_day', 'company')
+    list_display = ('company', 'day_of_week', 'open_time', 'close_time', 'is_closed')
+    list_filter = ('day_of_week', 'is_closed', 'company')
     search_fields = ('company__name',) 

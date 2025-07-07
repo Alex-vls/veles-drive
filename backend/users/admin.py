@@ -11,8 +11,8 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(EmailVerificationToken)
 class EmailVerificationTokenAdmin(admin.ModelAdmin):
-    list_display = ('user', 'token', 'is_used', 'expires_at', 'created_at')
-    list_filter = ('is_used', 'created_at', 'expires_at')
+    list_display = ('user', 'token', 'created_at')
+    list_filter = ('created_at',)
     search_fields = ('user__username', 'user__email', 'token')
     ordering = ('-created_at',)
 
@@ -26,19 +26,19 @@ class RoleAdmin(admin.ModelAdmin):
 class FavoriteCarAdmin(admin.ModelAdmin):
     list_display = ('user', 'car', 'created_at')
     list_filter = ('created_at',)
-    search_fields = ('user__username', 'car__title')
+    search_fields = ('user__username', 'car__vehicle__brand__name')
     ordering = ('-created_at',)
 
 @admin.register(ViewHistory)
 class ViewHistoryAdmin(admin.ModelAdmin):
     list_display = ('user', 'car', 'viewed_at')
     list_filter = ('viewed_at',)
-    search_fields = ('user__username', 'car__title')
+    search_fields = ('user__username', 'car__vehicle__brand__name')
     ordering = ('-viewed_at',)
 
 @admin.register(UserReview)
 class UserReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'car', 'rating', 'created_at')
+    list_display = ('user', 'company', 'rating', 'created_at')
     list_filter = ('rating', 'created_at')
-    search_fields = ('user__username', 'car__title', 'comment')
+    search_fields = ('user__username', 'company__name', 'comment')
     ordering = ('-created_at',) 

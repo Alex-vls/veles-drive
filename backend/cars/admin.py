@@ -23,10 +23,10 @@ class ModelAdmin(admin.ModelAdmin):
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ('title', 'brand', 'model', 'year', 'price', 'company', 'is_available')
-    list_filter = ('brand', 'model', 'year', 'is_available', 'company')
-    search_fields = ('title', 'brand__name', 'model__name', 'vin')
-    ordering = ('-created_at',)
+    list_display = ('vehicle', 'body_type', 'doors', 'seats')
+    list_filter = ('body_type', 'doors', 'seats')
+    search_fields = ('vehicle__brand__name', 'vehicle__model__name', 'vehicle__vin')
+    ordering = ('-vehicle__created_at',)
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
@@ -55,9 +55,9 @@ class AircraftAdmin(admin.ModelAdmin):
 
 @admin.register(CarImage)
 class CarImageAdmin(admin.ModelAdmin):
-    list_display = ('car', 'image_preview', 'is_primary', 'created_at')
-    list_filter = ('is_primary', 'created_at')
-    search_fields = ('car__title',)
+    list_display = ('car', 'image_preview', 'is_main', 'created_at')
+    list_filter = ('is_main', 'created_at')
+    search_fields = ('car__vehicle__brand__name',)
 
     def image_preview(self, obj):
         if obj.image:
@@ -68,8 +68,8 @@ class CarImageAdmin(admin.ModelAdmin):
 
 @admin.register(VehicleImage)
 class VehicleImageAdmin(admin.ModelAdmin):
-    list_display = ('vehicle', 'image_preview', 'is_primary', 'created_at')
-    list_filter = ('is_primary', 'created_at')
+    list_display = ('vehicle', 'image_preview', 'is_main', 'created_at')
+    list_filter = ('is_main', 'created_at')
     search_fields = ('vehicle__brand__name', 'vehicle__model__name')
 
     def image_preview(self, obj):
@@ -81,12 +81,12 @@ class VehicleImageAdmin(admin.ModelAdmin):
 
 @admin.register(CarFeature)
 class CarFeatureAdmin(admin.ModelAdmin):
-    list_display = ('car', 'feature_name', 'feature_value')
-    list_filter = ('feature_name',)
-    search_fields = ('car__title', 'feature_name')
+    list_display = ('car', 'name', 'value')
+    list_filter = ('name',)
+    search_fields = ('car__vehicle__brand__name', 'name')
 
 @admin.register(VehicleFeature)
 class VehicleFeatureAdmin(admin.ModelAdmin):
-    list_display = ('vehicle', 'feature_name', 'feature_value')
-    list_filter = ('feature_name',)
-    search_fields = ('vehicle__brand__name', 'feature_name') 
+    list_display = ('vehicle', 'name', 'value')
+    list_filter = ('name',)
+    search_fields = ('vehicle__brand__name', 'name') 

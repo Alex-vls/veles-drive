@@ -401,11 +401,10 @@ class UniversalCompanyAdmin(admin.ModelAdmin):
 
 # @admin.register(Car)  # Убрано - уже зарегистрировано в cars.admin
 class UniversalCarAdmin(admin.ModelAdmin):
-    list_display = ('brand', 'model', 'year', 'price', 'company', 'is_available', 'rating', 'status_display')
-    list_filter = ('brand', 'year', 'transmission', 'fuel_type', 'is_available', 'created_at')
-    search_fields = ('brand__name', 'model', 'company__name', 'description')
-    ordering = ('-created_at',)
-    raw_id_fields = ('brand', 'company')
+    list_display = ('vehicle', 'body_type', 'doors', 'seats', 'status_display')
+    list_filter = ('body_type', 'doors', 'seats')
+    search_fields = ('vehicle__brand__name', 'vehicle__model__name', 'vehicle__company__name')
+    ordering = ('-vehicle__created_at',)
     
     fieldsets = (
         ('Основная информация', {
