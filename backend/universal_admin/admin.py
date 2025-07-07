@@ -399,7 +399,7 @@ class UniversalCompanyAdmin(admin.ModelAdmin):
     status_display.short_description = 'Статус'
 
 
-@admin.register(Car)
+# @admin.register(Car)  # Убрано - уже зарегистрировано в cars.admin
 class UniversalCarAdmin(admin.ModelAdmin):
     list_display = ('brand', 'model', 'year', 'price', 'company', 'is_available', 'rating', 'status_display')
     list_filter = ('brand', 'year', 'transmission', 'fuel_type', 'is_available', 'created_at')
