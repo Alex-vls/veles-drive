@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Review, Car, Company, Article, ContentImage, YouTubeVideo, YouTubePlaylistVideo, PageView, UserSession
+from .models import Article, ContentImage, YouTubeVideo, YouTubePlaylistVideo, PageView, UserSession
+from companies.models import Review, Company
+from cars.models import Car
 from .tasks import (
     send_review_notification,
     publish_car_to_telegram,

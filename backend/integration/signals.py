@@ -414,23 +414,23 @@ def company_created_updated(sender, instance, created, **kwargs):
 
 
 # Сигналы для новостей
-@receiver(post_save, sender='core.News')
-def news_created_updated(sender, instance, created, **kwargs):
-    """Событие при создании/обновлении новости"""
-    if created:
-        EventService.record_event(
-            event_type='data_created',
-            description=f'Опубликована новость: {instance.title}',
-            severity='medium'
-        )
+# @receiver(post_save, sender='core.News')
+# def news_created_updated(sender, instance, created, **kwargs):
+#     """Событие при создании/обновлении новости"""
+#     if created:
+#         EventService.record_event(
+#             event_type='data_created',
+#             description=f'Опубликована новость: {instance.title}',
+#             severity='medium'
+#         )
         
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='news',
-            name='total_news',
-            value=sender.objects.count(),
-            unit='articles'
-        )
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='news',
+#             name='total_news',
+#             value=sender.objects.count(),
+#             unit='articles'
+#         )
 
 
 # Сигналы для ошибок
