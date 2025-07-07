@@ -267,21 +267,21 @@ class ModerationViewSet(viewsets.ModelViewSet):
         return Response({'count': count})
 
 class CarListView(generics.ListAPIView):
-    queryset = Car.objects.filter(is_published=True)
+    queryset = Car.objects.filter(vehicle__is_available=True)
     serializer_class = CarListSerializer
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['brand', 'model', 'year', 'transmission', 'fuel_type', 'is_available']
-    search_fields = ['brand', 'model', 'description']
-    ordering_fields = ['price', 'year', 'mileage', 'created_at']
-    ordering = ['-created_at']
+    filterset_fields = ['vehicle__brand', 'vehicle__model', 'vehicle__year', 'vehicle__transmission', 'vehicle__fuel_type', 'vehicle__is_available']
+    search_fields = ['vehicle__brand__name', 'vehicle__model__name', 'vehicle__description']
+    ordering_fields = ['vehicle__price', 'vehicle__year', 'vehicle__mileage', 'vehicle__created_at']
+    ordering = ['-vehicle__created_at']
 
     @cache_response(timeout=300)  # Кэшируем на 5 минут
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
 class CarDetailView(generics.RetrieveAPIView):
-    queryset = Car.objects.filter(is_published=True)
+    queryset = Car.objects.filter(vehicle__is_available=True)
     serializer_class = CarSerializer
     permission_classes = (permissions.AllowAny,)
 
