@@ -276,18 +276,10 @@ class CarListView(generics.ListAPIView):
     ordering_fields = ['vehicle__price', 'vehicle__year', 'vehicle__mileage', 'vehicle__created_at']
     ordering = ['-vehicle__created_at']
 
-    @cache_response(timeout=300)  # Кэшируем на 5 минут
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
 class CarDetailView(generics.RetrieveAPIView):
     queryset = Car.objects.filter(vehicle__is_available=True)
     serializer_class = CarSerializer
     permission_classes = (permissions.AllowAny,)
-
-    @cache_response(timeout=300)  # Кэшируем на 5 минут
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 class CarCreateView(generics.CreateAPIView):
     queryset = Car.objects.all()
