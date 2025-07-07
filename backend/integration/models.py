@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -51,7 +51,7 @@ class SystemEvent(models.Model):
         ('admin_action', _('Действие админки')),
     ], verbose_name=_('Тип события'))
     
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Пользователь'))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Пользователь'))
     description = models.TextField(verbose_name=_('Описание'))
     severity = models.CharField(max_length=20, choices=[
         ('low', _('Низкий')),
@@ -231,7 +231,7 @@ class SystemAlert(models.Model):
     
     is_active = models.BooleanField(default=True, verbose_name=_('Активно'))
     is_acknowledged = models.BooleanField(default=False, verbose_name=_('Подтверждено'))
-    acknowledged_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Подтвердил'))
+    acknowledged_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Подтвердил'))
     acknowledged_at = models.DateTimeField(blank=True, null=True, verbose_name=_('Подтверждено в'))
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Создано'))
@@ -266,7 +266,7 @@ class IntegrationLog(models.Model):
     details = models.JSONField(default=dict, blank=True, verbose_name=_('Детали'))
     execution_time = models.FloatField(blank=True, null=True, verbose_name=_('Время выполнения (мс)'))
     
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Пользователь'))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Пользователь'))
     ip_address = models.GenericIPAddressField(blank=True, null=True, verbose_name=_('IP адрес'))
     user_agent = models.TextField(blank=True, null=True, verbose_name=_('User Agent'))
     
