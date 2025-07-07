@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import News, Article, Notification, ModerationLog, ModerationStatus, CarImage, Car
+from .models import News, Article, Notification, ModerationLog, ModerationStatus
+from cars.models import CarImage, Car
+from companies.serializers import CompanySerializer
 from users.serializers import UserProfileSerializer
 
 class NewsSerializer(serializers.ModelSerializer):
