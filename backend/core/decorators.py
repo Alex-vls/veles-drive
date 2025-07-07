@@ -24,6 +24,10 @@ def cache_response(timeout=None):
             # Если нет в кэше, выполняем представление
             response = view_func(view_instance, request, *args, **kwargs)
             
+            # Рендерим ответ перед кэшированием
+            if hasattr(response, 'render'):
+                response.render()
+            
             # Кэшируем ответ
             cache_timeout = timeout or getattr(settings, 'CACHE_TTL', 60 * 15)
             cache.set(cache_key, response, cache_timeout)
