@@ -26,7 +26,7 @@ from .admin_actions import (
     export_as_json
 )
 
-@admin.register(User)
+# @admin.register(User)  # Убрано - уже зарегистрировано в universal_admin.admin
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined')
     list_filter = ('is_staff', 'is_active', 'groups')
@@ -40,7 +40,7 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
-@admin.register(Brand)
+# @admin.register(Brand)  # Убрано - уже зарегистрировано в universal_admin.admin
 class BrandAdmin(admin.ModelAdmin):
     list_display = ('name', 'logo_preview', 'car_count', 'created_at')
     search_fields = ('name',)
@@ -56,7 +56,7 @@ class BrandAdmin(admin.ModelAdmin):
         return obj.cars.count()
     car_count.short_description = 'Cars'
 
-@admin.register(Company)
+# @admin.register(Company)  # Убрано - уже зарегистрировано в universal_admin.admin
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'city', 'rating', 'is_verified', 'car_count', 'review_count')
     list_filter = ('is_verified', 'city')
@@ -74,7 +74,7 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(Review)
+# @admin.register(Review)  # Убрано - уже зарегистрировано в universal_admin.admin
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'rating', 'car', 'company', 'created_at')
     list_filter = ('rating', 'created_at')

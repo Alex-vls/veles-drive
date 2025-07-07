@@ -433,7 +433,7 @@ class UniversalCarAdmin(admin.ModelAdmin):
     status_display.short_description = 'Статус'
 
 
-@admin.register(Sale)
+# @admin.register(Sale)  # Убрано - уже зарегистрировано в erp.admin
 class UniversalSaleAdmin(admin.ModelAdmin):
     list_display = ('car', 'company', 'customer', 'sale_price', 'commission', 'total_amount_display', 'status', 'sale_date')
     list_filter = ('status', 'company', 'sale_date', 'created_at')
