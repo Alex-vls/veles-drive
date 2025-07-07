@@ -179,4 +179,21 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
         company = self.context['company']
-        return Review.objects.create(user=user, company=company, **validated_data) 
+        return Review.objects.create(user=user, company=company, **validated_data)
+
+class ReviewUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating Review"""
+    class Meta:
+        model = Review
+        fields = ('rating', 'text')
+        read_only_fields = ('user', 'company', 'created_at')
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        review = self.instance
+        
+        # Проверяем, что пользователь может редактировать этот отзыв
+        if user != review.user and not user.is_staff:
+            raise serializers.ValidationError("Вы не можете редактировать чужой отзыв")
+        
+        return attrs 
