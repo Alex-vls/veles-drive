@@ -363,7 +363,7 @@ class UniversalUserAdmin(UserAdmin):
     )
 
 
-@admin.register(Company)
+# @admin.register(Company)  # Убрано - уже зарегистрировано в companies.admin
 class UniversalCompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'city', 'rating', 'is_verified', 'car_count', 'review_count', 'status_display')
     list_filter = ('is_verified', 'city', 'created_at')
