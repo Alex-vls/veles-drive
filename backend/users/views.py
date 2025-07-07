@@ -12,12 +12,10 @@ from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
     UserProfileSerializer,
-    UserProfileUpdateSerializer,
     PasswordChangeSerializer,
-    PasswordResetRequestSerializer,
-    PasswordResetConfirmSerializer,
+    ResetPasswordSerializer,
+    ResetPasswordConfirmSerializer,
     EmailVerificationSerializer,
-    SubscriptionUpdateSerializer,
     RoleSerializer,
     PermissionSerializer,
     UserRoleSerializer,
@@ -134,7 +132,7 @@ class ResetPasswordView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        serializer = ResetPasswordRequestSerializer(data=request.data)
+        serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
             try:
                 user = User.objects.get(email=serializer.validated_data['email'])
@@ -213,23 +211,7 @@ class UserRoleUpdateView(generics.UpdateAPIView):
         self.perform_update(serializer)
         return Response(serializer.data)
 
-class SubscriptionUpdateView(generics.UpdateAPIView):
-    serializer_class = SubscriptionUpdateSerializer
-    permission_classes = (permissions.IsAuthenticated,)
 
-    def get_object(self):
-        return self.request.user
-
-    def perform_update(self, serializer):
-        user = serializer.save()
-        # Отправляем уведомление об обновлении подписки
-        NotificationService.notify_subscription(
-            user=user,
-            subscription_type=user.subscription_type,
-            end_date=user.subscription_end
-        )
-        # Очищаем кэш профиля пользователя
-        cache.delete_pattern(f"view_cache_/api/users/profile/*")
 
 class UserViewSet(viewsets.ModelViewSet):
     """ViewSet for User model"""
