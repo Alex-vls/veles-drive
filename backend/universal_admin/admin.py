@@ -15,9 +15,10 @@ from datetime import timedelta, datetime
 import json
 
 # Импорты моделей
+from cars.models import Brand, Car, CarImage
+from companies.models import Company, Review, CompanySchedule, CompanyFeature
 from veles_auto.models import (
-    Brand, Company, Car, CarImage, Review, CompanySchedule,
-    CompanyFeature, Category, Tag, Article, News, ContentImage,
+    Category, Tag, Article, News, ContentImage,
     Subscription, ContentView, Comment, Reaction, ContentRating,
     YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata,
     PageView, UserSession, SearchQuery, Conversion,
