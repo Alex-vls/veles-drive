@@ -1,13 +1,14 @@
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.utils import timezone
 from .models import SystemEvent, SystemMetric, IntegrationLog
 from .services import EventService, MetricsService, IntegrationLogService
 
 
 # Сигналы для пользователей
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=get_user_model())
 def user_created_updated(sender, instance, created, **kwargs):
     """Событие при создании/обновлении пользователя"""
     if created:
@@ -22,7 +23,7 @@ def user_created_updated(sender, instance, created, **kwargs):
         MetricsService.record_metric(
             metric_type='users',
             name='total_users',
-            value=User.objects.count(),
+            value=get_user_model().objects.count(),
             unit='users'
         )
     else:
@@ -34,7 +35,7 @@ def user_created_updated(sender, instance, created, **kwargs):
         )
 
 
-@receiver(post_delete, sender=User)
+@receiver(post_delete, sender=get_user_model())
 def user_deleted(sender, instance, **kwargs):
     """Событие при удалении пользователя"""
     EventService.record_event(
@@ -168,24 +169,24 @@ def telegram_message_created(sender, instance, created, **kwargs):
 
 
 # Сигналы для Universal Admin
-@receiver(post_save, sender='universal_admin.AdminAction')
-def admin_action_created(sender, instance, created, **kwargs):
-    """Событие при создании действия админки"""
-    if created:
-        EventService.record_event(
-            event_type='admin_action',
-            description=f'Действие админки: {instance.action_type} - {instance.description}',
-            user=instance.user,
-            severity='medium'
-        )
+# @receiver(post_save, sender='universal_admin.AdminAction')
+# def admin_action_created(sender, instance, created, **kwargs):
+#     """Событие при создании действия админки"""
+#     if created:
+#         EventService.record_event(
+#             event_type='admin_action',
+#             description=f'Действие админки: {instance.action_type} - {instance.description}',
+#             user=instance.user,
+#             severity='medium'
+#         )
         
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='admin',
-            name='total_admin_actions',
-            value=sender.objects.count(),
-            unit='actions'
-        )
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='admin',
+#             name='total_admin_actions',
+#             value=sender.objects.count(),
+#             unit='actions'
+#         )
 
 
 # Сигналы для уведомлений
@@ -392,24 +393,24 @@ def company_created_updated(sender, instance, created, **kwargs):
 
 
 # Сигналы для отзывов
-@receiver(post_save, sender='core.Review')
-def review_created_updated(sender, instance, created, **kwargs):
-    """Событие при создании/обновлении отзыва"""
-    if created:
-        EventService.record_event(
-            event_type='data_created',
-            description=f'Добавлен новый отзыв от {instance.user.username}',
-            user=instance.user,
-            severity='low'
-        )
+# @receiver(post_save, sender='core.Review')
+# def review_created_updated(sender, instance, created, **kwargs):
+#     """Событие при создании/обновлении отзыва"""
+#     if created:
+#         EventService.record_event(
+#             event_type='data_created',
+#             description=f'Добавлен новый отзыв от {instance.user.username}',
+#             user=instance.user,
+#             severity='low'
+#         )
         
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='reviews',
-            name='total_reviews',
-            value=sender.objects.count(),
-            unit='reviews'
-        )
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='reviews',
+#             name='total_reviews',
+#             value=sender.objects.count(),
+#             unit='reviews'
+#         )
 
 
 # Сигналы для новостей
@@ -433,69 +434,69 @@ def news_created_updated(sender, instance, created, **kwargs):
 
 
 # Сигналы для ошибок
-@receiver(post_save, sender='core.ErrorLog')
-def error_log_created(sender, instance, created, **kwargs):
-    """Событие при создании лога ошибки"""
-    if created:
-        EventService.record_event(
-            event_type='error_occurred',
-            description=f'Зафиксирована ошибка: {instance.error_type}',
-            severity='high'
-        )
+# @receiver(post_save, sender='core.ErrorLog')
+# def error_log_created(sender, instance, created, **kwargs):
+#     """Событие при создании лога ошибки"""
+#     if created:
+#         EventService.record_event(
+#             event_type='error_occurred',
+#             description=f'Зафиксирована ошибка: {instance.error_type}',
+#             severity='high'
+#         )
         
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='errors',
-            name='total_errors',
-            value=sender.objects.count(),
-            unit='errors'
-        )
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='errors',
+#             name='total_errors',
+#             value=sender.objects.count(),
+#             unit='errors'
+#         )
 
 
 # Сигналы для аналитики
-@receiver(post_save, sender='core.AnalyticsEvent')
-def analytics_event_created(sender, instance, created, **kwargs):
-    """Событие при создании события аналитики"""
-    if created:
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='analytics',
-            name='total_analytics_events',
-            value=sender.objects.count(),
-            unit='events'
-        )
+# @receiver(post_save, sender='core.AnalyticsEvent')
+# def analytics_event_created(sender, instance, created, **kwargs):
+#     """Событие при создании события аналитики"""
+#     if created:
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='analytics',
+#             name='total_analytics_events',
+#             value=sender.objects.count(),
+#             unit='events'
+#         )
 
 
 # Сигналы для SEO
-@receiver(post_save, sender='core.SEOMetric')
-def seo_metric_created(sender, instance, created, **kwargs):
-    """Событие при создании SEO метрики"""
-    if created:
-        EventService.record_event(
-            event_type='data_created',
-            description=f'Обновлена SEO метрика: {instance.metric_name}',
-            severity='low'
-        )
+# @receiver(post_save, sender='core.SEOMetric')
+# def seo_metric_created(sender, instance, created, **kwargs):
+#     """Событие при создании SEO метрики"""
+#     if created:
+#         EventService.record_event(
+#             event_type='data_created',
+#             description=f'Обновлена SEO метрика: {instance.metric_name}',
+#             severity='low'
+#         )
 
 
 # Сигналы для YouTube
-@receiver(post_save, sender='core.YouTubeVideo')
-def youtube_video_created_updated(sender, instance, created, **kwargs):
-    """Событие при создании/обновлении видео YouTube"""
-    if created:
-        EventService.record_event(
-            event_type='data_created',
-            description=f'Добавлено видео YouTube: {instance.title}',
-            severity='medium'
-        )
+# @receiver(post_save, sender='core.YouTubeVideo')
+# def youtube_video_created_updated(sender, instance, created, **kwargs):
+#     """Событие при создании/обновлении видео YouTube"""
+#     if created:
+#         EventService.record_event(
+#             event_type='data_created',
+#             description=f'Добавлено видео YouTube: {instance.title}',
+#             severity='medium'
+#         )
         
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='youtube',
-            name='total_youtube_videos',
-            value=sender.objects.count(),
-            unit='videos'
-        )
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='youtube',
+#             name='total_youtube_videos',
+#             value=sender.objects.count(),
+#             unit='videos'
+#         )
 
 
 # Сигналы для Telegram уведомлений
@@ -519,20 +520,20 @@ def telegram_notification_created(sender, instance, created, **kwargs):
 
 
 # Сигналы для Mini App сессий
-@receiver(post_save, sender='telegram_bot.MiniAppSession')
-def mini_app_session_created(sender, instance, created, **kwargs):
-    """Событие при создании сессии Mini App"""
-    if created:
-        EventService.record_event(
-            event_type='telegram_command',
-            description=f'Создана сессия Mini App для пользователя {instance.user.username}',
-            severity='low'
-        )
+# @receiver(post_save, sender='telegram_bot.MiniAppSession')
+# def mini_app_session_created(sender, instance, created, **kwargs):
+#     """Событие при создании сессии Mini App"""
+#     if created:
+#         EventService.record_event(
+#             event_type='telegram_command',
+#             description=f'Создана сессия Mini App для пользователя {instance.user.username}',
+#             severity='low'
+#         )
         
-        # Записать метрику
-        MetricsService.record_metric(
-            metric_type='telegram',
-            name='total_mini_app_sessions',
-            value=sender.objects.count(),
-            unit='sessions'
-        ) 
+#         # Записать метрику
+#         MetricsService.record_metric(
+#             metric_type='telegram',
+#             name='total_mini_app_sessions',
+#             value=sender.objects.count(),
+#             unit='sessions'
+#         ) 

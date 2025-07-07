@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Review, Car, Company, Article, News, ContentImage, YouTubeVideo, YouTubePlaylistVideo, PageView, UserSession
+from .models import Review, Car, Company, Article, ContentImage, YouTubeVideo, YouTubePlaylistVideo, PageView, UserSession
 from .tasks import (
     send_review_notification,
     publish_car_to_telegram,
@@ -32,10 +32,10 @@ def handle_article_save(sender, instance, created, **kwargs):
     if created:
         publish_article_to_telegram.delay(instance.id)
 
-@receiver(post_save, sender=News)
-def handle_news_save(sender, instance, created, **kwargs):
-    if created:
-        publish_news_to_telegram.delay(instance.id)
+# @receiver(post_save, sender=News)
+# def handle_news_save(sender, instance, created, **kwargs):
+#     if created:
+#         publish_news_to_telegram.delay(instance.id)
 
 @receiver(post_save, sender=ContentImage)
 def handle_content_image_save(sender, instance, created, **kwargs):

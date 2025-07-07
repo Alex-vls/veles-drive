@@ -2,6 +2,7 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 from datetime import timedelta
 
 # Импорты моделей
@@ -16,6 +17,8 @@ from cars.models import Car
 from erp.models import (
     Sale as ERPSale, ProjectTask, ProjectBoard
 )
+
+User = get_user_model()
 
 
 @receiver([post_save, post_delete], sender=User)
