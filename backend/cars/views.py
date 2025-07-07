@@ -20,14 +20,8 @@ from .serializers import (
     VehicleImageUpdateSerializer,
     VehicleFeatureSerializer,
     MotorcycleSerializer,
-    MotorcycleCreateSerializer,
-    MotorcycleUpdateSerializer,
     BoatSerializer,
-    BoatCreateSerializer,
-    BoatUpdateSerializer,
-    AircraftSerializer,
-    AircraftCreateSerializer,
-    AircraftUpdateSerializer
+    AircraftSerializer
 )
 from companies.models import Company
 
@@ -243,10 +237,6 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return MotorcycleCreateSerializer
-        elif self.action in ['update', 'partial_update']:
-            return MotorcycleUpdateSerializer
         return MotorcycleSerializer
 
     def perform_create(self, serializer):
@@ -278,10 +268,6 @@ class BoatViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return BoatCreateSerializer
-        elif self.action in ['update', 'partial_update']:
-            return BoatUpdateSerializer
         return BoatSerializer
 
     def perform_create(self, serializer):
@@ -313,10 +299,6 @@ class AircraftViewSet(viewsets.ModelViewSet):
     ordering = ['-created_at']
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return AircraftCreateSerializer
-        elif self.action in ['update', 'partial_update']:
-            return AircraftUpdateSerializer
         return AircraftSerializer
 
     def perform_create(self, serializer):
