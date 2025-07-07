@@ -459,7 +459,7 @@ class UniversalSaleAdmin(admin.ModelAdmin):
     total_amount_display.short_description = 'Общая сумма'
 
 
-@admin.register(ProjectTask)
+# @admin.register(ProjectTask)  # Убрано - уже зарегистрировано в erp.admin
 class UniversalProjectTaskAdmin(admin.ModelAdmin):
     list_display = [
         'title', 'column', 'assignee', 'priority', 'due_date', 'is_overdue_display', 
