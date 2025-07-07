@@ -6,8 +6,10 @@ from datetime import timedelta
 
 # Импорты моделей
 from veles_auto.models import (
-    User, Company, Car, Sale, Article, News, PageView
+    User, Article, News, PageView
 )
+from companies.models import Company
+from cars.models import Car
 
 from erp.models import (
     Sale as ERPSale, ProjectTask, ProjectBoard
