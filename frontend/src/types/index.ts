@@ -19,13 +19,18 @@ export interface Company {
   name: string;
   description: string;
   logo: string;
+  banner_image?: string;
   address: string;
   city: string;
+  location: string;
   phone: string;
   email: string;
   website: string;
   is_verified: boolean;
   rating: number;
+  reviews_count: number;
+  cars_count: number;
+  years_experience: number;
   images: CompanyImage[];
   features: CompanyFeature[];
   schedule: CompanySchedule[];
@@ -63,6 +68,7 @@ export interface Vehicle {
   transmission: 'manual' | 'automatic' | 'robot' | 'variator' | 'cvt';
   engine_volume: number;
   power: number;
+  engine_power: number;
   color: string;
   vin: string;
   description: string;
@@ -120,6 +126,11 @@ export interface Car {
   images: CarImage[];
   company: Company;
   is_available: boolean;
+  condition: 'new' | 'used';
+  rating: number;
+  reviews_count: number;
+  engine_power: number;
+  main_image: string;
   created_at: string;
   updated_at: string;
 }
@@ -219,7 +230,6 @@ export interface AuctionBid {
   created_at: string;
 }
 
-// Leasing types
 export interface LeasingProgram {
   id: number;
   company: Company;
@@ -247,7 +257,6 @@ export interface LeasingApplication {
   updated_at: string;
 }
 
-// Insurance types
 export interface InsurancePolicy {
   id: number;
   company: Company;
@@ -279,8 +288,13 @@ export interface News {
   id: number;
   title: string;
   content: string;
+  excerpt: string;
   image?: string;
   author?: User;
+  category: string;
+  tags: string[];
+  readTime: number;
+  date: string;
   created_at: string;
   updated_at: string;
 }

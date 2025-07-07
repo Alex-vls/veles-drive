@@ -8,52 +8,46 @@ import {
   Box,
   Button,
   Chip,
-  Avatar,
-  Rating,
   IconButton,
-  Tooltip,
+  Rating,
+  Avatar,
 } from '@mui/material';
 import {
-  Phone,
-  LocationOn,
-  Star,
-  Verified,
   Favorite,
   FavoriteBorder,
-  DirectionsCar,
   Business,
-  CheckCircle,
+  LocationOn,
+  Phone,
+  Email,
+  Star,
+  Verified,
+  DirectionsCar,
 } from '@mui/icons-material';
+import { Company } from '../../types';
 
 interface CompanyCardProps {
-  company: {
-    id: number;
-    name: string;
-    logo?: string;
-    description: string;
-    rating: number;
-    reviewCount: number;
-    phone: string;
-    address: string;
-    isVerified: boolean;
-    isFavorite?: boolean;
-    advantages: string[];
-    carCount: number;
-    type: 'dealer' | 'service' | 'insurance';
-  };
-  onFavoriteToggle?: (companyId: number) => void;
-  onContactClick?: (companyId: number) => void;
+  company: Company;
+  onFavoriteToggle?: (companyId: string) => void;
+  onContactClick?: (companyId: string) => void;
+  onFavorite?: (companyId: number) => void;
+  isFavorite?: boolean;
 }
 
 const CompanyCard: React.FC<CompanyCardProps> = ({
   company,
   onFavoriteToggle,
   onContactClick,
+  onFavorite,
+  isFavorite = false,
 }) => {
   const navigate = useNavigate();
 
   const handleFavoriteClick = () => {
-    onFavoriteToggle?.(company.id);
+    if (onFavorite) {
+      onFavorite(company.id);
+    } else if (onFavoriteToggle) {
+      onFavoriteToggle(company.id);
+    }
   };
 
   const handleContactClick = () => {
@@ -64,30 +58,8 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
     navigate(`/companies/${company.id}`);
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'dealer':
-        return '#0071E3';
-      case 'service':
-        return '#34C759';
-      case 'insurance':
-        return '#FF9500';
-      default:
-        return '#636366';
-    }
-  };
-
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'dealer':
-        return 'Дилер';
-      case 'service':
-        return 'Сервис';
-      case 'insurance':
-        return 'Страхование';
-      default:
-        return 'Компания';
-    }
+  const handleViewCars = () => {
+    navigate(`/cars?company=${company.id}`);
   };
 
   return (
@@ -98,9 +70,14 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
         flexDirection: 'column',
         position: 'relative',
         overflow: 'visible',
+        borderRadius: '20px',
+        border: '1px solid rgba(0,0,0,0.08)',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 32px rgba(60,60,67,0.12)',
+          transform: 'translateY(-12px)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+          borderColor: 'rgba(0,0,0,0.12)',
         },
       }}
     >
@@ -109,39 +86,64 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
         onClick={handleFavoriteClick}
         sx={{
           position: 'absolute',
-          top: 12,
-          right: 12,
+          top: 20,
+          right: 20,
           zIndex: 2,
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(0,0,0,0.08)',
+          width: 48,
+          height: 48,
           '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 1)',
+            transform: 'scale(1.1)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
           },
         }}
       >
-        {company.isFavorite ? (
-          <Favorite sx={{ color: '#FF3B30' }} />
+        {isFavorite ? (
+          <Favorite sx={{ color: '#FF3B30', fontSize: 24 }} />
         ) : (
-          <FavoriteBorder sx={{ color: '#636366' }} />
+          <FavoriteBorder sx={{ color: '#636366', fontSize: 24 }} />
         )}
       </IconButton>
 
-      {/* Logo section */}
+      {/* Verified badge */}
+      {company.is_verified && (
+        <Chip
+          icon={<Verified />}
+          label="Проверенный"
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 20,
+            left: 20,
+            zIndex: 2,
+            backgroundColor: '#34C759',
+            color: 'white',
+            fontWeight: 600,
+            fontSize: '0.875rem',
+            borderRadius: '12px',
+            px: 2,
+            py: 1,
+          }}
+        />
+      )}
+
+      {/* Company image */}
       <Box
         sx={{
           position: 'relative',
           height: 200,
           backgroundColor: '#F5F5F7',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           overflow: 'hidden',
+          borderRadius: '20px 20px 0 0',
         }}
       >
-        {company.logo ? (
+        {company.banner_image ? (
           <CardMedia
             component="img"
-            image={company.logo}
+            image={company.banner_image}
             alt={company.name}
             sx={{
               height: '100%',
@@ -155,231 +157,195 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 80,
-              height: 80,
-              borderRadius: '16px',
+              height: '100%',
               backgroundColor: '#E5E5EA',
             }}
           >
-            <Business sx={{ fontSize: 40, color: '#636366' }} />
+            <Business sx={{ fontSize: 60, color: '#636366' }} />
           </Box>
         )}
 
-        {/* Verification badge */}
-        {company.isVerified && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 12,
-              left: 12,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-              backgroundColor: 'rgba(52, 199, 89, 0.9)',
-              color: 'white',
-              px: 1.5,
-              py: 0.5,
-              borderRadius: '12px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-            }}
-          >
-            <Verified sx={{ fontSize: 16 }} />
-            Верифицирована
-          </Box>
-        )}
-
-        {/* Type badge */}
-        <Chip
-          label={getTypeLabel(company.type)}
-          size="small"
+        {/* Company logo overlay */}
+        <Box
           sx={{
             position: 'absolute',
-            bottom: 12,
-            left: 12,
-            backgroundColor: getTypeColor(company.type),
-            color: 'white',
-            fontWeight: 600,
-            fontSize: '0.75rem',
+            bottom: -30,
+            left: 20,
+            width: 80,
+            height: 80,
+            borderRadius: '16px',
+            backgroundColor: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+            border: '3px solid white',
           }}
-        />
+        >
+          {company.logo ? (
+            <Box
+              component="img"
+              src={company.logo}
+              alt={company.name}
+              sx={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '12px',
+              }}
+            />
+          ) : (
+            <Business sx={{ fontSize: 40, color: '#636366' }} />
+          )}
+        </Box>
       </Box>
 
-      <CardContent sx={{ flexGrow: 1, p: 3 }}>
+      <CardContent sx={{ flexGrow: 1, p: 4, pt: 6 }}>
         {/* Company name and rating */}
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 3 }}>
           <Typography
-            variant="h6"
+            variant="h5"
             sx={{
-              fontWeight: 600,
+              fontWeight: 700,
               color: '#1D1D1F',
               mb: 1,
               lineHeight: 1.3,
+              fontSize: '1.5rem',
             }}
           >
             {company.name}
           </Typography>
           
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Rating
-              value={company.rating}
-              precision={0.1}
-              size="small"
-              readOnly
-              sx={{
-                '& .MuiRating-iconFilled': {
-                  color: '#FF9500',
-                },
-                '& .MuiRating-iconEmpty': {
-                  color: '#E5E5EA',
-                },
-              }}
-            />
-            <Typography
-              variant="body2"
-              sx={{
-                color: '#636366',
-                fontWeight: 500,
-              }}
-            >
-              {company.rating.toFixed(1)}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: '#8E8E93',
-              }}
-            >
-              ({company.reviewCount} отзывов)
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Description */}
-        <Typography
-          variant="body2"
-          sx={{
-            color: '#636366',
-            mb: 3,
-            lineHeight: 1.5,
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
-          {company.description}
-        </Typography>
-
-        {/* Advantages */}
-        <Box sx={{ mb: 3 }}>
           <Typography
-            variant="caption"
+            variant="body1"
             sx={{
-              color: '#8E8E93',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              mb: 1,
-              display: 'block',
+              color: '#636366',
+              mb: 2,
+              fontSize: '1rem',
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
-            Преимущества
+            <LocationOn sx={{ fontSize: 20, color: '#007AFF', mr: 1 }} />
+            {company.location}
           </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {company.advantages.slice(0, 3).map((advantage, index) => (
-              <Chip
-                key={index}
-                label={advantage}
-                size="small"
-                icon={<CheckCircle sx={{ fontSize: 16 }} />}
-                sx={{
-                  backgroundColor: '#F5F5F7',
-                  color: '#636366',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  '& .MuiChip-icon': {
-                    color: '#34C759',
-                  },
-                }}
-              />
-            ))}
+          
+          {/* Rating */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Rating
+              value={company.rating || 0}
+              readOnly
+              size="small"
+              sx={{ mr: 1 }}
+            />
+            <Typography variant="body2" sx={{ color: '#636366' }}>
+              {company.rating || 0} ({company.reviews_count || 0} отзывов)
+            </Typography>
           </Box>
         </Box>
 
-        {/* Contact info */}
+        {/* Company description */}
         <Box sx={{ mb: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Phone sx={{ fontSize: 16, color: '#0071E3' }} />
-            <Typography
-              variant="body2"
-              sx={{
-                color: '#636366',
-                fontWeight: 500,
-              }}
-            >
-              {company.phone}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <LocationOn sx={{ fontSize: 16, color: '#0071E3' }} />
-            <Typography
-              variant="body2"
-              sx={{
-                color: '#636366',
-                fontSize: '0.875rem',
-              }}
-            >
-              {company.address}
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Car count */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-          <DirectionsCar sx={{ fontSize: 16, color: '#0071E3' }} />
           <Typography
             variant="body2"
             sx={{
               color: '#636366',
-              fontWeight: 500,
+              lineHeight: 1.6,
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
             }}
           >
-            {company.carCount} автомобилей в наличии
+            {company.description || 'Описание компании отсутствует'}
           </Typography>
         </Box>
+
+        {/* Company stats */}
+        <Box sx={{ mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <DirectionsCar sx={{ fontSize: 20, color: '#007AFF', mr: 1 }} />
+            <Typography variant="body2" sx={{ color: '#636366' }}>
+              {company.cars_count || 0} автомобилей в продаже
+            </Typography>
+          </Box>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Star sx={{ fontSize: 20, color: '#FF9500', mr: 1 }} />
+            <Typography variant="body2" sx={{ color: '#636366' }}>
+              {company.years_experience || 0} лет на рынке
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Company features */}
+        {company.features && company.features.length > 0 && (
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {company.features.slice(0, 3).map((feature, index) => (
+                <Chip
+                  key={index}
+                  label={feature.name}
+                  size="small"
+                  sx={{
+                    backgroundColor: '#F5F5F7',
+                    color: '#636366',
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    borderRadius: '8px',
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+        )}
 
         {/* Action buttons */}
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
             variant="contained"
             fullWidth
-            onClick={handleContactClick}
-            sx={{
-              background: 'linear-gradient(135deg, #34C759 0%, #30D158 100%)',
-              '&:hover': {
-                background: '#34C759',
-              },
-              fontWeight: 600,
-            }}
-          >
-            Оставить заявку
-          </Button>
-          <Button
-            variant="outlined"
             onClick={handleViewDetails}
             sx={{
-              borderColor: '#0071E3',
-              color: '#0071E3',
-              minWidth: 'auto',
-              px: 2,
+              bgcolor: '#007AFF',
+              color: 'white',
+              py: 1.5,
+              fontSize: '1rem',
+              fontWeight: 600,
+              borderRadius: '12px',
+              textTransform: 'none',
               '&:hover': {
-                borderColor: '#0051A3',
-                backgroundColor: 'rgba(0, 113, 227, 0.05)',
+                bgcolor: '#0056CC',
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 15px rgba(0, 122, 255, 0.3)',
               },
+              transition: 'all 0.3s ease',
             }}
           >
             Подробнее
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleViewCars}
+            sx={{
+              borderColor: '#007AFF',
+              color: '#007AFF',
+              py: 1.5,
+              px: 3,
+              fontSize: '1rem',
+              fontWeight: 600,
+              borderRadius: '12px',
+              textTransform: 'none',
+              minWidth: 'auto',
+              '&:hover': {
+                bgcolor: '#007AFF',
+                color: 'white',
+                transform: 'translateY(-2px)',
+              },
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Авто
           </Button>
         </Box>
       </CardContent>
