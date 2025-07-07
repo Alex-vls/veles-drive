@@ -200,40 +200,6 @@ def notify_large_transaction(sender, instance, created, **kwargs):
             print(f"Error sending financial notification: {e}")
 
 
-@receiver(post_save, sender='veles_auto.Car')
-def notify_car_status_change(sender, instance, **kwargs):
-    """Уведомление об изменении статуса автомобиля"""
-    try:
-        if instance.company and instance.company.user:
-            telegram_user = TelegramUser.objects.filter(
-                user=instance.company.user,
-                is_active=True
-            ).first()
-            
-            if telegram_user:
-                status_text = "доступен" if instance.is_available else "недоступен"
-                
-                notification = TelegramNotification.objects.create(
-                    user=telegram_user,
-                    notification_type='car_status',
-                    title='🚗 Изменение статуса автомобиля',
-                    message=f"Автомобиль <b>{instance.brand.name} {instance.model}</b> теперь {status_text}\n\n"
-                           f"Год: {instance.year}\n"
-                           f"Цена: {instance.price} ₽",
-                    data={
-                        'car_id': instance.id,
-                        'brand': instance.brand.name,
-                        'model': instance.model,
-                        'is_available': instance.is_available
-                    }
-                )
-                
-                notification_service = TelegramNotificationService()
-                notification_service.send_notification(notification)
-    
-    except Exception as e:
-        print(f"Error sending car status notification: {e}")
-
 
 @receiver(post_save, sender='companies.Company')
 def notify_company_verification(sender, instance, **kwargs):
