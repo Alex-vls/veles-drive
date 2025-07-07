@@ -40,47 +40,47 @@ class CustomUserAdmin(UserAdmin):
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
-# @admin.register(Brand)  # Убрано - уже зарегистрировано в universal_admin.admin
-class BrandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'logo_preview', 'car_count', 'created_at')
-    search_fields = ('name',)
-    ordering = ('name',)
+# @admin.register(Brand)  # Убрано - уже зарегистрировано в cars.admin
+# class BrandAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'logo_preview', 'car_count', 'created_at')
+#     search_fields = ('name',)
+#     ordering = ('name',)
+# 
+#     def logo_preview(self, obj):
+#         if obj.logo:
+#             return format_html('<img src="{}" width="50" height="50" />', obj.logo.url)
+#         return "No logo"
+#     logo_preview.short_description = 'Logo'
+# 
+#     def car_count(self, obj):
+#         return obj.cars.count()
+#     car_count.short_description = 'Cars'
 
-    def logo_preview(self, obj):
-        if obj.logo:
-            return format_html('<img src="{}" width="50" height="50" />', obj.logo.url)
-        return "No logo"
-    logo_preview.short_description = 'Logo'
-
-    def car_count(self, obj):
-        return obj.cars.count()
-    car_count.short_description = 'Cars'
-
-# @admin.register(Company)  # Убрано - уже зарегистрировано в universal_admin.admin
-class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'city', 'rating', 'is_verified', 'car_count', 'review_count')
-    list_filter = ('is_verified', 'city')
-    search_fields = ('name', 'city')
-    ordering = ('-rating',)
-    actions = [verify_companies, unverify_companies, export_as_json]
-
-    def car_count(self, obj):
-        return obj.cars.count()
-    car_count.short_description = 'Cars'
-
-    def review_count(self, obj):
-        return obj.reviews.count()
-    review_count.short_description = 'Reviews'
+# @admin.register(Company)  # Убрано - уже зарегистрировано в companies.admin
+# class CompanyAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'city', 'rating', 'is_verified', 'car_count', 'review_count')
+#     list_filter = ('is_verified', 'city')
+#     search_fields = ('name', 'city')
+#     ordering = ('-rating',)
+#     actions = [verify_companies, unverify_companies, export_as_json]
+# 
+#     def car_count(self, obj):
+#         return obj.cars.count()
+#     car_count.short_description = 'Cars'
+# 
+#     def review_count(self, obj):
+#         return obj.reviews.count()
+#     review_count.short_description = 'Reviews'
 
 
 
-# @admin.register(Review)  # Убрано - уже зарегистрировано в universal_admin.admin
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rating', 'car', 'company', 'created_at')
-    list_filter = ('rating', 'created_at')
-    search_fields = ('user__username', 'car__model', 'company__name')
-    ordering = ('-created_at',)
-    actions = [delete_spam, export_as_json]
+# @admin.register(Review)  # Убрано - уже зарегистрировано в companies.admin
+# class ReviewAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'rating', 'car', 'company', 'created_at')
+#     list_filter = ('rating', 'created_at')
+#     search_fields = ('user__username', 'car__model', 'company__name')
+#     ordering = ('-created_at',)
+#     actions = [delete_spam, export_as_json]
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
