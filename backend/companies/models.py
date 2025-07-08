@@ -23,7 +23,7 @@ class Company(models.Model):
         default=0,
         validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True, default=timezone.now)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
     class Meta:
@@ -39,7 +39,7 @@ class CompanyImage(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='images', verbose_name='Компания')
     image = models.ImageField('Изображение', upload_to='companies/images/')
     is_main = models.BooleanField('Главное изображение', default=False)
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True, default=timezone.now)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Изображение компании'
@@ -54,7 +54,7 @@ class CompanyFeature(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='features', verbose_name='Компания')
     name = models.CharField('Название', max_length=100)
     value = models.CharField('Значение', max_length=100, default='')
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True, default=timezone.now)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Характеристика компании'
@@ -86,7 +86,7 @@ class CompanySchedule(models.Model):
     open_time = models.TimeField('Время открытия')
     close_time = models.TimeField('Время закрытия')
     is_closed = models.BooleanField('Закрыто', default=False)
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True, default=timezone.now)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
     class Meta:
@@ -114,7 +114,7 @@ class Review(models.Model):
     )
     rating = models.IntegerField(verbose_name='Оценка')
     text = models.TextField(verbose_name='Текст отзыва')
-    created_at = models.DateTimeField(auto_now_add=True, default=timezone.now, verbose_name='Дата создания')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     is_approved = models.BooleanField(default=False, verbose_name='Одобрен')
 
     class Meta:

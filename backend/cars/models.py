@@ -300,7 +300,7 @@ class VehicleFeature(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='features', verbose_name='Транспорт')
     name = models.CharField('Название', max_length=100)
     value = models.CharField('Значение', max_length=100, default='')
-    created_at = models.DateTimeField('Дата создания', auto_now_add=True, default=timezone.now)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Характеристика транспорта'
