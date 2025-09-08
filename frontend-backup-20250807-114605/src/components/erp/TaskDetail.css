@@ -1,0 +1,457 @@
+.task-detail-modal .ant-modal-content {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.task-detail-modal .ant-modal-header {
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px 24px;
+}
+
+.task-detail-modal .ant-modal-body {
+  padding: 0;
+}
+
+.task-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.task-detail-content {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.task-card {
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task-card:last-child {
+  margin-bottom: 0;
+}
+
+.task-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 16px;
+  min-height: 48px;
+}
+
+.task-card .ant-card-head-title {
+  font-weight: 600;
+  color: #262626;
+  font-size: 14px;
+}
+
+.task-card .ant-card-body {
+  padding: 16px;
+}
+
+/* Метаинформация */
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.meta-item:last-child {
+  border-bottom: none;
+}
+
+.meta-value {
+  text-align: right;
+  max-width: 60%;
+}
+
+/* Комментарии */
+.comment-form {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-item .ant-list-item-meta-title {
+  margin-bottom: 4px;
+}
+
+.comment-item .ant-list-item-meta-description {
+  color: #595959;
+  line-height: 1.5;
+}
+
+/* Вложения */
+.attachment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.attachment-item:last-child {
+  border-bottom: none;
+}
+
+.attachment-item .ant-list-item-meta-title a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.attachment-item .ant-list-item-meta-title a:hover {
+  text-decoration: underline;
+}
+
+/* Метки */
+.labels-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.labels-container .ant-tag {
+  margin: 0;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* История */
+.history-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-time {
+  font-size: 11px;
+}
+
+/* Формы */
+.task-detail-modal .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.task-detail-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.task-detail-modal .ant-input,
+.task-detail-modal .ant-select,
+.task-detail-modal .ant-picker {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.task-detail-modal .ant-input:focus,
+.task-detail-modal .ant-select:focus,
+.task-detail-modal .ant-picker:focus,
+.task-detail-modal .ant-select-focused .ant-select-selector,
+.task-detail-modal .ant-picker-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.task-detail-modal .ant-textarea {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.task-detail-modal .ant-textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Кнопки */
+.task-detail-modal .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.task-detail-modal .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовки */
+.task-detail-modal .ant-typography h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  line-height: 1.4;
+}
+
+.task-detail-modal .ant-typography p {
+  margin: 0 0 16px 0;
+  color: #595959;
+  line-height: 1.6;
+}
+
+/* Теги */
+.task-detail-modal .ant-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin: 0 4px 4px 0;
+}
+
+/* Аватары */
+.task-detail-modal .ant-avatar {
+  border: 1px solid #f0f0f0;
+}
+
+/* Timeline */
+.task-detail-modal .ant-timeline {
+  padding: 0;
+}
+
+.task-detail-modal .ant-timeline-item {
+  padding-bottom: 12px;
+}
+
+.task-detail-modal .ant-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.task-detail-modal .ant-timeline-item-tail {
+  border-left: 2px solid #f0f0f0;
+}
+
+.task-detail-modal .ant-timeline-item-head {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+/* Скроллбар */
+.task-detail-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-detail-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.task-detail-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.task-detail-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .task-detail-modal {
+    width: 95% !important;
+    margin: 16px;
+  }
+
+  .task-detail-content {
+    padding: 16px;
+  }
+
+  .task-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .task-card .ant-card-body {
+    padding: 12px;
+  }
+
+  .meta-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .meta-value {
+    text-align: left;
+    max-width: 100%;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .task-detail-modal .ant-modal-content {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .task-detail-modal .ant-modal-header {
+    background: #1f1f1f;
+    border-bottom-color: #303030;
+  }
+
+  .task-detail-modal .ant-modal-title {
+    color: #ffffff;
+  }
+
+  .task-card {
+    background: #262626;
+    border-color: #303030;
+  }
+
+  .task-card .ant-card-head {
+    border-bottom-color: #303030;
+  }
+
+  .task-card .ant-card-head-title {
+    color: #ffffff;
+  }
+
+  .meta-item {
+    border-bottom-color: #303030;
+  }
+
+  .comment-form {
+    border-bottom-color: #303030;
+  }
+
+  .comment-item,
+  .attachment-item {
+    border-bottom-color: #303030;
+  }
+
+  .task-detail-modal .ant-form-item-label > label {
+    color: #ffffff;
+  }
+
+  .task-detail-modal .ant-input,
+  .task-detail-modal .ant-select,
+  .task-detail-modal .ant-picker,
+  .task-detail-modal .ant-textarea {
+    background: #1f1f1f;
+    border-color: #434343;
+    color: #ffffff;
+  }
+
+  .task-detail-modal .ant-input::placeholder,
+  .task-detail-modal .ant-textarea::placeholder {
+    color: #8c8c8c;
+  }
+
+  .task-detail-modal .ant-typography h4 {
+    color: #ffffff;
+  }
+
+  .task-detail-modal .ant-typography p {
+    color: #a6a6a6;
+  }
+
+  .comment-item .ant-list-item-meta-description {
+    color: #a6a6a6;
+  }
+
+  .task-detail-modal .ant-timeline-item-tail {
+    border-left-color: #303030;
+  }
+
+  .task-detail-content::-webkit-scrollbar-track {
+    background: #262626;
+  }
+
+  .task-detail-content::-webkit-scrollbar-thumb {
+    background: #434343;
+  }
+
+  .task-detail-content::-webkit-scrollbar-thumb:hover {
+    background: #595959;
+  }
+}
+
+/* Анимации */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-detail-content {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Стили для загрузки */
+.task-detail-modal .ant-spin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Стили для пустого состояния */
+.task-detail-modal .ant-empty {
+  padding: 40px 0;
+}
+
+.task-detail-modal .ant-empty-description {
+  color: #8c8c8c;
+}
+
+/* Стили для загрузки файлов */
+.task-detail-modal .ant-upload {
+  border: 2px dashed #d9d9d9;
+  border-radius: 6px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.task-detail-modal .ant-upload:hover {
+  border-color: #1890ff;
+}
+
+.task-detail-modal .ant-upload-drag {
+  background: #fafafa;
+}
+
+.task-detail-modal .ant-upload-drag:hover {
+  background: #f0f8ff;
+}
+
+/* Темная тема для загрузки */
+@media (prefers-color-scheme: dark) {
+  .task-detail-modal .ant-upload {
+    border-color: #434343;
+    background: #1f1f1f;
+  }
+
+  .task-detail-modal .ant-upload:hover {
+    border-color: #177ddc;
+  }
+
+  .task-detail-modal .ant-upload-drag {
+    background: #262626;
+  }
+
+  .task-detail-modal .ant-upload-drag:hover {
+    background: #1a2332;
+  }
+} 

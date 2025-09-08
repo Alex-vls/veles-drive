@@ -1,0 +1,58 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: veles-drive-ingress
+  namespace: veles-drive
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      # Закрытие от индексации
+      add_header X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex";
+      add_header X-Content-Type-Options "nosniff";
+      add_header X-Frame-Options "DENY";
+      add_header X-XSS-Protection "1; mode=block";
+spec:
+  tls:
+  - hosts:
+    - veles-drive.ru
+    - www.veles-drive.ru
+    - api.veles-drive.ru
+    secretName: veles-drive-tls
+  rules:
+  - host: veles-drive.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: veles-drive-frontend
+            port:
+              number: 80
+  - host: www.veles-drive.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: veles-drive-frontend
+            port:
+              number: 80
+  - host: api.veles-drive.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: veles-drive-backend
+            port:
+              number: 80

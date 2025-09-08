@@ -1,0 +1,132 @@
+:root {
+  /* Светлая тема (по умолчанию) */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f8f9fa;
+  --color-background-card: #ffffff;
+  --color-background-light: #f8f9fa;
+  --color-background-modal: #ffffff;
+  --color-backdrop: rgba(0, 0, 0, 0.5);
+  --color-text-primary: #000000;
+  --color-text-secondary: #6c757d;
+  --color-text-dark: #000000;
+  --color-text-light: #ffffff;
+  --color-accent-primary: #007AFF;
+  --color-accent-secondary: #4A47B5;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-error: #dc3545;
+  --color-border-light: #e9ecef;
+  --color-border-focus: #007AFF;
+  --color-border-dark: #dee2e6;
+  --color-shadow-light: rgba(0, 0, 0, 0.1);
+  --color-shadow-dark: rgba(0, 0, 0, 0.2);
+  
+  /* Шрифты */
+  --font-family-primary: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-secondary: SF Pro Display, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Отступы */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  
+  /* Радиусы скругления */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-full: 50%;
+  
+  /* Тени */
+  --shadow-sm: 0 1px 2px var(--color-shadow-light);
+  --shadow-md: 0 4px 6px var(--color-shadow-light);
+  --shadow-lg: 0 10px 15px var(--color-shadow-light);
+  --shadow-xl: 0 20px 25px var(--color-shadow-light);
+  --shadow-card: 0 4px 12px var(--color-shadow-light);
+  --shadow-modal: 0 25px 50px var(--color-shadow-dark);
+  --shadow-button: 0 4px 12px rgba(0, 122, 255, 0.3);
+  
+  /* Макет */
+  --container-max-width: 1200px;
+  --header-height: 80px;
+  --transition-speed: 0.3s;
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+  --color-background-primary: #000000;
+  --color-background-secondary: #1a1a1a;
+  --color-background-card: #1a1a1a;
+  --color-background-light: #2a2a2a;
+  --color-background-modal: #1a1a1a;
+  --color-backdrop: rgba(0, 0, 0, 0.7);
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0a0;
+  --color-text-dark: #ffffff;
+  --color-text-light: #000000;
+  --color-accent-primary: #007AFF;
+  --color-accent-secondary: #4A47B5;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-error: #dc3545;
+  --color-border-light: #333333;
+  --color-border-focus: #007AFF;
+  --color-border-dark: #444444;
+  --color-shadow-light: rgba(0, 0, 0, 0.3);
+  --color-shadow-dark: rgba(0, 0, 0, 0.5);
+  
+  /* Тени для темной темы */
+  --shadow-sm: 0 1px 2px var(--color-shadow-light);
+  --shadow-md: 0 4px 6px var(--color-shadow-light);
+  --shadow-lg: 0 10px 15px var(--color-shadow-light);
+  --shadow-xl: 0 20px 25px var(--color-shadow-light);
+  --shadow-card: 0 4px 12px var(--color-shadow-light);
+  --shadow-modal: 0 25px 50px var(--color-shadow-dark);
+  --shadow-button: 0 4px 12px rgba(0, 122, 255, 0.4);
+}
+
+/* Автоматическое переключение темы по системным настройкам */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-background-primary: #000000;
+    --color-background-secondary: #1a1a1a;
+    --color-background-card: #1a1a1a;
+    --color-background-light: #2a2a2a;
+    --color-background-modal: #1a1a1a;
+    --color-backdrop: rgba(0, 0, 0, 0.7);
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #a0a0a0;
+    --color-text-dark: #ffffff;
+    --color-text-light: #000000;
+    --color-border-light: #333333;
+    --color-border-dark: #444444;
+    --color-shadow-light: rgba(0, 0, 0, 0.3);
+    --color-shadow-dark: rgba(0, 0, 0, 0.5);
+    
+    --shadow-sm: 0 1px 2px var(--color-shadow-light);
+    --shadow-md: 0 4px 6px var(--color-shadow-light);
+    --shadow-lg: 0 10px 15px var(--color-shadow-light);
+    --shadow-xl: 0 20px 25px var(--color-shadow-light);
+    --shadow-card: 0 4px 12px var(--color-shadow-light);
+    --shadow-modal: 0 25px 50px var(--color-shadow-dark);
+    --shadow-button: 0 4px 12px rgba(0, 122, 255, 0.4);
+  }
+}

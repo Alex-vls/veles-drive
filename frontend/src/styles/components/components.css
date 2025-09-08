@@ -1,0 +1,74 @@
+/* Компоненты дизайн-системы */
+
+/* Breadcrumbs */
+.breadcrumbs {
+}
+
+/* Dropdown */
+.dropdown {
+}
+
+/* CarCard */
+.carcard {
+  background: var(--color-background-card);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* DealershipCard */
+.dealershipcard {
+  background: var(--color-background-card);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* Pagination */
+.pagination {
+}
+
+/* SearchBar */
+.searchbar {
+  background: var(--color-background-light);
+  border: var(--border-focus);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Modal */
+.modal {
+  background: var(--color-background-modal);
+  backdrop: var(--color-backdrop);
+  border_radius: var(--border-radius-lg);
+  shadow: var(--shadow-modal);
+}
+
+/* Gallery */
+.gallery {
+}
+
+/* Accordion */
+.accordion {
+}
+
+/* Tooltip */
+.tooltip {
+}
+
+/* FilterPanel */
+.filterpanel {
+  background: var(--color-background-light);
+  border: var(--border-light);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+}
+
+/* Slider */
+.slider {
+}
+
+/* Tabs */
+.tabs {
+}
+

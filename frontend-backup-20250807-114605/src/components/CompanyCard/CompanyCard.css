@@ -1,0 +1,160 @@
+.company-card {
+  background: var(--main-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  transition: transform var(--transition-normal);
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.company-card:hover {
+  transform: translateY(-4px);
+}
+
+.company-card__header {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+}
+
+.company-card__logo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.company-card__info {
+  flex: 1;
+}
+
+.company-card__name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.company-card__verified {
+  color: var(--accent-green);
+  font-size: 16px;
+  background: var(--gray-bg);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-card__rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
+.company-card__stars {
+  color: #ffd700;
+  letter-spacing: 2px;
+}
+
+.company-card__rating-value {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.company-card__location {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.company-card__advantages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+
+.company-card__advantage {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: var(--gray-bg);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.company-card__advantage-icon {
+  font-size: 16px;
+}
+
+.company-card__reviews {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0;
+}
+
+.company-card__review {
+  background: var(--gray-bg);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+}
+
+.company-card__review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xs);
+}
+
+.company-card__review-author {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.company-card__review-date {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.company-card__review-text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.company-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.company-card__phone {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.company-card__phone-icon {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .company-card {
+    min-width: 100%;
+  }
+} 

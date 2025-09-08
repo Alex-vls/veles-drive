@@ -1,0 +1,850 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-01-27T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2024.5.0",
+  "resources": [
+    {
+      "_id": "wrk_1",
+      "_type": "workspace",
+      "name": "Veles Auto API",
+      "description": "API коллекция для проекта Veles Auto"
+    },
+    {
+      "_id": "env_1",
+      "_type": "environment",
+      "name": "Development",
+      "parentId": "wrk_1",
+      "data": {
+        "base_url": "http://localhost:8000",
+        "api_url": "http://localhost:8000/api",
+        "erp_url": "http://localhost:8000/api/erp",
+        "auth_url": "http://localhost:8000/api/auth"
+      }
+    },
+    {
+      "_id": "env_2",
+      "_type": "environment",
+      "name": "Production",
+      "parentId": "wrk_1",
+      "data": {
+        "base_url": "https://api.veles-auto.com",
+        "api_url": "https://api.veles-auto.com/api",
+        "erp_url": "https://api.veles-auto.com/api/erp",
+        "auth_url": "https://api.veles-auto.com/api/auth"
+      }
+    },
+    {
+      "_id": "req_health",
+      "_type": "request",
+      "name": "Health Check",
+      "method": "GET",
+      "url": "{{base_url}}/health/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_api_status",
+      "_type": "request",
+      "name": "API Status",
+      "method": "GET",
+      "url": "{{base_url}}/api/status/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -999,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_system_info",
+      "_type": "request",
+      "name": "System Info",
+      "method": "GET",
+      "url": "{{base_url}}/api/system/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -998,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "name": "User Login",
+      "method": "POST",
+      "url": "{{auth_url}}/login/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -900,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "name": "User Registration",
+      "method": "POST",
+      "url": "{{auth_url}}/register/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"first_name\": \"Иван\",\n  \"last_name\": \"Иванов\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -899,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_profile",
+      "_type": "request",
+      "name": "User Profile",
+      "method": "GET",
+      "url": "{{auth_url}}/profile/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -898,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_token_refresh",
+      "_type": "request",
+      "name": "Refresh Token",
+      "method": "POST",
+      "url": "{{auth_url}}/token/refresh/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -897,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_cars_list",
+      "_type": "request",
+      "name": "Get Cars List",
+      "method": "GET",
+      "url": "{{api_url}}/cars/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -800,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_cars_detail",
+      "_type": "request",
+      "name": "Get Car Detail",
+      "method": "GET",
+      "url": "{{api_url}}/cars/1/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -799,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_cars_create",
+      "_type": "request",
+      "name": "Create Car",
+      "method": "POST",
+      "url": "{{api_url}}/cars/create/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"brand\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2023,\n  \"price\": 2500000,\n  \"description\": \"Отличное состояние\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -798,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_vehicles_list",
+      "_type": "request",
+      "name": "Get Vehicles List",
+      "method": "GET",
+      "url": "{{api_url}}/vehicles/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -797,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_vehicles_detail",
+      "_type": "request",
+      "name": "Get Vehicle Detail",
+      "method": "GET",
+      "url": "{{api_url}}/vehicles/1/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -796,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_brands_list",
+      "_type": "request",
+      "name": "Get Brands List",
+      "method": "GET",
+      "url": "{{api_url}}/brands/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -795,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_models_list",
+      "_type": "request",
+      "name": "Get Models List",
+      "method": "GET",
+      "url": "{{api_url}}/models/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -794,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_companies_list",
+      "_type": "request",
+      "name": "Get Companies List",
+      "method": "GET",
+      "url": "{{api_url}}/companies/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_companies_detail",
+      "_type": "request",
+      "name": "Get Company Detail",
+      "method": "GET",
+      "url": "{{api_url}}/companies/1/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -699,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_companies_create",
+      "_type": "request",
+      "name": "Create Company",
+      "method": "POST",
+      "url": "{{api_url}}/companies/create/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Автосервис Ремонт\",\n  \"description\": \"Качественный ремонт автомобилей\",\n  \"address\": \"ул. Ленина, 1\",\n  \"phone\": \"+7-999-123-45-67\",\n  \"email\": \"info@autoservice.ru\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -698,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_news_list",
+      "_type": "request",
+      "name": "Get News List",
+      "method": "GET",
+      "url": "{{api_url}}/news/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -600,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_news_detail",
+      "_type": "request",
+      "name": "Get News Detail",
+      "method": "GET",
+      "url": "{{api_url}}/news/1/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -599,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_articles_list",
+      "_type": "request",
+      "name": "Get Articles List",
+      "method": "GET",
+      "url": "{{api_url}}/articles/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -598,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_articles_detail",
+      "_type": "request",
+      "name": "Get Article Detail",
+      "method": "GET",
+      "url": "{{api_url}}/articles/1/",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -597,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_inventory",
+      "_type": "request",
+      "name": "ERP - Get Inventory",
+      "method": "GET",
+      "url": "{{erp_url}}/inventory/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_sales",
+      "_type": "request",
+      "name": "ERP - Get Sales",
+      "method": "GET",
+      "url": "{{erp_url}}/sales/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -499,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_services",
+      "_type": "request",
+      "name": "ERP - Get Services",
+      "method": "GET",
+      "url": "{{erp_url}}/services/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -498,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_service_orders",
+      "_type": "request",
+      "name": "ERP - Get Service Orders",
+      "method": "GET",
+      "url": "{{erp_url}}/service-orders/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -497,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_financial",
+      "_type": "request",
+      "name": "ERP - Get Financial",
+      "method": "GET",
+      "url": "{{erp_url}}/financial/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -496,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_project_boards",
+      "_type": "request",
+      "name": "ERP - Get Project Boards",
+      "method": "GET",
+      "url": "{{erp_url}}/project-boards/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -495,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_project_tasks",
+      "_type": "request",
+      "name": "ERP - Get Project Tasks",
+      "method": "GET",
+      "url": "{{erp_url}}/project-tasks/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -494,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_dashboard",
+      "_type": "request",
+      "name": "ERP - Get Dashboard",
+      "method": "GET",
+      "url": "{{erp_url}}/dashboard/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -493,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_erp_reports",
+      "_type": "request",
+      "name": "ERP - Get Reports",
+      "method": "GET",
+      "url": "{{erp_url}}/reports/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -492,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_integration_metrics",
+      "_type": "request",
+      "name": "Integration - Get Metrics",
+      "method": "GET",
+      "url": "{{api_url}}/metrics/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_integration_events",
+      "_type": "request",
+      "name": "Integration - Get Events",
+      "method": "GET",
+      "url": "{{api_url}}/events/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -399,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_integration_health_check",
+      "_type": "request",
+      "name": "Integration - Health Check",
+      "method": "POST",
+      "url": "{{api_url}}/health-check/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -398,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_telegram_webhook",
+      "_type": "request",
+      "name": "Telegram - Webhook",
+      "method": "POST",
+      "url": "{{base_url}}/telegram/webhook/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"update_id\": 123456789,\n  \"message\": {\n    \"message_id\": 1,\n    \"from\": {\n      \"id\": 123456789,\n      \"first_name\": \"User\"\n    },\n    \"chat\": {\n      \"id\": 123456789,\n      \"type\": \"private\"\n    },\n    \"date\": 1640995200,\n    \"text\": \"Hello\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_telegram_mini_app_auth",
+      "_type": "request",
+      "name": "Telegram - Mini App Auth",
+      "method": "POST",
+      "url": "{{base_url}}/telegram/api/auth/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"init_data\": \"query_id=...&user=...&auth_date=...&hash=...\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -299,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_telegram_mini_app_data",
+      "_type": "request",
+      "name": "Telegram - Mini App Data",
+      "method": "GET",
+      "url": "{{base_url}}/telegram/api/data/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -298,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_notifications_list",
+      "_type": "request",
+      "name": "Get Notifications List",
+      "method": "GET",
+      "url": "{{api_url}}/notifications/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_notifications_detail",
+      "_type": "request",
+      "name": "Get Notification Detail",
+      "method": "GET",
+      "url": "{{api_url}}/notifications/1/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -199,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    },
+    {
+      "_id": "req_moderation_list",
+      "_type": "request",
+      "name": "Get Moderation List",
+      "method": "GET",
+      "url": "{{api_url}}/moderation/",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{auth_token}}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "parentId": "wrk_1"
+    }
+  ]
+}

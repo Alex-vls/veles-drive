@@ -353,5 +353,5 @@ COPY universal_admin/ /app/universal_admin/
 
 ### Контакты
 - Разработчик: VELES AUTO Team
-- Email: support@veles-auto.com
-- Документация: https://docs.veles-auto.com 
+- Email: support@veles-drive.ru
+- Документация: https://docs.veles-drive.ru 

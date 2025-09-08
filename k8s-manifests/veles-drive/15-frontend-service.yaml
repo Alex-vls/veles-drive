@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: veles-drive-frontend
+  namespace: veles-drive
+spec:
+  selector:
+    app: veles-drive-frontend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: ClusterIP

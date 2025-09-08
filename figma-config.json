@@ -1,0 +1,15 @@
+{
+  "accessToken": "figd_PW2JpX5EjL9zyApUBnCZ3qzAILJoY1PbPkoeuOpU",
+  "fileKey": "your_figma_file_key_here",
+  "outputDir": "./frontend/src/components/figma-export",
+  "exportFormats": {
+    "components": "png",
+    "icons": "svg",
+    "images": "png"
+  },
+  "scales": {
+    "web": 1,
+    "mobile": 2,
+    "retina": 3
+  }
+} 

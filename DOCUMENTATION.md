@@ -50,7 +50,7 @@ VELES AUTO - это современная веб-платформа для по
 ### Структура проекта
 
 ```
-veles-auto-project/
+veles-drive/
 ├── backend/                 # Django backend
 │   ├── cars/               # Модуль автомобилей
 │   ├── companies/          # Модуль компаний
@@ -93,8 +93,8 @@ veles-auto-project/
 
 1. **Клонирование репозитория:**
 ```bash
-git clone https://github.com/your-username/veles-auto-project.git
-cd veles-auto-project
+git clone https://github.com/your-username/veles-drive.git
+cd veles-drive
 ```
 
 2. **Настройка переменных окружения:**
@@ -141,7 +141,7 @@ npm start
 
 ### Базовый URL
 ```
-https://api.veles-auto.com/api/v1/
+https://api.veles-drive.ru/api/v1/
 ```
 
 ### Аутентификация
@@ -368,14 +368,14 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo apt install certbot python3-certbot-nginx
 
 # Получение сертификата
-sudo certbot --nginx -d veles-auto.com -d www.veles-auto.com
+sudo certbot --nginx -d veles-drive.ru -d www.veles-drive.ru
 ```
 
 3. **Запуск приложения:**
 ```bash
 # Клонирование проекта
-git clone https://github.com/your-username/veles-auto-project.git
-cd veles-auto-project
+git clone https://github.com/your-username/veles-drive.git
+cd veles-drive
 
 # Настройка переменных окружения
 cp env.example .env
@@ -465,9 +465,9 @@ docker-compose exec backend python manage.py migrate
 
 ### Контакты
 
-- **Email**: support@veles-auto.com
+- **Email**: support@veles-drive.ru
 - **Telegram**: @veles_auto_support
-- **Документация**: https://docs.veles-auto.com
+- **Документация**: https://docs.veles-drive.ru
 
 ### Полезные команды
 

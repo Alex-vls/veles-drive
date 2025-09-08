@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-backend
+  namespace: veles-drive
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: node2.alx
+  containers:
+  - name: backend
+    image: alsx12/veles-drive-backend:latest
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      cd /app
+      echo "Starting Django application..."
+      echo "Waiting for database..."
+      sleep 10
+      echo "Running migrations..."
+      python manage.py migrate --noinput
+      echo "Collecting static files..."
+      python manage.py collectstatic --noinput
+      echo "Starting Gunicorn..."
+      exec gunicorn --bind 0.0.0.0:80 --workers 1 --timeout 120 --keep-alive 5 veles_drive.wsgi:application
+    env:
+    - name: DJANGO_SETTINGS_MODULE
+      value: "veles_drive.settings"
+    - name: DEBUG
+      value: "True"
+    - name: SECRET_KEY
+      value: "temp_key_for_debug"
+    - name: DATABASE_URL
+      value: "postgres://veles_user:veles_password_2024@veles-drive-postgres:5432/veles_drive"
+    - name: REDIS_URL
+      value: "redis://veles-drive-redis:6379/0"
+    - name: CELERY_BROKER_URL
+      value: "redis://veles-drive-redis:6379/0"
+    - name: CELERY_RESULT_BACKEND
+      value: "redis://veles-drive-redis:6379/0"
+  restartPolicy: Never

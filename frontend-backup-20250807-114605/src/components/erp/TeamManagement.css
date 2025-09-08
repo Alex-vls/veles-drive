@@ -1,0 +1,436 @@
+.team-management {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.team-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.team-stats {
+  margin-bottom: 24px;
+}
+
+.team-stats .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.team-stats .ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.team-table-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.team-table {
+  border-radius: 8px;
+}
+
+.team-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+  color: #262626;
+}
+
+.team-table .ant-table-tbody > tr:hover > td {
+  background: #f6f8fa;
+}
+
+.team-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 16px;
+}
+
+/* Аватары участников */
+.team-table .ant-avatar {
+  border: 2px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.team-table .ant-avatar:hover {
+  border-color: #1890ff;
+  transform: scale(1.05);
+}
+
+/* Роли участников */
+.team-table .ant-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.team-table .ant-tag .anticon {
+  font-size: 10px;
+}
+
+/* Статистика */
+.ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ant-statistic-content-prefix {
+  margin-right: 8px;
+}
+
+/* Кнопки */
+.team-management .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.team-management .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.team-management .ant-btn-primary {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.team-management .ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.team-management .ant-btn-dangerous {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.team-management .ant-btn-dangerous:hover {
+  color: #ff7875;
+  border-color: #ff7875;
+}
+
+/* Модальное окно */
+.team-management .ant-modal-content {
+  border-radius: 8px;
+}
+
+.team-management .ant-modal-header {
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.team-management .ant-modal-title {
+  font-weight: 600;
+  color: #262626;
+}
+
+.team-management .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.team-management .ant-select,
+.team-management .ant-input {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.team-management .ant-select:focus,
+.team-management .ant-input:focus,
+.team-management .ant-select-focused .ant-select-selector {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Popconfirm */
+.team-management .ant-popconfirm-title {
+  font-weight: 600;
+  color: #262626;
+}
+
+.team-management .ant-popconfirm-description {
+  color: #8c8c8c;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .team-management {
+    padding: 16px;
+  }
+
+  .team-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .team-header h3 {
+    font-size: 18px;
+  }
+
+  .team-stats {
+    margin-bottom: 16px;
+  }
+
+  .team-table .ant-table-thead > tr > th,
+  .team-table .ant-table-tbody > tr > td {
+    padding: 8px 12px;
+  }
+
+  .team-table .ant-table-thead > tr > th {
+    font-size: 12px;
+  }
+
+  .team-table .ant-table-tbody > tr > td {
+    font-size: 12px;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .team-management {
+    background: #141414;
+  }
+
+  .team-header {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .team-header h3 {
+    color: #ffffff;
+  }
+
+  .team-stats .ant-card,
+  .team-table-card {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .team-table .ant-table-thead > tr > th {
+    background: #262626;
+    border-bottom-color: #434343;
+    color: #ffffff;
+  }
+
+  .team-table .ant-table-tbody > tr > td {
+    background: #1f1f1f;
+    border-bottom-color: #434343;
+  }
+
+  .team-table .ant-table-tbody > tr:hover > td {
+    background: #262626;
+  }
+
+  .team-table .ant-avatar {
+    border-color: #434343;
+  }
+
+  .ant-statistic-title {
+    color: #a6a6a6;
+  }
+
+  .team-management .ant-modal-content {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .team-management .ant-modal-header {
+    background: #1f1f1f;
+    border-bottom-color: #303030;
+  }
+
+  .team-management .ant-modal-title {
+    color: #ffffff;
+  }
+
+  .team-management .ant-form-item-label > label {
+    color: #ffffff;
+  }
+
+  .team-management .ant-select,
+  .team-management .ant-input {
+    background: #1f1f1f;
+    border-color: #434343;
+    color: #ffffff;
+  }
+
+  .team-management .ant-select .ant-select-selection-placeholder {
+    color: #8c8c8c;
+  }
+
+  .team-management .ant-popconfirm-title {
+    color: #ffffff;
+  }
+
+  .team-management .ant-popconfirm-description {
+    color: #a6a6a6;
+  }
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.team-management {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.team-stats .ant-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.team-stats .ant-card:nth-child(1) { animation-delay: 0.1s; }
+.team-stats .ant-card:nth-child(2) { animation-delay: 0.2s; }
+.team-stats .ant-card:nth-child(3) { animation-delay: 0.3s; }
+.team-stats .ant-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Стили для таблицы на мобильных */
+@media (max-width: 768px) {
+  .team-table .ant-table {
+    font-size: 12px;
+  }
+
+  .team-table .ant-table-thead > tr > th,
+  .team-table .ant-table-tbody > tr > td {
+    padding: 6px 8px;
+  }
+
+  .team-table .ant-avatar {
+    width: 24px;
+    height: 24px;
+  }
+
+  .team-table .ant-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+}
+
+/* Стили для скроллбара */
+.team-table .ant-table-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.team-table .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.team-table .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.team-table .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Темная тема для скроллбара */
+@media (prefers-color-scheme: dark) {
+  .team-table .ant-table-body::-webkit-scrollbar-track {
+    background: #262626;
+  }
+
+  .team-table .ant-table-body::-webkit-scrollbar-thumb {
+    background: #434343;
+  }
+
+  .team-table .ant-table-body::-webkit-scrollbar-thumb:hover {
+    background: #595959;
+  }
+}
+
+/* Стили для пустого состояния */
+.team-table .ant-empty {
+  padding: 40px 0;
+}
+
+.team-table .ant-empty-description {
+  color: #8c8c8c;
+}
+
+/* Стили для загрузки */
+.team-table .ant-spin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Стили для поиска в селекте */
+.team-management .ant-select-dropdown {
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.team-management .ant-select-item {
+  border-radius: 4px;
+  margin: 2px 8px;
+}
+
+.team-management .ant-select-item-option-selected {
+  background: #e6f7ff;
+}
+
+.team-management .ant-select-item-option-active {
+  background: #f5f5f5;
+}
+
+/* Темная тема для селекта */
+@media (prefers-color-scheme: dark) {
+  .team-management .ant-select-dropdown {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .team-management .ant-select-item {
+    color: #ffffff;
+  }
+
+  .team-management .ant-select-item-option-selected {
+    background: #177ddc;
+  }
+
+  .team-management .ant-select-item-option-active {
+    background: #262626;
+  }
+} 

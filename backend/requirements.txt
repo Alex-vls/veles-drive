@@ -32,3 +32,4 @@ PyJWT>=2.8.0
 django-environ>=0.11.2
 google-api-python-client>=2.113.0
 psutil>=5.9.0
+dj-database-url>=2.1.0

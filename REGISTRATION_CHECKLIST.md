@@ -61,7 +61,7 @@
 ### 9. 📈 Google Analytics
 - [ ] **Google Analytics** (https://analytics.google.com/)
   - [ ] Создать аккаунт
-  - [ ] Создать ресурс для veles-auto.com
+  - [ ] Создать ресурс для veles-drive.ru
   - [ ] Получить `GOOGLE_ANALYTICS_ID`
 
 ### 10. 📊 Yandex Metrika
@@ -71,7 +71,7 @@
 
 ### 11. 🔍 Google Search Console
 - [ ] **Google Search Console** (https://search.google.com/search-console)
-  - [ ] Добавить сайт veles-auto.com
+  - [ ] Добавить сайт veles-drive.ru
   - [ ] Подтвердить владение
   - [ ] Получить `GOOGLE_SEARCH_CONSOLE_VERIFICATION`
 
@@ -120,19 +120,19 @@
 ### 18. 🛡️ Cloudflare (CDN и DNS)
 - [ ] **Cloudflare** (https://cloudflare.com/)
   - [ ] Зарегистрироваться
-  - [ ] Добавить домен veles-auto.com
+  - [ ] Добавить домен veles-drive.ru
   - [ ] Получить `CLOUDFLARE_API_TOKEN` и `CLOUDFLARE_ZONE_ID`
 
 ## 🌐 DNS настройки
 
 ### 19. 📍 DNS записи
 - [ ] Настроить A записи для всех поддоменов:
-  - [ ] `veles-auto.com` → IP сервера
-  - [ ] `www.veles-auto.com` → IP сервера
-  - [ ] `api.veles-auto.com` → IP сервера
-  - [ ] `tg.veles-auto.com` → IP сервера
-  - [ ] `admin.veles-auto.com` → IP сервера
-  - [ ] `cdn.veles-auto.com` → IP сервера (опционально)
+  - [ ] `veles-drive.ru` → IP сервера
+  - [ ] `www.veles-drive.ru` → IP сервера
+  - [ ] `api.veles-drive.ru` → IP сервера
+  - [ ] `tg.veles-drive.ru` → IP сервера
+  - [ ] `admin.veles-drive.ru` → IP сервера
+  - [ ] `cdn.veles-drive.ru` → IP сервера (опционально)
 
 ## 🔐 Безопасность
 

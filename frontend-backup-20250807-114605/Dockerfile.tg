@@ -1,0 +1,36 @@
+# Многоэтапная сборка для Telegram Mini App
+FROM node:18-alpine AS builder
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем файлы зависимостей
+COPY package*.json ./
+
+# Устанавливаем зависимости
+RUN npm install --only=production
+
+# Копируем исходный код
+COPY . .
+
+# Устанавливаем переменные окружения для Telegram Mini App
+ENV REACT_APP_TELEGRAM_MODE=true
+ENV REACT_APP_ADMIN_MODE=false
+
+# Собираем приложение для production
+RUN npm run build
+
+# Production этап
+FROM nginx:alpine
+
+# Копируем собранное приложение
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Копируем конфигурацию Nginx для Telegram Mini App
+COPY nginx.tg.conf /etc/nginx/conf.d/default.conf
+
+# Открываем порт
+EXPOSE 3000
+
+# Запускаем Nginx
+CMD ["nginx", "-g", "daemon off;"] 

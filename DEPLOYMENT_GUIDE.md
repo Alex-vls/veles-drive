@@ -11,10 +11,10 @@
 - Домен и DNS настройки
 
 ### Домены
-- `veles-auto.com` - основной сайт
-- `api.veles-auto.com` - API
-- `tg.veles-auto.com` - Telegram Mini App
-- `admin.veles-auto.com` - админка
+- `veles-drive.ru` - основной сайт
+- `api.veles-drive.ru` - API
+- `tg.veles-drive.ru` - Telegram Mini App
+- `admin.veles-drive.ru` - админка
 
 ## Подготовка сервера
 
@@ -58,8 +58,8 @@ sudo apt install git nginx certbot python3-certbot-nginx htop
 
 ### 1. Клонирование репозитория
 ```bash
-git clone https://github.com/your-username/veles-auto-project.git
-cd veles-auto-project
+git clone https://github.com/your-username/veles-drive.git
+cd veles-drive
 ```
 
 ### 2. Настройка переменных окружения
@@ -73,7 +73,7 @@ nano .env
 # Django
 SECRET_KEY=your-super-secret-key-here
 DEBUG=False
-ALLOWED_HOSTS=veles-auto.com,api.veles-auto.com,tg.veles-auto.com,admin.veles-auto.com
+ALLOWED_HOSTS=veles-drive.ru,api.veles-drive.ru,tg.veles-drive.ru,admin.veles-drive.ru
 
 # База данных
 DATABASE_URL=postgresql://veles_user:veles_password@postgres:5432/veles_db
@@ -111,15 +111,15 @@ python3 -c "from django.core.management.utils import get_random_secret_key; prin
 
 ### 1. Настройка A записей
 ```
-veles-auto.com     A    YOUR_SERVER_IP
-api.veles-auto.com A    YOUR_SERVER_IP
-tg.veles-auto.com  A    YOUR_SERVER_IP
-admin.veles-auto.com A  YOUR_SERVER_IP
+veles-drive.ru     A    YOUR_SERVER_IP
+api.veles-drive.ru A    YOUR_SERVER_IP
+tg.veles-drive.ru  A    YOUR_SERVER_IP
+admin.veles-drive.ru A  YOUR_SERVER_IP
 ```
 
 ### 2. Настройка CNAME записей
 ```
-www.veles-auto.com CNAME veles-auto.com
+www.veles-drive.ru CNAME veles-drive.ru
 ```
 
 ## Развертывание
@@ -167,12 +167,12 @@ docker-compose stop nginx
 
 # Получение сертификатов
 sudo certbot certonly --standalone \
-  -d veles-auto.com \
-  -d www.veles-auto.com \
-  -d api.veles-auto.com \
-  -d tg.veles-auto.com \
-  -d admin.veles-auto.com \
-  --email admin@veles-auto.com \
+  -d veles-drive.ru \
+  -d www.veles-drive.ru \
+  -d api.veles-drive.ru \
+  -d tg.veles-drive.ru \
+  -d admin.veles-drive.ru \
+  --email admin@veles-drive.ru \
   --agree-tos \
   --no-eff-email
 
@@ -255,7 +255,7 @@ chmod +x scripts/backup.sh
 crontab -e
 
 # Добавить строку для ежедневного бэкапа в 2:00
-0 2 * * * /path/to/veles-auto-project/scripts/backup.sh
+0 2 * * * /path/to/veles-drive/scripts/backup.sh
 ```
 
 ## Настройка Telegram Bot
@@ -269,28 +269,28 @@ crontab -e
 ```bash
 curl -X POST "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook" \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://api.veles-auto.com/api/telegram/webhook/"}'
+  -d '{"url": "https://api.veles-drive.ru/api/telegram/webhook/"}'
 ```
 
 ### 3. Настройка Mini App
 - В BotFather настройте команды для Mini App
-- Укажите URL: `https://tg.veles-auto.com`
+- Укажите URL: `https://tg.veles-drive.ru`
 
 ## Проверка работоспособности
 
 ### 1. Проверка основных сервисов
 ```bash
 # Проверка веб-сайта
-curl -I https://veles-auto.com
+curl -I https://veles-drive.ru
 
 # Проверка API
-curl -I https://api.veles-auto.com/api/health/
+curl -I https://api.veles-drive.ru/api/health/
 
 # Проверка Telegram Mini App
-curl -I https://tg.veles-auto.com
+curl -I https://tg.veles-drive.ru
 
 # Проверка админки
-curl -I https://admin.veles-auto.com
+curl -I https://admin.veles-drive.ru
 ```
 
 ### 2. Проверка логов
@@ -451,7 +451,7 @@ services:
 
 ## Контакты и поддержка
 
-- Email: support@veles-auto.com
+- Email: support@veles-drive.ru
 - Telegram: @veles_auto_support
-- Документация: https://docs.veles-auto.com
-- GitHub Issues: https://github.com/your-username/veles-auto-project/issues 
+- Документация: https://docs.veles-drive.ru
+- GitHub Issues: https://github.com/your-username/veles-drive/issues 

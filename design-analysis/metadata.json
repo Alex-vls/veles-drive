@@ -1,0 +1,252 @@
+{
+  "design_analysis": {
+    "total_files": 37,
+    "categories": {
+      "pages": [],
+      "components": [],
+      "cards": [
+        {
+          "name": "cards.png",
+          "size": 209761,
+          "type": "component"
+        }
+      ],
+      "images": [
+        {
+          "name": "image3.png",
+          "size": 348072,
+          "type": "image"
+        },
+        {
+          "name": "image1.png",
+          "size": 29810,
+          "type": "image"
+        },
+        {
+          "name": "image2.png",
+          "size": 109268,
+          "type": "image"
+        },
+        {
+          "name": "image4.png",
+          "size": 390697,
+          "type": "image"
+        }
+      ],
+      "frames": [
+        {
+          "name": "frame22.png",
+          "size": 302408,
+          "type": "frame"
+        },
+        {
+          "name": "frame2.png",
+          "size": 143433,
+          "type": "frame"
+        },
+        {
+          "name": "frame21.png",
+          "size": 1531974,
+          "type": "frame"
+        },
+        {
+          "name": "frame1.png",
+          "size": 150380,
+          "type": "frame"
+        },
+        {
+          "name": "frame13.png",
+          "size": 170054,
+          "type": "frame"
+        },
+        {
+          "name": "frame9.png",
+          "size": 424478,
+          "type": "frame"
+        },
+        {
+          "name": "frame16.png",
+          "size": 403933,
+          "type": "frame"
+        },
+        {
+          "name": "frame7.png",
+          "size": 174498,
+          "type": "frame"
+        },
+        {
+          "name": "frame34.png",
+          "size": 95142,
+          "type": "frame"
+        },
+        {
+          "name": "frame30.png",
+          "size": 291452,
+          "type": "frame"
+        },
+        {
+          "name": "frame12.png",
+          "size": 431415,
+          "type": "frame"
+        },
+        {
+          "name": "frame31.png",
+          "size": 263902,
+          "type": "frame"
+        },
+        {
+          "name": "frame5.png",
+          "size": 171001,
+          "type": "frame"
+        },
+        {
+          "name": "frame11.png",
+          "size": 435333,
+          "type": "frame"
+        },
+        {
+          "name": "frame24.png",
+          "size": 290886,
+          "type": "frame"
+        },
+        {
+          "name": "frame26.png",
+          "size": 2680469,
+          "type": "frame"
+        },
+        {
+          "name": "frame29.png",
+          "size": 975707,
+          "type": "frame"
+        },
+        {
+          "name": "frame14.png",
+          "size": 481249,
+          "type": "frame"
+        },
+        {
+          "name": "frame6.png",
+          "size": 200750,
+          "type": "frame"
+        },
+        {
+          "name": "frame20.png",
+          "size": 2138974,
+          "type": "frame"
+        },
+        {
+          "name": "frame4.png",
+          "size": 169739,
+          "type": "frame"
+        },
+        {
+          "name": "frame33.png",
+          "size": 55705,
+          "type": "frame"
+        },
+        {
+          "name": "frame28.png",
+          "size": 872732,
+          "type": "frame"
+        },
+        {
+          "name": "frame18.png",
+          "size": 84439,
+          "type": "frame"
+        },
+        {
+          "name": "frame23.png",
+          "size": 292859,
+          "type": "frame"
+        },
+        {
+          "name": "frame15.png",
+          "size": 405922,
+          "type": "frame"
+        },
+        {
+          "name": "frame10.png",
+          "size": 431415,
+          "type": "frame"
+        },
+        {
+          "name": "frame32.png",
+          "size": 2434342,
+          "type": "frame"
+        },
+        {
+          "name": "frame19.png",
+          "size": 2140340,
+          "type": "frame"
+        },
+        {
+          "name": "frame17.png",
+          "size": 1530990,
+          "type": "frame"
+        },
+        {
+          "name": "frame27.png",
+          "size": 1027761,
+          "type": "frame"
+        },
+        {
+          "name": "frame8.png",
+          "size": 403133,
+          "type": "frame"
+        }
+      ]
+    },
+    "file_sizes": {
+      "image3.png": 348072,
+      "frame22.png": 302408,
+      "frame2.png": 143433,
+      "frame21.png": 1531974,
+      "frame1.png": 150380,
+      "frame13.png": 170054,
+      "frame9.png": 424478,
+      "frame16.png": 403933,
+      "frame7.png": 174498,
+      "cards.png": 209761,
+      "frame34.png": 95142,
+      "frame30.png": 291452,
+      "frame12.png": 431415,
+      "image1.png": 29810,
+      "frame31.png": 263902,
+      "frame5.png": 171001,
+      "frame11.png": 435333,
+      "frame24.png": 290886,
+      "frame26.png": 2680469,
+      "frame29.png": 975707,
+      "frame14.png": 481249,
+      "frame6.png": 200750,
+      "frame20.png": 2138974,
+      "frame4.png": 169739,
+      "frame33.png": 55705,
+      "frame28.png": 872732,
+      "frame18.png": 84439,
+      "frame23.png": 292859,
+      "frame15.png": 405922,
+      "frame10.png": 431415,
+      "frame32.png": 2434342,
+      "image2.png": 109268,
+      "frame19.png": 2140340,
+      "frame17.png": 1530990,
+      "image4.png": 390697,
+      "frame27.png": 1027761,
+      "frame8.png": 403133
+    },
+    "recommendations": []
+  },
+  "total_files": 37,
+  "categories": {
+    "pages": 32,
+    "components": 1,
+    "images": 4
+  },
+  "recommendations": [
+    "Использовать фреймы как макеты страниц",
+    "Карточки использовать как переиспользуемые компоненты",
+    "Изображения добавить в assets",
+    "Создать дизайн-токены на основе цветов из скриншотов"
+  ]
+}

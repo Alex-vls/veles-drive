@@ -6,7 +6,8 @@ from .views import (
     NotificationListView, NotificationDetailView,
     ModerationViewSet,
     CarListView, CarDetailView,
-    CarCreateView, CarUpdateView, CarDeleteView
+    CarCreateView, CarUpdateView, CarDeleteView,
+    health_check, api_status, system_info
 )
 
 router = DefaultRouter()
@@ -14,6 +15,9 @@ router.register(r'moderation', ModerationViewSet, basename='moderation')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('health/', health_check, name='health-check'),
+    path('api/status/', api_status, name='api-status'),
+    path('api/system/', system_info, name='system-info'),
     path('news/', NewsListView.as_view(), name='news-list'),
     path('news/<int:pk>/', NewsDetailView.as_view(), name='news-detail'),
     path('articles/', ArticleListView.as_view(), name='article-list'),

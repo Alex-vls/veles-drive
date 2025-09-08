@@ -1,0 +1,602 @@
+.time-tracking-container {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.time-tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.time-tracking-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.active-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #e6f7ff;
+  border: 1px solid #91d5ff;
+  border-radius: 6px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(24, 144, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0);
+  }
+}
+
+.time-stats {
+  margin-bottom: 24px;
+}
+
+.time-stats .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.time-stats .ant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.time-table-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.time-table-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 16px;
+}
+
+.time-table-card .ant-card-head-title {
+  font-weight: 600;
+  color: #262626;
+}
+
+.time-table-card .ant-table {
+  border-radius: 8px;
+}
+
+.time-table-card .ant-table-thead > tr > th {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+  color: #262626;
+}
+
+.time-table-card .ant-table-tbody > tr:hover > td {
+  background: #f6f8fa;
+}
+
+/* Статистика */
+.ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.ant-statistic-content-prefix {
+  margin-right: 8px;
+}
+
+/* Теги статусов */
+.time-table-card .ant-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Кнопки */
+.time-tracking-container .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.time-tracking-container .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.time-tracking-container .ant-btn-primary {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.time-tracking-container .ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.time-tracking-container .ant-btn-dangerous {
+  background: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.time-tracking-container .ant-btn-dangerous:hover {
+  background: #ff7875;
+  border-color: #ff7875;
+}
+
+/* Модальные окна */
+.time-tracking-container .ant-modal-content {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.time-tracking-container .ant-modal-header {
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 16px 24px;
+}
+
+.time-tracking-container .ant-modal-title {
+  font-weight: 600;
+  color: #262626;
+}
+
+.time-tracking-container .ant-modal-body {
+  padding: 24px;
+}
+
+/* Формы */
+.time-tracking-container .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.time-tracking-container .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.time-tracking-container .ant-input,
+.time-tracking-container .ant-select,
+.time-tracking-container .ant-picker {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.time-tracking-container .ant-input:focus,
+.time-tracking-container .ant-select:focus,
+.time-tracking-container .ant-picker:focus,
+.time-tracking-container .ant-select-focused .ant-select-selector,
+.time-tracking-container .ant-picker-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.time-tracking-container .ant-input-number {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.time-tracking-container .ant-input-number:focus,
+.time-tracking-container .ant-input-number-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Иконки */
+.time-tracking-container .anticon {
+  margin-right: 4px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .time-tracking-container {
+    padding: 16px;
+  }
+
+  .time-tracking-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .time-tracking-header h3 {
+    font-size: 18px;
+  }
+
+  .active-timer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .time-stats {
+    margin-bottom: 16px;
+  }
+
+  .time-stats .ant-col {
+    margin-bottom: 16px;
+  }
+
+  .time-table-card .ant-table-thead > tr > th,
+  .time-table-card .ant-table-tbody > tr > td {
+    padding: 8px 12px;
+  }
+
+  .time-table-card .ant-table-thead > tr > th {
+    font-size: 12px;
+  }
+
+  .time-table-card .ant-table-tbody > tr > td {
+    font-size: 12px;
+  }
+
+  .time-tracking-container .ant-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .time-tracking-container .ant-modal {
+    margin: 16px;
+  }
+
+  .time-tracking-container .ant-modal-body {
+    padding: 16px;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .time-tracking-container {
+    background: #141414;
+  }
+
+  .time-tracking-header {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .time-tracking-header h3 {
+    color: #ffffff;
+  }
+
+  .active-timer {
+    background: #111b26;
+    border-color: #177ddc;
+  }
+
+  .time-stats .ant-card,
+  .time-table-card {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .time-table-card .ant-card-head {
+    border-bottom-color: #303030;
+  }
+
+  .time-table-card .ant-card-head-title {
+    color: #ffffff;
+  }
+
+  .time-table-card .ant-table-thead > tr > th {
+    background: #262626;
+    border-bottom-color: #434343;
+    color: #ffffff;
+  }
+
+  .time-table-card .ant-table-tbody > tr > td {
+    background: #1f1f1f;
+    border-bottom-color: #434343;
+  }
+
+  .time-table-card .ant-table-tbody > tr:hover > td {
+    background: #262626;
+  }
+
+  .ant-statistic-title {
+    color: #a6a6a6;
+  }
+
+  .time-tracking-container .ant-form-item-label > label {
+    color: #ffffff;
+  }
+
+  .time-tracking-container .ant-input,
+  .time-tracking-container .ant-select,
+  .time-tracking-container .ant-picker,
+  .time-tracking-container .ant-input-number {
+    background: #1f1f1f;
+    border-color: #434343;
+    color: #ffffff;
+  }
+
+  .time-tracking-container .ant-input::placeholder {
+    color: #8c8c8c;
+  }
+
+  .time-tracking-container .ant-select .ant-select-selection-placeholder {
+    color: #8c8c8c;
+  }
+
+  .time-tracking-container .ant-modal-content {
+    background: #1f1f1f;
+    border-color: #303030;
+  }
+
+  .time-tracking-container .ant-modal-header {
+    background: #1f1f1f;
+    border-bottom-color: #303030;
+  }
+
+  .time-tracking-container .ant-modal-title {
+    color: #ffffff;
+  }
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.time-tracking-container {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.time-stats .ant-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.time-stats .ant-card:nth-child(1) { animation-delay: 0.1s; }
+.time-stats .ant-card:nth-child(2) { animation-delay: 0.2s; }
+.time-stats .ant-card:nth-child(3) { animation-delay: 0.3s; }
+.time-stats .ant-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Стили для скроллбара */
+.time-table-card .ant-table-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.time-table-card .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.time-table-card .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.time-table-card .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Темная тема для скроллбара */
+@media (prefers-color-scheme: dark) {
+  .time-table-card .ant-table-body::-webkit-scrollbar-track {
+    background: #262626;
+  }
+
+  .time-table-card .ant-table-body::-webkit-scrollbar-thumb {
+    background: #434343;
+  }
+
+  .time-table-card .ant-table-body::-webkit-scrollbar-thumb:hover {
+    background: #595959;
+  }
+}
+
+/* Стили для пустого состояния */
+.time-tracking-container .ant-empty {
+  padding: 40px 0;
+}
+
+.time-tracking-container .ant-empty-description {
+  color: #8c8c8c;
+}
+
+/* Стили для загрузки */
+.time-tracking-container .ant-spin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Стили для сообщений */
+.time-tracking-container .ant-message {
+  z-index: 1010;
+}
+
+/* Стили для подтверждения удаления */
+.time-tracking-container .ant-popconfirm {
+  z-index: 1000;
+}
+
+.time-tracking-container .ant-popconfirm-message-title {
+  font-weight: 500;
+  color: #262626;
+}
+
+.time-tracking-container .ant-popconfirm-message-description {
+  color: #8c8c8c;
+}
+
+/* Темная тема для подтверждения */
+@media (prefers-color-scheme: dark) {
+  .time-tracking-container .ant-popconfirm-message-title {
+    color: #ffffff;
+  }
+
+  .time-tracking-container .ant-popconfirm-message-description {
+    color: #a6a6a6;
+  }
+}
+
+/* Стили для пагинации */
+.time-table-card .ant-pagination {
+  margin: 16px 0 0 0;
+  text-align: right;
+}
+
+.time-table-card .ant-pagination-item {
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+
+.time-table-card .ant-pagination-item-active {
+  border-color: #1890ff;
+  background: #1890ff;
+}
+
+.time-table-card .ant-pagination-item-active a {
+  color: white;
+}
+
+/* Темная тема для пагинации */
+@media (prefers-color-scheme: dark) {
+  .time-table-card .ant-pagination-item {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+
+  .time-table-card .ant-pagination-item a {
+    color: #ffffff;
+  }
+
+  .time-table-card .ant-pagination-item:hover {
+    border-color: #1890ff;
+  }
+
+  .time-table-card .ant-pagination-prev,
+  .time-table-card .ant-pagination-next {
+    background: #1f1f1f;
+    border-color: #434343;
+  }
+
+  .time-table-card .ant-pagination-prev .ant-pagination-item-link,
+  .time-table-card .ant-pagination-next .ant-pagination-item-link {
+    color: #ffffff;
+  }
+}
+
+/* Стили для таблиц на мобильных */
+@media (max-width: 768px) {
+  .time-table-card .ant-table {
+    font-size: 12px;
+  }
+
+  .time-table-card .ant-table-thead > tr > th,
+  .time-table-card .ant-table-tbody > tr > td {
+    padding: 6px 8px;
+  }
+
+  .time-table-card .ant-tag {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+}
+
+/* Стили для таймера */
+.active-timer .anticon {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.5;
+  }
+}
+
+/* Стили для времени */
+.time-display {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+/* Стили для описания */
+.description-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Стили для валидации */
+.time-tracking-container .ant-form-item-has-error .ant-input,
+.time-tracking-container .ant-form-item-has-error .ant-select,
+.time-tracking-container .ant-form-item-has-error .ant-picker,
+.time-tracking-container .ant-form-item-has-error .ant-input-number {
+  border-color: #ff4d4f;
+}
+
+.time-tracking-container .ant-form-item-has-error .ant-input:focus,
+.time-tracking-container .ant-form-item-has-error .ant-select:focus,
+.time-tracking-container .ant-form-item-has-error .ant-picker:focus,
+.time-tracking-container .ant-form-item-has-error .ant-input-number:focus {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
+
+.time-tracking-container .ant-form-item-explain-error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Стили для успешных состояний */
+.time-tracking-container .ant-form-item-has-success .ant-input,
+.time-tracking-container .ant-form-item-has-success .ant-select,
+.time-tracking-container .ant-form-item-has-success .ant-picker,
+.time-tracking-container .ant-form-item-has-success .ant-input-number {
+  border-color: #52c41a;
+}
+
+.time-tracking-container .ant-form-item-has-success .ant-input:focus,
+.time-tracking-container .ant-form-item-has-success .ant-select:focus,
+.time-tracking-container .ant-form-item-has-success .ant-picker:focus,
+.time-tracking-container .ant-form-item-has-success .ant-input-number:focus {
+  border-color: #52c41a;
+  box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+} 

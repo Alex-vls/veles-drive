@@ -291,7 +291,7 @@ Mini App интегрируется с Telegram через:
 # Установка webhook
 curl -X POST "https://api.telegram.org/bot<BOT_TOKEN>/setWebhook" \
      -H "Content-Type: application/json" \
-     -d '{"url": "https://api.veles-auto.com/telegram/webhook/"}'
+     -d '{"url": "https://api.veles-drive.ru/telegram/webhook/"}'
 ```
 
 ### 3. Загрузка демо-данных

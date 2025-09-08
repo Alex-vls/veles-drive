@@ -346,7 +346,7 @@ def show_sales(telegram_user, chat_id, message_id=None):
 def show_cars(telegram_user, chat_id, message_id=None):
     """Показать автомобили"""
     try:
-        from veles_auto.models import Car
+        from veles_drive.models import Car
         
         # Получаем автомобили пользователя (если он владелец компании)
         cars = Car.objects.filter(
@@ -624,7 +624,7 @@ def mini_app_data(request):
         
         # Собираем данные для Mini App
         from erp.models import ProjectBoard, ProjectTask, Sale
-        from veles_auto.models import Car, Company
+        from veles_drive.models import Car, Company
         
         data = {
             'user': {
@@ -776,7 +776,7 @@ def handle_create_sale(data):
     """Создание продажи"""
     try:
         from erp.models import Sale
-        from veles_auto.models import Car
+        from veles_drive.models import Car
         
         car = Car.objects.get(id=data['car_id'])
         

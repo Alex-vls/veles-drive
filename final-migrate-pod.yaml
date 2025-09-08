@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: final-migrate
+  namespace: veles-drive
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: node2.alx
+  containers:
+  - name: migrate
+    image: alsx12/veles-drive-backend:latest
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      cd /app
+      echo "Running migrations..."
+      python manage.py migrate --noinput
+      echo "Collecting static files..."
+      python manage.py collectstatic --noinput
+      echo "Creating superuser..."
+      python manage.py shell -c "
+      from django.contrib.auth import get_user_model
+      User = get_user_model()
+      if not User.objects.filter(username='admin').exists():
+          User.objects.create_superuser('admin', 'admin@veles-drive.ru', 'veles_admin_2024')
+          print('Superuser created')
+      else:
+          print('Superuser already exists')
+      "
+      echo "Done!"
+    env:
+    - name: DJANGO_SETTINGS_MODULE
+      value: "veles_drive.settings"
+    - name: DEBUG
+      value: "True"
+    - name: SECRET_KEY
+      value: "temp_key_for_migration"
+    - name: DATABASE_URL
+      value: "postgres://veles_user:veles_password_2024@veles-drive-postgres:5432/veles_drive"
+    - name: REDIS_URL
+      value: "redis://veles-drive-redis:6379/0"
+    - name: CELERY_BROKER_URL
+      value: "redis://veles-drive-redis:6379/0"
+    - name: CELERY_RESULT_BACKEND
+      value: "redis://veles-drive-redis:6379/0"
+  restartPolicy: Never

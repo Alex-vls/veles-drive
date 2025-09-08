@@ -10,7 +10,7 @@ from datetime import timedelta, datetime
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 
 # Импорты моделей
-from veles_auto.models import (
+from veles_drive.models import (
     Company, Car, Review, Article, News, PageView, UserSession, 
     SearchQuery, Conversion, ABTest, ABTestResult
 )

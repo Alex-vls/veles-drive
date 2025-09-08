@@ -1,0 +1,341 @@
+{
+  "pages": [
+    {
+      "name": "additional_image3",
+      "file": "image3.png",
+      "description": "Дополнительная страница image3",
+      "elements": []
+    },
+    {
+      "name": "page_2",
+      "file": "frame2.png",
+      "description": "Страница: car_details",
+      "type": "car_details",
+      "elements": [
+        {
+          "type": "car_gallery",
+          "main_image": true,
+          "thumbnails": true
+        },
+        {
+          "type": "car_specs",
+          "specifications": [
+            "engine",
+            "transmission",
+            "fuel",
+            "mileage"
+          ]
+        },
+        {
+          "type": "dealer_info",
+          "contact": true,
+          "rating": true
+        },
+        {
+          "type": "action_buttons",
+          "buttons": [
+            "contact",
+            "favorite",
+            "share"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "page_1",
+      "file": "frame1.png",
+      "description": "Страница: catalog",
+      "type": "catalog",
+      "elements": [
+        {
+          "type": "filter_panel",
+          "filters": [
+            "brand",
+            "price",
+            "year",
+            "body_type"
+          ]
+        },
+        {
+          "type": "car_grid",
+          "layout": "grid",
+          "items_per_row": 3
+        },
+        {
+          "type": "pagination",
+          "items_per_page": 12
+        }
+      ]
+    },
+    {
+      "name": "homepage",
+      "file": "image1.png",
+      "description": "Главная страница с hero-секцией",
+      "elements": [
+        {
+          "type": "header",
+          "logo": "ВЕЛЕС АВТО",
+          "navigation": [
+            "ТОП-ПОДБОРКИ",
+            "ИЗБРАННОЕ",
+            "О НАС",
+            "О ПЛАТФОРМЕ",
+            "НОВОСТИ"
+          ],
+          "icons": [
+            "bookmark",
+            "profile"
+          ]
+        },
+        {
+          "type": "hero_section",
+          "headline": "АВТОМОБИЛИ, КОТОРЫЕ ГОВОРЯТ ЗА ВАС",
+          "subtext": "Только официальные дилеры и проверенные автосалоны. Исключительное качество. Прозрачные условия",
+          "call_to_action": "КАТАЛОГ АВТОМОБИЛЕЙ",
+          "background_image": "luxury_car_silhouette"
+        }
+      ]
+    },
+    {
+      "name": "page_5",
+      "file": "frame5.png",
+      "description": "Страница: search_results",
+      "type": "search_results",
+      "elements": []
+    },
+    {
+      "name": "page_6",
+      "file": "frame6.png",
+      "description": "Страница: favorites",
+      "type": "favorites",
+      "elements": []
+    },
+    {
+      "name": "page_4",
+      "file": "frame4.png",
+      "description": "Страница: dealership_list",
+      "type": "dealership_list",
+      "elements": [
+        {
+          "type": "map_view",
+          "interactive": true
+        },
+        {
+          "type": "dealership_cards",
+          "layout": "list"
+        },
+        {
+          "type": "filter_panel",
+          "filters": [
+            "location",
+            "rating",
+            "brands"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "additional_image2",
+      "file": "image2.png",
+      "description": "Дополнительная страница image2",
+      "elements": []
+    },
+    {
+      "name": "additional_image4",
+      "file": "image4.png",
+      "description": "Дополнительная страница image4",
+      "elements": []
+    }
+  ],
+  "components": {
+    "Breadcrumbs": {
+      "file": "frame13.png",
+      "description": "Компонент: Breadcrumbs",
+      "properties": {}
+    },
+    "Dropdown": {
+      "file": "frame16.png",
+      "description": "Компонент: Dropdown",
+      "properties": {}
+    },
+    "CarCard": {
+      "file": "cards.png",
+      "description": "Карточка автомобиля с изображением и характеристиками",
+      "properties": {
+        "background": "var(--color-background-card)",
+        "border_radius": "var(--border-radius-lg)",
+        "padding": "var(--spacing-md)",
+        "shadow": "var(--shadow-card)",
+        "image_ratio": "16:9",
+        "badge": "ПРЕДЛОЖЕНИЕ НЕДЕЛИ",
+        "bookmark_icon": true,
+        "image_slider": true
+      }
+    },
+    "DealershipCard": {
+      "file": "cards.png",
+      "description": "Карточка автосалона с рейтингом",
+      "properties": {
+        "background": "var(--color-background-card)",
+        "border_radius": "var(--border-radius-lg)",
+        "padding": "var(--spacing-md)",
+        "shadow": "var(--shadow-card)",
+        "rating_stars": 5,
+        "bookmark_icon": true
+      }
+    },
+    "Pagination": {
+      "file": "frame12.png",
+      "description": "Компонент: Pagination",
+      "properties": {}
+    },
+    "SearchBar": {
+      "file": "frame11.png",
+      "description": "Компонент: SearchBar",
+      "properties": {
+        "background": "var(--color-background-light)",
+        "border": "var(--border-focus)",
+        "border_radius": "var(--border-radius-lg)",
+        "padding": "var(--spacing-sm) var(--spacing-md)"
+      }
+    },
+    "Modal": {
+      "file": "frame14.png",
+      "description": "Компонент: Modal",
+      "properties": {
+        "background": "var(--color-background-modal)",
+        "backdrop": "var(--color-backdrop)",
+        "border_radius": "var(--border-radius-lg)",
+        "shadow": "var(--shadow-modal)"
+      }
+    },
+    "Gallery": {
+      "file": "frame20.png",
+      "description": "Компонент: Gallery",
+      "properties": {}
+    },
+    "Accordion": {
+      "file": "frame18.png",
+      "description": "Компонент: Accordion",
+      "properties": {}
+    },
+    "Tooltip": {
+      "file": "frame15.png",
+      "description": "Компонент: Tooltip",
+      "properties": {}
+    },
+    "FilterPanel": {
+      "file": "frame10.png",
+      "description": "Компонент: FilterPanel",
+      "properties": {
+        "background": "var(--color-background-light)",
+        "border": "var(--border-light)",
+        "padding": "var(--spacing-md)",
+        "border_radius": "var(--border-radius-md)"
+      }
+    },
+    "Slider": {
+      "file": "frame19.png",
+      "description": "Компонент: Slider",
+      "properties": {}
+    },
+    "Tabs": {
+      "file": "frame17.png",
+      "description": "Компонент: Tabs",
+      "properties": {}
+    }
+  },
+  "colors": {
+    "--color-background-primary": "#000000",
+    "--color-background-secondary": "#1a1a1a",
+    "--color-background-card": "#ffffff",
+    "--color-background-light": "#f8f9fa",
+    "--color-background-modal": "#ffffff",
+    "--color-backdrop": "rgba(0, 0, 0, 0.5)",
+    "--color-text-primary": "#ffffff",
+    "--color-text-secondary": "#6c757d",
+    "--color-text-dark": "#000000",
+    "--color-accent-primary": "#007AFF",
+    "--color-accent-secondary": "#4A47B5",
+    "--color-success": "#28a745",
+    "--color-warning": "#ffc107",
+    "--color-error": "#dc3545",
+    "--color-border-light": "#e9ecef",
+    "--color-border-focus": "#007AFF"
+  },
+  "fonts": {
+    "--font-family-primary": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+    "--font-family-secondary": "SF Pro Display, sans-serif",
+    "--font-size-xs": "12px",
+    "--font-size-sm": "14px",
+    "--font-size-base": "16px",
+    "--font-size-lg": "18px",
+    "--font-size-xl": "20px",
+    "--font-size-2xl": "24px",
+    "--font-size-3xl": "30px",
+    "--font-size-4xl": "36px",
+    "--font-size-5xl": "48px",
+    "--font-weight-light": "300",
+    "--font-weight-normal": "400",
+    "--font-weight-medium": "500",
+    "--font-weight-semibold": "600",
+    "--font-weight-bold": "700"
+  },
+  "spacing": {
+    "--spacing-xs": "4px",
+    "--spacing-sm": "8px",
+    "--spacing-md": "16px",
+    "--spacing-lg": "24px",
+    "--spacing-xl": "32px",
+    "--spacing-2xl": "48px",
+    "--spacing-3xl": "64px"
+  },
+  "border_radius": {
+    "--border-radius-sm": "4px",
+    "--border-radius-md": "8px",
+    "--border-radius-lg": "12px",
+    "--border-radius-xl": "16px",
+    "--border-radius-full": "50%"
+  },
+  "shadows": {
+    "--shadow-sm": "0 1px 2px rgba(0, 0, 0, 0.05)",
+    "--shadow-md": "0 4px 6px rgba(0, 0, 0, 0.1)",
+    "--shadow-lg": "0 10px 15px rgba(0, 0, 0, 0.1)",
+    "--shadow-xl": "0 20px 25px rgba(0, 0, 0, 0.15)",
+    "--shadow-card": "0 4px 12px rgba(0, 0, 0, 0.1)",
+    "--shadow-modal": "0 25px 50px rgba(0, 0, 0, 0.25)",
+    "--shadow-button": "0 4px 12px rgba(0, 122, 255, 0.3)"
+  },
+  "layout_patterns": {
+    "container_max_width": "1200px",
+    "grid_columns": 12,
+    "breakpoint_mobile": "768px",
+    "breakpoint_tablet": "1024px",
+    "breakpoint_desktop": "1200px"
+  },
+  "interactive_elements": {
+    "button_primary": {
+      "background": "linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary))",
+      "color": "var(--color-text-primary)",
+      "padding": "var(--spacing-md) var(--spacing-xl)",
+      "border_radius": "var(--border-radius-lg)",
+      "font_weight": "var(--font-weight-semibold)",
+      "transition": "all 0.2s ease"
+    },
+    "button_secondary": {
+      "background": "transparent",
+      "color": "var(--color-text-primary)",
+      "border": "1px solid var(--color-text-primary)",
+      "padding": "var(--spacing-md) var(--spacing-xl)",
+      "border_radius": "var(--border-radius-lg)",
+      "font_weight": "var(--font-weight-medium)"
+    },
+    "input_field": {
+      "background": "var(--color-background-light)",
+      "border": "1px solid var(--color-border-light)",
+      "border_radius": "var(--border-radius-md)",
+      "padding": "var(--spacing-sm) var(--spacing-md)",
+      "color": "var(--color-text-dark)"
+    }
+  }
+}

@@ -102,10 +102,10 @@ src/
 - **alertmanager** - уведомления
 
 #### Домены:
-- `veles-auto.com` - основной сайт
-- `api.veles-auto.com` - API
-- `tg.veles-auto.com` - Telegram Mini App
-- `admin.veles-auto.com` - админка
+- `veles-drive.ru` - основной сайт
+- `api.veles-drive.ru` - API
+- `tg.veles-drive.ru` - Telegram Mini App
+- `admin.veles-drive.ru` - админка
 
 ## Безопасность
 

@@ -5,7 +5,7 @@ from datetime import timedelta
 import random
 
 # Импорты моделей
-from veles_auto.models import (
+from veles_drive.models import (
     Brand, Company, Car, CarImage, Review, Article, News, Category, Tag,
     PageView, UserSession, SearchQuery, Conversion
 )

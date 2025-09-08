@@ -1,0 +1,19 @@
+FROM python:3.11-alpine
+
+WORKDIR /app
+
+# Устанавливаем зависимости
+RUN apk add --no-cache postgresql-dev gcc musl-dev linux-headers
+
+# Копируем requirements
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Копируем код
+COPY . .
+
+# Создаем health check
+RUN echo 'from django.http import HttpResponse\ndef health_check(request):\n    return HttpResponse("ok", content_type="text/plain")' > /app/health_check.py
+
+# Запускаем Django
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]

@@ -45,8 +45,8 @@ VELES AUTO - это комплексная веб-платформа для по
 
 ```bash
 # Клонирование репозитория
-git clone https://github.com/your-username/veles-auto-project.git
-cd veles-auto-project
+git clone https://github.com/your-username/veles-drive.git
+cd veles-drive
 
 # Настройка переменных окружения
 cp env.example .env
@@ -81,7 +81,7 @@ npm start
 ## 📁 Структура проекта
 
 ```
-veles-auto-project/
+veles-drive/
 ├── backend/                 # Django backend
 │   ├── cars/               # Модуль автомобилей
 │   ├── companies/          # Модуль компаний
@@ -185,10 +185,10 @@ chmod +x scripts/deploy_production.sh
 
 ## 📞 Поддержка
 
-- **Email**: support@veles-auto.com
+- **Email**: support@veles-drive.ru
 - **Telegram**: @veles_auto_support
-- **Документация**: https://docs.veles-auto.com
-- **Issues**: [GitHub Issues](https://github.com/your-username/veles-auto-project/issues)
+- **Документация**: https://docs.veles-drive.ru
+- **Issues**: [GitHub Issues](https://github.com/your-username/veles-drive/issues)
 
 ## 🎯 Roadmap
 

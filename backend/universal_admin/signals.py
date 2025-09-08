@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from datetime import timedelta
 
 # Импорты моделей
-from veles_auto.models import (
+from veles_drive.models import (
     Category, Tag, Article, ContentImage, Subscription, ContentView, Comment, Reaction, ContentRating,
     YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata, PageView, UserSession, SearchQuery, Conversion,
     ABTest, ABTestVariant, ABTestResult

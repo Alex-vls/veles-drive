@@ -26,6 +26,13 @@ from .serializers import (
 from .permissions import IsModerator
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.decorators import action
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from django.db import connection
+import redis
+import json
+from datetime import datetime
 
 class NewsListView(generics.ListAPIView):
     queryset = News.objects.filter(is_published=True)
@@ -319,3 +326,167 @@ class CarDeleteView(generics.DestroyAPIView):
         # Очищаем кэш для удаленного автомобиля
         cache.delete_pattern(f"view_cache_/api/cars/{self.kwargs['pk']}/*")
         cache.delete_pattern("view_cache_/api/cars/*") 
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def health_check(request):
+    """
+    Health check endpoint для проверки работоспособности системы
+    """
+    health_status = {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "services": {}
+    }
+    
+    # Проверка базы данных
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            health_status["services"]["database"] = {
+                "status": "healthy",
+                "message": "PostgreSQL connection successful"
+            }
+    except Exception as e:
+        health_status["services"]["database"] = {
+            "status": "unhealthy",
+            "message": f"Database connection failed: {str(e)}"
+        }
+        health_status["status"] = "unhealthy"
+    
+    # Проверка Redis
+    try:
+        cache.set("health_check", "ok", 10)
+        if cache.get("health_check") == "ok":
+            health_status["services"]["redis"] = {
+                "status": "healthy",
+                "message": "Redis connection successful"
+            }
+        else:
+            raise Exception("Redis cache test failed")
+    except Exception as e:
+        health_status["services"]["redis"] = {
+            "status": "unhealthy",
+            "message": f"Redis connection failed: {str(e)}"
+        }
+        health_status["status"] = "unhealthy"
+    
+    # Проверка основных модулей
+    try:
+        from cars.models import Car
+        from companies.models import Company
+        from users.models import User
+        from erp.models import Inventory, Sale, Service
+        
+        health_status["services"]["modules"] = {
+            "status": "healthy",
+            "message": "All ERP modules loaded successfully",
+            "modules": ["cars", "companies", "users", "erp"]
+        }
+    except Exception as e:
+        health_status["services"]["modules"] = {
+            "status": "unhealthy",
+            "message": f"Module loading failed: {str(e)}"
+        }
+        health_status["status"] = "unhealthy"
+    
+    # Статистика системы
+    try:
+        car_count = Car.objects.count()
+        company_count = Company.objects.count()
+        user_count = User.objects.count()
+        inventory_count = Inventory.objects.count()
+        sale_count = Sale.objects.count()
+        service_count = Service.objects.count()
+        
+        health_status["statistics"] = {
+            "cars": car_count,
+            "companies": company_count,
+            "users": user_count,
+            "inventory_items": inventory_count,
+            "sales": sale_count,
+            "services": service_count
+        }
+    except Exception as e:
+        health_status["statistics"] = {
+            "error": f"Failed to get statistics: {str(e)}"
+        }
+    
+    # Версия API
+    health_status["version"] = "1.0.0"
+    health_status["service"] = "Veles Auto ERP"
+    
+    return JsonResponse(health_status, status=200 if health_status["status"] == "healthy" else 503)
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def api_status(request):
+    """
+    Статус API и доступных endpoints
+    """
+    api_status = {
+        "status": "operational",
+        "timestamp": datetime.now().isoformat(),
+        "version": "1.0.0",
+        "endpoints": {
+            "health": "/health/",
+            "api_status": "/api/status/",
+            "cars": "/api/cars/",
+            "companies": "/api/companies/",
+            "users": "/api/users/",
+            "erp": {
+                "inventory": "/api/erp/inventory/",
+                "sales": "/api/erp/sales/",
+                "services": "/api/erp/services/",
+                "service_orders": "/api/erp/service-orders/",
+                "financial": "/api/erp/financial/",
+                "project_boards": "/api/erp/project-boards/",
+                "project_tasks": "/api/erp/project-tasks/",
+                "dashboard": "/api/erp/dashboard/",
+                "reports": "/api/erp/reports/"
+            },
+            "telegram": "/api/telegram/",
+            "admin": "/admin/"
+        },
+        "documentation": {
+            "api_docs": "/api/docs/",
+            "swagger": "/api/swagger/",
+            "redoc": "/api/redoc/"
+        }
+    }
+    
+    return JsonResponse(api_status)
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def system_info(request):
+    """
+    Информация о системе
+    """
+    import os
+    import platform
+    
+    system_info = {
+        "timestamp": datetime.now().isoformat(),
+        "system": {
+            "platform": platform.platform(),
+            "python_version": platform.python_version(),
+            "django_version": "4.2+",
+            "node": platform.node()
+        },
+        "environment": {
+            "debug": os.getenv("DEBUG", "False"),
+            "database_url": os.getenv("DATABASE_URL", "not_set"),
+            "redis_url": os.getenv("REDIS_URL", "not_set"),
+            "allowed_hosts": os.getenv("ALLOWED_HOSTS", "not_set")
+        },
+        "services": {
+            "postgresql": "15-alpine",
+            "redis": "7-alpine",
+            "nginx": "alpine",
+            "prometheus": "latest",
+            "grafana": "latest"
+        }
+    }
+    
+    return JsonResponse(system_info) 

@@ -17,7 +17,7 @@ import json
 # Импорты моделей
 from cars.models import Brand, Car, CarImage
 from companies.models import Company, Review, CompanySchedule, CompanyFeature
-from veles_auto.models import (
+from veles_drive.models import (
     Category, Tag, Article, ContentImage,
     Subscription, ContentView, Comment, Reaction, ContentRating,
     YouTubeChannel, YouTubeVideo, YouTubePlaylist, SEOMetadata,
@@ -30,7 +30,7 @@ from erp.models import (
     ProjectBoard, ProjectColumn, ProjectTask, TaskComment, TaskAttachment, TaskHistory, TaskLabel
 )
 
-from veles_auto.admin_actions import (
+from veles_drive.admin_actions import (
     approve_content, reject_content, verify_companies,
     unverify_companies, delete_spam, ban_users, unban_users,
     export_as_json
@@ -66,7 +66,7 @@ class VelesAutoUniversalAdminSite(AdminSite):
             elif app_name in ['Core']:
                 categorized_apps['Контент и медиа'].append(app)
             elif app_name in ['Veles auto']:
-                # Разделяем veles_auto на категории
+                # Разделяем veles_drive на категории
                 content_models = []
                 analytics_models = []
                 user_models = []
@@ -83,21 +83,21 @@ class VelesAutoUniversalAdminSite(AdminSite):
                 if content_models:
                     categorized_apps['Контент и медиа'].append({
                         'name': 'Контент',
-                        'app_label': 'veles_auto_content',
+                        'app_label': 'veles_drive_content',
                         'models': content_models
                     })
                 
                 if analytics_models:
                     categorized_apps['Аналитика и SEO'].append({
                         'name': 'Аналитика',
-                        'app_label': 'veles_auto_analytics',
+                        'app_label': 'veles_drive_analytics',
                         'models': analytics_models
                     })
                 
                 if user_models:
                     categorized_apps['Пользователи и права'].append({
                         'name': 'Пользователи',
-                        'app_label': 'veles_auto_users',
+                        'app_label': 'veles_drive_users',
                         'models': user_models
                     })
             else:
@@ -313,7 +313,7 @@ class VelesAutoUniversalAdminSite(AdminSite):
             },
             {
                 'name': 'Добавить статью',
-                'url': reverse('admin:veles_auto_article_add'),
+                'url': reverse('admin:veles_drive_article_add'),
                 'icon': '📝',
                 'color': 'secondary'
             },

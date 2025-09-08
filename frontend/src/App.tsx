@@ -1,27 +1,46 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { store } from '@/store';
-import theme from '@/theme';
-import { AuthProvider } from '@/contexts/AuthContext';
-import AppRoutes from '@/routes';
-import './styles/global.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/design/Header';
+import HeroSection from './components/design/HeroSection';
 
-const App: React.FC = () => {
+function App() {
+  const handleCatalogClick = () => {
+    console.log('Каталог автомобилей');
+  };
+
+  const handleMenuClick = () => {
+    console.log('Меню');
+  };
+
+  const handleFavoritesClick = () => {
+    console.log('Избранное');
+  };
+
+  const handleProfileClick = () => {
+    console.log('Профиль');
+  };
+
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Router>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </Router>
-      </ThemeProvider>
-    </Provider>
+    <Router>
+      <div className="App">
+        <Header
+          onMenuClick={handleMenuClick}
+          onFavoritesClick={handleFavoritesClick}
+          onProfileClick={handleProfileClick}
+        />
+        
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              <HeroSection onCatalogClick={handleCatalogClick} />
+            } 
+          />
+          {/* Другие маршруты будут добавлены позже */}
+        </Routes>
+      </div>
+    </Router>
   );
-};
+}
 
-export default App; 
+export default App;

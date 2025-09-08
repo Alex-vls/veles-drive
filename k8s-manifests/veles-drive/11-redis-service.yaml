@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: veles-drive-redis
+  namespace: veles-drive
+spec:
+  selector:
+    app: veles-drive-redis
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+  type: ClusterIP

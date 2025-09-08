@@ -39,7 +39,7 @@ class Command(BaseCommand):
     def create_bot_settings(self):
         """Создание настроек бота"""
         bot_settings, created = TelegramBotSettings.objects.get_or_create(
-            bot_username='veles_auto_bot',
+            bot_username='veles_drive_bot',
             defaults={
                 'bot_token': '1234567890:ABCdefGHIjklMNOpqrsTUVwxyz',  # Демо токен
                 'webhook_url': 'https://api.veles-auto.com/telegram/webhook/',
@@ -267,19 +267,19 @@ class Command(BaseCommand):
                 'chat_id': -1001234567890,
                 'chat_type': 'supergroup',
                 'title': 'VELES AUTO - Общие вопросы',
-                'username': 'veles_auto_general'
+                'username': 'veles_drive_general'
             },
             {
                 'chat_id': -1009876543210,
                 'chat_type': 'supergroup',
                 'title': 'VELES AUTO - Продажи',
-                'username': 'veles_auto_sales'
+                'username': 'veles_drive_sales'
             },
             {
                 'chat_id': -1005556667770,
                 'chat_type': 'supergroup',
                 'title': 'VELES AUTO - Разработка',
-                'username': 'veles_auto_dev'
+                'username': 'veles_drive_dev'
             },
             {
                 'chat_id': 123456789,

@@ -69,7 +69,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'veles_auto'),
+        'NAME': os.environ.get('POSTGRES_DB', 'veles_drive'),
         'USER': os.environ.get('POSTGRES_USER', 'veles_user'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'veles_password_2024'),
         'HOST': os.environ.get('POSTGRES_HOST', 'db'),

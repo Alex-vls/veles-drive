@@ -11,11 +11,11 @@
 - [ ] Домен настроен и указывает на сервер
 
 ### Домены и DNS
-- [ ] veles-auto.com → A запись на сервер
-- [ ] api.veles-auto.com → A запись на сервер
-- [ ] tg.veles-auto.com → A запись на сервер
-- [ ] admin.veles-auto.com → A запись на сервер
-- [ ] www.veles-auto.com → CNAME на veles-auto.com
+- [ ] veles-drive.ru → A запись на сервер
+- [ ] api.veles-drive.ru → A запись на сервер
+- [ ] tg.veles-drive.ru → A запись на сервер
+- [ ] admin.veles-drive.ru → A запись на сервер
+- [ ] www.veles-drive.ru → CNAME на veles-drive.ru
 
 ### Переменные окружения
 - [ ] .env файл создан и настроен
@@ -52,15 +52,15 @@
 - [ ] Тест обновления прошел успешно
 
 ### Проверка SSL
-- [ ] https://veles-auto.com работает
-- [ ] https://api.veles-auto.com работает
-- [ ] https://tg.veles-auto.com работает
-- [ ] https://admin.veles-auto.com работает
+- [ ] https://veles-drive.ru работает
+- [ ] https://api.veles-drive.ru работает
+- [ ] https://tg.veles-drive.ru работает
+- [ ] https://admin.veles-drive.ru работает
 - [ ] Редирект с HTTP на HTTPS работает
 
 ## ✅ Функциональность
 
-### Основной сайт (veles-auto.com)
+### Основной сайт (veles-drive.ru)
 - [ ] Главная страница загружается
 - [ ] Поиск автомобилей работает
 - [ ] Фильтры работают
@@ -68,7 +68,7 @@
 - [ ] Schema.org микроразметка присутствует
 - [ ] Адаптивный дизайн работает
 
-### API (api.veles-auto.com)
+### API (api.veles-drive.ru)
 - [ ] /api/health/ возвращает 200
 - [ ] /api/vehicles/ возвращает список
 - [ ] /api/companies/ возвращает список
@@ -76,13 +76,13 @@
 - [ ] CORS настроен правильно
 - [ ] Rate limiting работает
 
-### Telegram Mini App (tg.veles-auto.com)
+### Telegram Mini App (tg.veles-drive.ru)
 - [ ] Страница загружается в Telegram
 - [ ] Поиск работает
 - [ ] Карточки отображаются
 - [ ] Интеграция с Telegram API работает
 
-### Админка (admin.veles-auto.com)
+### Админка (admin.veles-drive.ru)
 - [ ] Django Admin доступен
 - [ ] Все модели зарегистрированы
 - [ ] Фильтры и поиск работают
@@ -246,10 +246,10 @@
 ## ✅ Финальная проверка
 
 ### Все домены
-- [ ] veles-auto.com работает
-- [ ] api.veles-auto.com работает
-- [ ] tg.veles-auto.com работает
-- [ ] admin.veles-auto.com работает
+- [ ] veles-drive.ru работает
+- [ ] api.veles-drive.ru работает
+- [ ] tg.veles-drive.ru работает
+- [ ] admin.veles-drive.ru работает
 
 ### Все функции
 - [ ] Поиск и фильтрация работают
@@ -272,9 +272,9 @@
 Если все пункты отмечены, система готова к использованию в продакшене.
 
 ### Контакты для поддержки
-- Email: support@veles-auto.com
+- Email: support@veles-drive.ru
 - Telegram: @veles_auto_support
-- Документация: https://docs.veles-auto.com
+- Документация: https://docs.veles-drive.ru
 
 ### Мониторинг после запуска
 - Регулярно проверяйте логи

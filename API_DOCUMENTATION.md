@@ -2,7 +2,7 @@
 
 ## Базовый URL
 ```
-https://api.veles-auto.com
+https://api.veles-drive.ru
 ```
 
 ## Аутентификация
@@ -52,7 +52,7 @@ GET /api/vehicles/
 ```json
 {
     "count": 100,
-    "next": "https://api.veles-auto.com/api/vehicles/?page=2",
+    "next": "https://api.veles-drive.ru/api/vehicles/?page=2",
     "previous": null,
     "results": [
         {
@@ -78,7 +78,7 @@ GET /api/vehicles/
                 "city": "Москва"
             },
             "images": [
-                "https://api.veles-auto.com/media/vehicles/car1.jpg"
+                "https://api.veles-drive.ru/media/vehicles/car1.jpg"
             ],
             "created_at": "2024-01-01T10:00:00Z"
         }
@@ -206,7 +206,7 @@ GET /api/companies/
         {
             "id": 1,
             "name": "Автосалон",
-            "logo": "https://api.veles-auto.com/media/companies/logo1.jpg",
+            "logo": "https://api.veles-drive.ru/media/companies/logo1.jpg",
             "rating": 4.5,
             "is_verified": true,
             "city": "Москва",
@@ -484,7 +484,7 @@ GET /api/search/
 ```json
 {
     "count": 1000,
-    "next": "https://api.veles-auto.com/api/vehicles/?page=2",
+    "next": "https://api.veles-drive.ru/api/vehicles/?page=2",
     "previous": null,
     "results": [...]
 }
@@ -512,7 +512,7 @@ GET /api/vehicles/?ordering=year,-price
 
 ### Подключение
 ```javascript
-const ws = new WebSocket('wss://api.veles-auto.com/ws/');
+const ws = new WebSocket('wss://api.veles-drive.ru/ws/');
 ```
 
 ### События

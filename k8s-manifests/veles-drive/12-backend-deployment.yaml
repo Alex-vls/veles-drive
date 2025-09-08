@@ -1,0 +1,124 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: veles-drive-backend
+  namespace: veles-drive
+  labels:
+    app: veles-drive-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: veles-drive-backend
+  template:
+    metadata:
+      labels:
+        app: veles-drive-backend
+    spec:
+      containers:
+      - name: backend
+        image: alsx12/veles-drive-backend:latest
+        ports:
+        - containerPort: 80
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          cd /app
+          echo "Starting Django application..."
+          echo "Waiting for database..."
+          sleep 10
+          echo "Running migrations..."
+          python manage.py migrate --noinput
+          echo "Collecting static files..."
+          python manage.py collectstatic --noinput
+          echo "Starting Gunicorn..."
+          exec gunicorn --bind 0.0.0.0:80 --workers 1 --timeout 120 --keep-alive 5 veles_drive.wsgi:application
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: DJANGO_SETTINGS_MODULE
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: DEBUG
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: veles-drive-secret
+              key: SECRET_KEY
+        - name: ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: ALLOWED_HOSTS
+        - name: CORS_ALLOWED_ORIGINS
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: CORS_ALLOWED_ORIGINS
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: REDIS_URL
+        - name: CELERY_BROKER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: CELERY_BROKER_URL
+        - name: CELERY_RESULT_BACKEND
+          valueFrom:
+            configMapKeyRef:
+              name: veles-drive-config
+              key: CELERY_RESULT_BACKEND
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: veles-drive-secret
+              key: TELEGRAM_BOT_TOKEN
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: veles-drive-secret
+              key: SENTRY_DSN
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health/
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
+        volumeMounts:
+        - name: static-storage
+          mountPath: /app/staticfiles
+        - name: media-storage
+          mountPath: /app/mediafiles
+      volumes:
+      - name: static-storage
+        persistentVolumeClaim:
+          claimName: veles-drive-static-pvc
+      - name: media-storage
+        persistentVolumeClaim:
+          claimName: veles-drive-media-pvc

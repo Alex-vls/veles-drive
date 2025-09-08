@@ -1,0 +1,333 @@
+.project-list {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.project-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.project-list-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.project-table {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.project-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+  color: #262626;
+}
+
+.project-table .ant-table-tbody > tr:hover > td {
+  background: #f6f8fa;
+}
+
+.project-name-cell h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #262626;
+  line-height: 1.4;
+}
+
+.project-name-cell p {
+  margin: 0;
+  font-size: 12px;
+  color: #8c8c8c;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.project-dates {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.project-dates > div {
+  margin-bottom: 2px;
+}
+
+.project-dates .anticon {
+  margin-right: 4px;
+  color: #1890ff;
+}
+
+/* Статусы проектов */
+.ant-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Прогресс бар */
+.ant-progress {
+  margin: 0;
+}
+
+.ant-progress-text {
+  font-size: 11px !important;
+  color: #8c8c8c !important;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .project-list {
+    padding: 16px;
+  }
+
+  .project-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .project-list-header h2 {
+    font-size: 20px;
+  }
+
+  .project-name-cell h4 {
+    font-size: 14px;
+  }
+
+  .project-name-cell p {
+    font-size: 11px;
+  }
+
+  .project-dates {
+    font-size: 11px;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .project-list {
+    background: #141414;
+  }
+
+  .project-list-header {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .project-list-header h2 {
+    color: #ffffff;
+  }
+
+  .project-table {
+    background: #1f1f1f;
+    border: 1px solid #303030;
+  }
+
+  .project-table .ant-table-thead > tr > th {
+    background: #262626;
+    border-bottom-color: #434343;
+    color: #ffffff;
+  }
+
+  .project-table .ant-table-tbody > tr > td {
+    background: #1f1f1f;
+    border-bottom-color: #434343;
+  }
+
+  .project-table .ant-table-tbody > tr:hover > td {
+    background: #262626;
+  }
+
+  .project-name-cell h4 {
+    color: #ffffff;
+  }
+
+  .project-name-cell p {
+    color: #a6a6a6;
+  }
+
+  .project-dates {
+    color: #a6a6a6;
+  }
+
+  .project-dates .anticon {
+    color: #177ddc;
+  }
+}
+
+/* Анимации */
+.project-table .ant-table-tbody > tr {
+  transition: all 0.2s ease;
+}
+
+.project-table .ant-table-tbody > tr:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Кастомные стили для кнопок */
+.project-table .ant-btn {
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.project-table .ant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для модального окна */
+.ant-modal-content {
+  border-radius: 8px;
+}
+
+.ant-modal-header {
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ant-modal-title {
+  font-weight: 600;
+  color: #262626;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+}
+
+.ant-input,
+.ant-input-number,
+.ant-picker {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.ant-input:focus,
+.ant-input-number:focus,
+.ant-picker:focus,
+.ant-input-number-focused,
+.ant-picker-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.ant-textarea {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.ant-textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Стили для пагинации */
+.ant-pagination {
+  margin: 16px 0 0 0;
+}
+
+.ant-pagination-item {
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.ant-pagination-item:hover {
+  border-color: #1890ff;
+  transform: translateY(-1px);
+}
+
+.ant-pagination-item-active {
+  background: #1890ff;
+  border-color: #1890ff;
+}
+
+.ant-pagination-item-active a {
+  color: white;
+}
+
+/* Стили для загрузки */
+.ant-spin-dot {
+  font-size: 24px;
+}
+
+.ant-spin-text {
+  margin-top: 8px;
+  color: #8c8c8c;
+}
+
+/* Стили для пустого состояния */
+.ant-empty {
+  padding: 40px 0;
+}
+
+.ant-empty-description {
+  color: #8c8c8c;
+}
+
+/* Стили для фильтров */
+.ant-table-filter-trigger {
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.ant-table-filter-trigger:hover {
+  background: #f5f5f5;
+}
+
+/* Стили для сортировки */
+.ant-table-column-sorter {
+  transition: all 0.2s ease;
+}
+
+.ant-table-column-sorter:hover {
+  color: #1890ff;
+}
+
+/* Стили для выбора размера страницы */
+.ant-select {
+  border-radius: 4px;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Стили для быстрого перехода */
+.ant-pagination-options-quick-jumper {
+  border-radius: 4px;
+}
+
+.ant-pagination-options-quick-jumper input {
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.2s ease;
+}
+
+.ant-pagination-options-quick-jumper input:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+} 
