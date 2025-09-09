@@ -1,889 +1,838 @@
-# Техническое задание для фронтенд-разработчика
-## VELES AUTO - Современная платформа для автомобильного бизнеса
+# 🚗 VELES AUTO - Техническое задание на Frontend
+
+## 📋 Содержание
+
+1. [Обзор проекта](#обзор-проекта)
+2. [Технические требования](#технические-требования)
+3. [Архитектура фронтенда](#архитектура-фронтенда)
+4. [Основные модули](#основные-модули)
+5. [ERP система](#erp-система)
+6. [Админ-панель](#админ-панель)
+7. [UI/UX требования](#uiux-требования)
+8. [API интеграция](#api-интеграция)
+9. [Безопасность](#безопасность)
+10. [Тестирование](#тестирование)
 
 ---
 
-## 📋 Общая информация
+## 🎯 Обзор проекта
 
-**Проект:** VELES AUTO  
-**Тип:** PWA приложение с акцентом на Telegram Mini App  
-**Технологии:** React 18+ + TypeScript + Material-UI  
-**Целевые платформы:** Web, Telegram Mini App, PWA  
-**Время разработки:** С нуля  
+**VELES AUTO** - современная веб-платформа для автомобильного бизнеса с дизайном в стиле Apple. 
 
----
+### Цель проекта
+Создать интуитивно понятный и функциональный фронтенд для комплексной системы управления автомобильным бизнесом.
 
-## 🎯 Цель проекта
-
-Создать современную веб-платформу для покупки, продажи и обслуживания автомобилей с дизайном в стиле Apple, включающую:
-- Агрегатор автомобилей и транспорта
-- ERP систему для управления бизнесом
-- Telegram Mini App интеграцию
-- Универсальную админку с ролевой системой
+### Ключевые характеристики
+- 🎨 Современный дизайн в стиле Apple
+- 📱 Полная адаптивность (desktop, tablet, mobile)
+- ⚡ Высокая производительность
+- 🔒 Безопасность данных
+- 🌐 Многоязычность (RU/EN)
 
 ---
 
-## 🏗️ Архитектура системы
+## 🛠️ Технические требования
 
-### Backend (готовый)
-- **Django 4.2+** с Django REST Framework
-- **PostgreSQL** - основная БД
-- **Redis** - кэширование и сессии
-- **MinIO** - файловое хранилище
-- **Celery** - фоновые задачи
+### Основной стек
+```json
+{
+  "framework": "React 18+",
+  "language": "TypeScript 5.0+",
+  "ui_library": "Material-UI (MUI) v5+",
+  "state_management": "Redux Toolkit + RTK Query",
+  "routing": "React Router v6+",
+  "forms": "React Hook Form + Yup validation",
+  "charts": "Recharts / Chart.js",
+  "styling": "Emotion (styled-components)",
+  "build_tool": "Vite",
+  "package_manager": "npm/yarn"
+}
+```
 
-### Frontend (твоя задача)
-- **React 18+** с TypeScript
-- **Material-UI** для компонентов
-- **Redux Toolkit** для состояния
-- **React Router** для маршрутизации
-- **PWA** функциональность
-- **Telegram Mini App** интеграция
+### Дополнительные библиотеки
+```json
+{
+  "date_handling": "dayjs",
+  "drag_and_drop": "@dnd-kit/core (для Trello)",
+  "notifications": "react-toastify",
+  "icons": "@mui/icons-material + Heroicons",
+  "rich_text": "@mui/x-data-grid (таблицы)",
+  "file_upload": "react-dropzone",
+  "animations": "framer-motion",
+  "pdf_generation": "@react-pdf/renderer"
+}
+```
+
+### Требования к браузерам
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
 
 ---
 
-## 👥 Роли пользователей
+## 🏗️ Архитектура фронтенда
 
-### 1. Гость (неавторизованный)
-- Просмотр каталога автомобилей
-- Поиск и фильтрация
-- Просмотр компаний
-- Регистрация/авторизация
+### Структура проекта
+```
+src/
+├── components/           # Переиспользуемые компоненты
+│   ├── common/          # Общие компоненты
+│   ├── forms/           # Формы
+│   └── charts/          # Графики и диаграммы
+├── pages/               # Страницы приложения
+│   ├── auth/           # Аутентификация
+│   ├── dashboard/      # Главная панель
+│   ├── cars/           # Модуль автомобилей
+│   ├── companies/      # Модуль компаний
+│   ├── erp/            # ERP система
+│   └── admin/          # Админ-панель
+├── layouts/            # Макеты страниц
+├── store/              # Redux store
+│   ├── api/            # RTK Query API
+│   ├── slices/         # Redux slices
+│   └── middleware/     # Middleware
+├── services/           # Сервисы и утилиты
+├── hooks/              # Кастомные хуки
+├── utils/              # Утилиты
+├── types/              # TypeScript типы
+├── constants/          # Константы
+└── assets/             # Статические файлы
+```
 
-### 2. Пользователь (обычный)
-- Все функции гостя
-- Личный кабинет
-- Избранные автомобили
-- История просмотров
-- Подача заявок на лизинг/страхование
+### State Management
+```typescript
+// Redux Store Structure
+interface RootState {
+  auth: AuthState;
+  cars: CarsState;
+  companies: CompaniesState;
+  erp: ERPState;
+  ui: UIState;
+  notifications: NotificationsState;
+}
 
-### 3. Владелец компании
-- Все функции пользователя
-- Управление своей компанией
-- Добавление автомобилей
-- ERP система (базовая)
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  permissions: string[];
+}
 
-### 4. Менеджер компании
-- Все функции владельца
-- Расширенная ERP система
-- Управление продажами
-- Управление сервисом
+interface ERPState {
+  sales: Sale[];
+  inventory: InventoryItem[];
+  services: Service[];
+  projects: {
+    boards: ProjectBoard[];
+    tasks: Task[];
+    columns: Column[];
+  };
+  reports: Report[];
+}
+```
 
-### 5. Администратор
-- Полный доступ ко всем функциям
-- Универсальная админка
-- Модерация контента
-- Управление пользователями
+---
+
+## 🎨 UI/UX требования
+
+### Дизайн-система
+- **Цветовая палитра**: Нейтральная с акцентами (в стиле Apple)
+- **Типографика**: San Francisco / Inter font family
+- **Иконки**: Outline style, консистентный набор
+- **Анимации**: Плавные переходы (200-300ms)
+- **Shadows**: Мягкие тени для глубины
+
+### Адаптивность
+```css
+/* Breakpoints */
+mobile: 0-768px
+tablet: 768-1024px  
+desktop: 1024px+
+
+/* Layout principles */
+- Mobile-first подход
+- Flexible grid system
+- Touch-friendly элементы (44px min)
+- Readable typography scales
+```
+
+### Темы
+- 🌞 **Light theme** (по умолчанию)
+- 🌙 **Dark theme** (переключение в настройках)
 
 ---
 
 ## 🚗 Основные модули
 
-### 1. Каталог автомобилей
-**Модели данных:**
+### 1. Система аутентификации
 ```typescript
-interface Vehicle {
-  id: number;
-  vehicle_type: 'car' | 'motorcycle' | 'truck' | 'bus' | 'boat' | 'yacht' | 'helicopter' | 'airplane' | 'tractor' | 'special';
-  brand: Brand;
-  model: Model;
-  year: number;
-  mileage: number;
-  price: number;
-  currency: string;
-  fuel_type: 'petrol' | 'diesel' | 'electric' | 'hybrid' | 'gas' | 'kerosene' | 'aviation_fuel';
-  transmission: 'manual' | 'automatic' | 'robot' | 'variator' | 'cvt';
-  engine_volume: number;
-  power: number;
-  color: string;
-  vin: string;
-  description: string;
-  is_active: boolean;
-  is_available: boolean;
-  company: Company;
-  images: VehicleImage[];
-  features: VehicleFeature[];
-  created_at: string;
-  updated_at: string;
-}
+// Страницы авторизации
+pages/auth/
+├── LoginPage.tsx           # Вход в систему
+├── RegisterPage.tsx        # Регистрация
+├── ForgotPasswordPage.tsx  # Восстановление пароля
+├── ResetPasswordPage.tsx   # Сброс пароля
+└── ProfilePage.tsx         # Профиль пользователя
 
-interface Car extends Vehicle {
-  body_type: 'sedan' | 'hatchback' | 'wagon' | 'suv' | 'crossover' | 'coupe' | 'convertible' | 'pickup' | 'van';
-  doors: number;
-  seats: number;
-  trunk_volume: number;
-}
-
-interface Motorcycle extends Vehicle {
-  engine_type: 'inline' | 'v_twin' | 'boxer' | 'single';
-  cylinders: number;
-  cooling: 'air' | 'liquid' | 'oil';
-  fuel_capacity: number;
-}
-
-interface Boat extends Vehicle {
-  boat_type: 'motorboat' | 'sailboat' | 'yacht' | 'catamaran' | 'jet_ski';
-  length: number;
-  beam: number;
-  draft: number;
-  capacity: number;
-}
-
-interface Aircraft extends Vehicle {
-  aircraft_type: 'helicopter' | 'airplane' | 'gyrocopter' | 'drone';
-  wingspan?: number;
-  length: number;
-  max_altitude: number;
-  range: number;
-  flight_hours: number;
-}
+// Функционал
+- JWT аутентификация
+- Социальные логины (VK, Google, Telegram)
+- Двухфакторная аутентификация
+- Управление профилем
+- История активности
 ```
 
-**Функционал:**
-- Каталог с фильтрацией по типу транспорта
-- Детальные карточки с галереей изображений
-- Поиск по марке, модели, году, цене
+### 2. Модуль автомобилей (Cars)
+```typescript
+pages/cars/
+├── CarsListPage.tsx        # Каталог транспорта
+├── CarDetailPage.tsx       # Детали автомобиля
+├── CarCreatePage.tsx       # Добавление транспорта
+├── CarEditPage.tsx         # Редактирование
+└── CarComparisonPage.tsx   # Сравнение автомобилей
+
+// Компоненты
+components/cars/
+├── CarCard.tsx             # Карточка автомобиля
+├── CarFilters.tsx          # Фильтры поиска
+├── CarImageGallery.tsx     # Галерея изображений
+├── CarSpecifications.tsx   # Характеристики
+└── CarPriceCalculator.tsx  # Калькулятор цены
+
+// Функционал
+- Расширенные фильтры (тип, марка, год, цена)
+- Поиск по всем параметрам
+- Галерея изображений с zoom
 - Сравнение автомобилей
-- Избранное
-- История просмотров
-
-### 2. Компании
-**Модель данных:**
-```typescript
-interface Company {
-  id: number;
-  owner?: User;
-  name: string;
-  description: string;
-  logo?: string;
-  address: string;
-  city: string;
-  phone: string;
-  email: string;
-  website?: string;
-  is_verified: boolean;
-  rating: number;
-  images: CompanyImage[];
-  features: CompanyFeature[];
-  schedule: CompanySchedule[];
-  reviews: Review[];
-  vehicles_count: number;
-  reviews_count: number;
-  created_at: string;
-  updated_at: string;
-}
+- Избранное и история просмотров
+- Поддержка всех типов транспорта:
+  * Автомобили (седан, хэтчбек, SUV, etc.)
+  * Мотоциклы
+  * Лодки/Яхты
+  * Воздушные суда
+  * Спецтехника
 ```
 
-**Функционал:**
-- Список компаний с фильтрацией
-- Детальные страницы компаний
-- Отзывы и рейтинги
+### 3. Модуль компаний (Companies)
+```typescript
+pages/companies/
+├── CompaniesListPage.tsx   # Список компаний
+├── CompanyDetailPage.tsx   # Детали компании
+├── CompanyCreatePage.tsx   # Создание компании
+└── CompanyEditPage.tsx     # Редактирование
+
+// Функционал
+- Каталог автосалонов и сервисных центров
+- Рейтинги и отзывы
 - Расписание работы
-- Каталог автомобилей компании
-
-### 3. ERP система
-**Основные модули:**
-
-#### 3.1 Управление инвентарем
-```typescript
-interface Inventory {
-  id: number;
-  company: Company;
-  car: Car;
-  quantity: number;
-  cost_price: number;
-  selling_price: number;
-  status: 'available' | 'reserved' | 'sold' | 'maintenance' | 'damaged';
-  location: string;
-  notes: string;
-  created_at: string;
-  updated_at: string;
-}
+- Контактная информация
+- Галерея изображений
+- Геолокация и карты
 ```
 
-#### 3.2 Продажи
+---
+
+## 💼 ERP система
+
+### 1. Dashboard (Главная панель)
 ```typescript
-interface Sale {
-  id: number;
-  company: Company;
-  car: Car;
-  customer: User;
-  sale_price: number;
-  commission: number;
-  sale_date: string;
-  status: 'pending' | 'completed' | 'cancelled' | 'refunded';
-  notes: string;
-  created_at: string;
-  updated_at: string;
-}
+pages/erp/DashboardPage.tsx
+
+// Компоненты дашборда
+components/erp/dashboard/
+├── MetricsCards.tsx        # Карточки метрик
+├── SalesChart.tsx          # График продаж
+├── RecentActivity.tsx      # Последняя активность
+├── TasksSummary.tsx        # Сводка задач
+├── FinancialOverview.tsx   # Финансовый обзор
+└── InventoryStatus.tsx     # Статус склада
+
+// Метрики
+- Общая выручка за период
+- Количество продаж
+- Активные задачи
+- Остатки на складе
+- Просроченные задачи
+- Топ автомобили по продажам
 ```
 
-#### 3.3 Сервисные услуги
+### 2. Управление продажами
 ```typescript
-interface Service {
-  id: number;
-  company: Company;
-  name: string;
-  description: string;
-  price: number;
-  duration: number; // в минутах
-  category: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-}
+pages/erp/sales/
+├── SalesListPage.tsx       # Список продаж
+├── SaleDetailPage.tsx      # Детали продажи
+├── SaleCreatePage.tsx      # Новая продажа
+└── SalesReportPage.tsx     # Отчет по продажам
 
-interface ServiceOrder {
-  id: number;
-  company: Company;
-  customer: User;
-  car: Car;
-  services: Service[];
-  total_price: number;
-  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
-  scheduled_date: string;
-  completed_date?: string;
-  notes: string;
-  created_at: string;
-  updated_at: string;
-}
+// Функционал
+- CRUD операции с продажами
+- Расчет комиссий
+- История продаж клиента
+- Аналитика по продавцам
+- Экспорт отчетов (PDF, Excel)
 ```
 
-#### 3.4 Финансы
+### 3. Сервисное обслуживание
 ```typescript
-interface Financial {
-  id: number;
-  company: Company;
-  operation_type: 'income' | 'expense' | 'investment' | 'loan' | 'refund';
-  amount: number;
-  category: string;
-  description: string;
-  date: string;
-  created_by: User;
-  created_at: string;
-  updated_at: string;
-}
+pages/erp/service/
+├── ServicesListPage.tsx    # Каталог услуг
+├── ServiceOrdersPage.tsx   # Заказы на обслуживание
+├── ServiceCreatePage.tsx   # Новая услуга
+└── ServiceReportPage.tsx   # Отчет по сервису
+
+// Функционал
+- Управление услугами
+- Заказы на обслуживание
+- Планировщик работ (календарь)
+- Отслеживание статусов
+- Уведомления клиентов
 ```
 
-#### 3.5 Trello-like управление проектами
+### 4. Финансовый модуль
 ```typescript
+pages/erp/finance/
+├── FinanceOverviewPage.tsx # Финансовый обзор
+├── TransactionsPage.tsx    # Список операций
+├── ReportsPage.tsx         # Финансовые отчеты
+└── BudgetPage.tsx          # Бюджет и планирование
+
+// Функционал
+- Учет доходов и расходов
+- Категоризация операций
+- Финансовая отчетность
+- Графики прибыли/убытков
+- Прогнозирование
+- Экспорт в различные форматы
+```
+
+### 5. Управление складом
+```typescript
+pages/erp/inventory/
+├── InventoryListPage.tsx   # Список товаров
+├── InventoryDetailPage.tsx # Детали позиции
+├── StockMovementPage.tsx   # Движение товаров
+└── InventoryReportPage.tsx # Отчет по складу
+
+// Функционал
+- Управление остатками
+- Движение товаров
+- Расчет маржинальности
+- Уведомления о низких остатках
+- ABC-анализ товаров
+```
+
+### 6. 📋 Trello-подобная система проектов
+
+```typescript
+pages/erp/projects/
+├── ProjectBoardsPage.tsx   # Список досок
+├── ProjectBoardPage.tsx    # Доска задач (Trello-like)
+├── ProjectTaskPage.tsx     # Детали задачи
+└── ProjectReportsPage.tsx  # Отчеты по проектам
+
+// Основные компоненты
+components/erp/projects/
+├── ProjectBoard.tsx        # Главный компонент доски
+├── ProjectColumn.tsx       # Колонка задач
+├── TaskCard.tsx           # Карточка задачи
+├── TaskModal.tsx          # Модалка задачи
+├── TaskComments.tsx       # Комментарии
+├── TaskAttachments.tsx    # Вложения
+├── TaskLabels.tsx         # Метки
+└── TaskHistory.tsx        # История изменений
+
+// Функциональность Trello-системы
 interface ProjectBoard {
-  id: number;
-  company: Company;
+  id: string;
   name: string;
   description: string;
-  board_type: 'sales' | 'service' | 'inventory' | 'general';
+  company: Company;
+  boardType: 'sales' | 'service' | 'inventory' | 'general';
   color: string;
-  is_archived: boolean;
-  created_by: User;
   columns: ProjectColumn[];
-  created_at: string;
-  updated_at: string;
+  labels: TaskLabel[];
+  members: User[];
+  isArchived: boolean;
 }
 
 interface ProjectColumn {
-  id: number;
-  board: ProjectBoard;
+  id: string;
   name: string;
   order: number;
   color: string;
-  is_archived: boolean;
   tasks: ProjectTask[];
-  created_at: string;
-  updated_at: string;
+  wipLimit?: number; // Work In Progress limit
 }
 
 interface ProjectTask {
-  id: number;
-  column: ProjectColumn;
+  id: string;
   title: string;
   description: string;
-  order: number;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  due_date?: string;
   assignee?: User;
   labels: TaskLabel[];
-  related_sale?: Sale;
-  related_service_order?: ServiceOrder;
-  related_car?: Car;
-  related_customer?: User;
-  is_archived: boolean;
-  created_by: User;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  dueDate?: Date;
+  
+  // Связи с ERP
+  relatedSale?: Sale;
+  relatedServiceOrder?: ServiceOrder;
+  relatedCar?: Car;
+  relatedCustomer?: User;
+  
+  // Дополнительные данные
   comments: TaskComment[];
   attachments: TaskAttachment[];
   history: TaskHistory[];
-  created_at: string;
-  updated_at: string;
+  
+  // UI состояния
+  order: number;
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
-```
 
-### 4. Дополнительные сервисы
+// Фичи Trello-системы:
+1. Drag & Drop задач между колонками
+2. Создание/редактирование/удаление:
+   - Досок проектов
+   - Колонок
+   - Задач
+3. Система меток с цветами
+4. Назначение исполнителей
+5. Комментарии к задачам
+6. Вложения файлов
+7. История изменений
+8. Дедлайны и уведомления
+9. Поиск и фильтрация
+10. Связь с ERP объектами (продажи, сервис, автомобили)
 
-#### 4.1 Аукционы
-```typescript
-interface Auction {
-  id: number;
-  title: string;
-  description: string;
-  auction_type: 'english' | 'dutch' | 'sealed' | 'reverse';
-  status: 'draft' | 'scheduled' | 'active' | 'paused' | 'ended' | 'cancelled';
-  vehicle: Vehicle;
-  start_date: string;
-  end_date: string;
-  min_bid: number;
-  reserve_price?: number;
-  current_price: number;
-  bid_increment: number;
-  total_bids: number;
-  is_active: boolean;
-  created_by: User;
-  created_at: string;
-  updated_at: string;
-}
-```
+// Типы досок по умолчанию:
+- Продажи (Sales) - задачи по продажам
+- Сервис (Service) - задачи по обслуживанию  
+- Склад (Inventory) - задачи по складу
+- Общие (General) - универсальные задачи
 
-#### 4.2 Лизинг
-```typescript
-interface LeasingApplication {
-  id: number;
-  program: LeasingProgram;
-  vehicle: Vehicle;
-  applicant: User;
-  status: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'cancelled';
-  down_payment: number;
-  term_months: number;
-  monthly_payment?: number;
-  total_amount?: number;
-  notes: string;
-  created_at: string;
-  updated_at: string;
-}
-```
-
-#### 4.3 Страхование
-```typescript
-interface InsurancePolicy {
-  id: number;
-  company: InsuranceCompany;
-  insurance_type: InsuranceType;
-  vehicle: Vehicle;
-  policy_number: string;
-  status: 'draft' | 'active' | 'expired' | 'cancelled';
-  start_date: string;
-  end_date: string;
-  premium_amount: number;
-  coverage_amount: number;
-  deductible: number;
-  insured_person: User;
-  created_at: string;
-  updated_at: string;
-}
+// UI особенности:
+- Полноэкранный режим доски
+- Боковая панель с фильтрами
+- Быстрые действия (хоткеи)
+- Bulk операции (массовые действия)
+- Экспорт досок
+- Шаблоны досок
 ```
 
 ---
 
-## 📱 Telegram Mini App
+## 🔧 Админ-панель
 
-### Функционал Mini App:
-1. **Агрегатор автомобилей** - просмотр каталога
-2. **Админка для компаний** - управление автомобилями
-3. **ERP система** - управление продажами и проектами
-4. **Уведомления** - push-уведомления о событиях
-
-### Интеграция с Telegram:
+### Структура админки
 ```typescript
-interface TelegramUser {
-  id: number;
-  telegram_id: string;
-  user: User;
-  username?: string;
-  first_name?: string;
-  last_name?: string;
-  language_code?: string;
-  is_bot: boolean;
-  created_at: string;
-  updated_at: string;
-}
+pages/admin/
+├── AdminDashboardPage.tsx  # Админ дашборд
+├── UsersManagementPage.tsx # Управление пользователями
+├── CompaniesManagementPage.tsx # Управление компаниями
+├── CarsManagementPage.tsx  # Управление автомобилями
+├── SystemSettingsPage.tsx  # Системные настройки
+├── ReportsPage.tsx         # Системные отчеты
+├── LogsPage.tsx           # Логи системы
+└── BackupPage.tsx         # Резервное копирование
 
-interface TelegramMiniAppSession {
-  id: string;
-  user: User;
-  init_data: string;
-  is_active: boolean;
-  created_at: string;
-  expires_at: string;
-}
+// Функционал админки
+1. Управление пользователями:
+   - CRUD операции
+   - Роли и разрешения
+   - Блокировка/разблокировка
+   - История активности
+   - Массовые операции
+
+2. Управление компаниями:
+   - Модерация новых компаний
+   - Верификация компаний
+   - Управление подписками
+   - Статистика по компаниям
+
+3. Управление контентом:
+   - Модерация автомобилей
+   - Управление брендами и моделями
+   - Системы категорий
+   - SEO настройки
+
+4. Системные настройки:
+   - Конфигурация приложения
+   - Email настройки
+   - Настройки уведомлений
+   - Настройки безопасности
+
+5. Аналитика и отчеты:
+   - Системные метрики
+   - Отчеты использования
+   - Финансовые отчеты
+   - Экспорт данных
+
+6. Системное администрирование:
+   - Логи приложения
+   - Мониторинг производительности
+   - Резервное копирование
+   - Управление кэшем
 ```
 
 ---
 
-## 🎨 Дизайн и UI/UX
+## 🔌 API интеграция
 
-### Дизайн-система:
-- **Стиль:** Apple-inspired, минималистичный
-- **Цветовая схема:** Современная, с акцентом на синий (#007AFF)
-- **Типографика:** Системные шрифты (SF Pro, Roboto)
-- **Компоненты:** Material-UI с кастомными стилями
-- **Анимации:** Плавные переходы, микроанимации
-
-### Адаптивность:
-- **Desktop:** 1200px+
-- **Tablet:** 768px - 1199px
-- **Mobile:** 320px - 767px
-- **PWA:** Поддержка установки как приложение
-
-### Темы:
-- **Светлая тема** (по умолчанию)
-- **Темная тема** (переключатель)
-- **Автоматическое переключение** по системным настройкам
-
----
-
-## 🔧 Технические требования
-
-### Обязательные технологии:
-- **React 18+** с TypeScript
-- **Material-UI v5** для компонентов
-- **Redux Toolkit** для управления состоянием
-- **React Router v6** для маршрутизации
-- **Axios** для HTTP запросов
-- **Formik + Yup** для форм и валидации
-- **Date-fns** для работы с датами
-
-### Дополнительные библиотеки:
-- **React Query** для кэширования API
-- **React Hook Form** для производительных форм
-- **Framer Motion** для анимаций
-- **React Virtual** для виртуализации списков
-- **React Helmet** для SEO
-- **Workbox** для PWA
-
-### Структура проекта:
-```
-src/
-├── components/          # Переиспользуемые компоненты
-│   ├── ui/             # Базовые UI компоненты
-│   ├── forms/          # Формы
-│   ├── layout/         # Компоненты макета
-│   └── features/       # Компоненты по функциональности
-├── pages/              # Страницы приложения
-├── hooks/              # Кастомные хуки
-├── services/           # API сервисы
-├── store/              # Redux store
-├── types/              # TypeScript типы
-├── utils/              # Утилиты
-├── constants/          # Константы
-└── styles/             # Глобальные стили
-```
-
----
-
-## 🌐 API интеграция
-
-### Базовый URL:
-```
-https://api.veles-drive.ru
-```
-
-### Аутентификация:
+### RTK Query настройка
 ```typescript
-// JWT токены
-interface AuthTokens {
-  access: string;
-  refresh: string;
-}
-
-// Заголовки
-Authorization: Bearer <access_token>
-```
-
-### Основные эндпоинты:
-
-#### Транспортные средства:
-- `GET /api/vehicles/` - список транспорта
-- `GET /api/vehicles/{id}/` - детали транспорта
-- `POST /api/vehicles/` - создание транспорта
-- `PUT /api/vehicles/{id}/` - обновление транспорта
-- `DELETE /api/vehicles/{id}/` - удаление транспорта
-
-#### Компании:
-- `GET /api/companies/` - список компаний
-- `GET /api/companies/{id}/` - детали компании
-- `POST /api/companies/` - создание компании
-- `PUT /api/companies/{id}/` - обновление компании
-
-#### ERP система:
-- `GET /api/erp/inventory/` - инвентарь
-- `GET /api/erp/sales/` - продажи
-- `GET /api/erp/services/` - услуги
-- `GET /api/erp/service-orders/` - заказы на обслуживание
-- `GET /api/erp/financial/` - финансовые операции
-- `GET /api/erp/project-boards/` - доски проектов
-- `GET /api/erp/project-tasks/` - задачи проектов
-
-#### Аукционы:
-- `GET /api/erp/auctions/` - список аукционов
-- `POST /api/erp/auctions/{id}/bid/` - размещение ставки
-
-#### Лизинг:
-- `GET /api/erp/leasing/` - заявки на лизинг
-- `POST /api/erp/leasing/` - создание заявки
-
-#### Страхование:
-- `GET /api/erp/insurance/` - страховые полисы
-- `POST /api/erp/insurance/` - создание полиса
-
-### WebSocket API:
-```typescript
-// Подключение
-const ws = new WebSocket('wss://api.veles-drive.ru/ws/');
-
-// События
-interface WebSocketEvent {
-  type: 'vehicle.created' | 'auction.updated' | 'bid.placed' | 'notification';
-  data: any;
-}
-```
-
----
-
-## 📊 Состояние приложения (Redux)
-
-### Слайсы:
-```typescript
-// authSlice.ts
-interface AuthState {
-  user: User | null;
-  tokens: AuthTokens | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-}
-
-// vehiclesSlice.ts
-interface VehiclesState {
-  vehicles: Vehicle[];
-  currentVehicle: Vehicle | null;
-  filters: VehicleFilters;
-  pagination: Pagination;
-  isLoading: boolean;
-  error: string | null;
-}
-
-// companiesSlice.ts
-interface CompaniesState {
-  companies: Company[];
-  currentCompany: Company | null;
-  filters: CompanyFilters;
-  pagination: Pagination;
-  isLoading: boolean;
-  error: string | null;
-}
-
-// erpSlice.ts
-interface ERPState {
-  inventory: Inventory[];
-  sales: Sale[];
-  services: Service[];
-  serviceOrders: ServiceOrder[];
-  financial: Financial[];
-  projectBoards: ProjectBoard[];
-  projectTasks: ProjectTask[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-// uiSlice.ts
-interface UIState {
-  theme: 'light' | 'dark';
-  sidebarOpen: boolean;
-  notifications: Notification[];
-  modals: ModalState[];
-  loading: boolean;
-}
-```
-
----
-
-## 🔐 Безопасность и права доступа
-
-### Роли и разрешения:
-```typescript
-interface Role {
-  id: number;
-  name: string;
-  description: string;
-  permissions: Permission[];
-}
-
-interface Permission {
-  id: number;
-  name: string;
-  codename: string;
-}
-
-// Проверка прав
-const hasPermission = (permission: string): boolean => {
-  return user?.role?.permissions.some(p => p.codename === permission) || false;
-};
-```
-
-### Защищенные маршруты:
-```typescript
-// Компонент для защиты маршрутов
-<ProtectedRoute 
-  requiredPermissions={['add_vehicle']}
-  fallback="/unauthorized"
->
-  <VehicleForm />
-</ProtectedRoute>
-```
-
----
-
-## 📱 PWA функциональность
-
-### Service Worker:
-- Кэширование статических ресурсов
-- Офлайн режим для просмотра каталога
-- Фоновые уведомления
-- Автоматические обновления
-
-### Манифест:
-```json
-{
-  "name": "VELES AUTO",
-  "short_name": "VELES",
-  "description": "Современная платформа для автомобильного бизнеса",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007AFF",
-  "icons": [
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+// store/api/baseApi.ts
+export const baseApi = createApi({
+  reducerPath: 'api',
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api/',
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+      return headers;
     },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  }),
+  tagTypes: ['Car', 'Company', 'User', 'Sale', 'Task', 'Report'],
+  endpoints: () => ({}),
+});
+
+// Примеры API слайсов
+// store/api/carsApi.ts
+export const carsApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getCars: builder.query<CarsResponse, CarsFilters>({
+      query: (filters) => ({ url: 'cars/', params: filters }),
+      providesTags: ['Car'],
+    }),
+    getCarById: builder.query<Car, string>({
+      query: (id) => `cars/${id}/`,
+      providesTags: (result, error, id) => [{ type: 'Car', id }],
+    }),
+    createCar: builder.mutation<Car, CreateCarRequest>({
+      query: (car) => ({
+        url: 'cars/',
+        method: 'POST',
+        body: car,
+      }),
+      invalidatesTags: ['Car'],
+    }),
+    // ... другие endpoints
+  }),
+});
+```
+
+### API Endpoints покрытие
+```typescript
+// Полное покрытие backend API
+interface APIEndpoints {
+  // Аутентификация
+  '/auth/login/': 'POST';
+  '/auth/register/': 'POST';
+  '/auth/refresh/': 'POST';
+  '/auth/logout/': 'POST';
+  
+  // Автомобили
+  '/cars/': 'GET | POST';
+  '/cars/{id}/': 'GET | PUT | DELETE';
+  '/cars/brands/': 'GET | POST';
+  '/cars/models/': 'GET | POST';
+  
+  // Компании  
+  '/companies/': 'GET | POST';
+  '/companies/{id}/': 'GET | PUT | DELETE';
+  '/companies/{id}/reviews/': 'GET | POST';
+  
+  // ERP система
+  '/erp/sales/': 'GET | POST';
+  '/erp/inventory/': 'GET | POST';
+  '/erp/services/': 'GET | POST';
+  '/erp/projects/boards/': 'GET | POST';
+  '/erp/projects/tasks/': 'GET | POST';
+  '/erp/reports/dashboard/': 'GET';
+  '/erp/reports/sales/': 'GET';
+  
+  // Дополнительные системы
+  '/cars/auctions/': 'GET | POST';
+  '/cars/leasing/': 'GET | POST';
+  '/cars/insurance/': 'GET | POST';
+  
+  // Админка
+  '/admin/users/': 'GET | POST';
+  '/admin/system/': 'GET';
+  '/admin/logs/': 'GET';
 }
+```
+
+---
+
+## 🎯 Особенности реализации
+
+### 1. Производительность
+```typescript
+// Оптимизации
+- React.memo для компонентов
+- useMemo/useCallback для тяжелых вычислений
+- Lazy loading страниц и компонентов
+- Виртуализация больших списков
+- Оптимизация изображений
+- Кэширование API запросов (RTK Query)
+- Debounce для поисковых запросов
+```
+
+### 2. Пользовательский опыт
+```typescript
+// UX улучшения
+- Loading states для всех асинхронных операций
+- Error boundaries с красивой обработкой ошибок
+- Toast уведомления для действий пользователя
+- Skeleton loaders
+- Infinite scroll для длинных списков
+- Оптимистичные обновления
+- Offline support (частично)
+```
+
+### 3. Адаптивность
+```typescript
+// Responsive компоненты
+- Адаптивные таблицы (collapse на мобиле)
+- Мобильные меню (drawer)
+- Touch-friendly элементы
+- Адаптивная типографика
+- Flexible layouts
+```
+
+---
+
+## 🔒 Безопасность
+
+### Клиентская безопасность
+```typescript
+// Меры безопасности
+- XSS защита (DOMPurify для пользовательского контента)
+- CSRF защита
+- Валидация всех форм (client + server)
+- Безопасное хранение токенов
+- Права доступа на уровне роутинга
+- Content Security Policy headers
+```
+
+### Управление разрешениями
+```typescript
+// Компонент для проверки разрешений
+<PermissionGuard permission="sales.create">
+  <CreateSaleButton />
+</PermissionGuard>
+
+// Хук для проверки разрешений
+const canCreateSale = usePermission('sales.create');
 ```
 
 ---
 
 ## 🧪 Тестирование
 
-### Обязательные тесты:
-- **Unit тесты** для утилит и хуков
-- **Integration тесты** для компонентов
-- **E2E тесты** для критических пользовательских сценариев
+### Тестовое покрытие
+```json
+{
+  "unit_tests": "Jest + React Testing Library",
+  "integration_tests": "MSW для API мocking",
+  "e2e_tests": "Cypress/Playwright",
+  "coverage_target": "80%+"
+}
+```
 
-### Инструменты:
-- **Jest** для unit тестов
-- **React Testing Library** для тестирования компонентов
-- **Cypress** для E2E тестов
-
----
-
-## 📈 Производительность
-
-### Оптимизации:
-- **Lazy loading** для страниц и компонентов
-- **Виртуализация** для больших списков
-- **Мемоизация** для дорогих вычислений
-- **Code splitting** по маршрутам
-- **Image optimization** с lazy loading
-- **Bundle analysis** и оптимизация размера
-
-### Метрики:
-- **First Contentful Paint** < 1.5s
-- **Largest Contentful Paint** < 2.5s
-- **Cumulative Layout Shift** < 0.1
-- **First Input Delay** < 100ms
-
----
-
-## 🔍 SEO и микроразметка
-
-### Schema.org разметка:
+### Тестовая стратегия
 ```typescript
-// Генерация микроразметки для автомобилей
-const generateCarSchema = (car: Car) => ({
-  "@context": "https://schema.org",
-  "@type": "Car",
-  "name": `${car.brand.name} ${car.model.name}`,
-  "brand": {
-    "@type": "Brand",
-    "name": car.brand.name
+// Типы тестов
+1. Unit тесты:
+   - Компоненты
+   - Хуки
+   - Утилиты
+   - Redux slices
+
+2. Integration тесты:
+   - API взаимодействие
+   - Формы с валидацией
+   - Routing
+
+3. E2E тесты:
+   - Критические пользовательские сценарии
+   - Процессы авторизации
+   - CRUD операции
+```
+
+---
+
+## 📊 Мониторинг и аналитика
+
+### Error tracking
+```typescript
+// Sentry интеграция
+import * as Sentry from "@sentry/react";
+
+// Обертка для отслеживания ошибок
+const withSentryProfiling = Sentry.withProfiler(Component);
+```
+
+### Аналитика использования
+```typescript
+// События для аналитики
+interface AnalyticsEvents {
+  'car_viewed': { carId: string };
+  'sale_created': { saleId: string, amount: number };
+  'task_moved': { taskId: string, fromColumn: string, toColumn: string };
+  'report_generated': { reportType: string };
+}
+```
+
+---
+
+## 🚀 Развертывание
+
+### Build конфигурация
+```json
+{
+  "development": {
+    "build_tool": "Vite dev server",
+    "hot_reload": true,
+    "source_maps": true
   },
-  "model": car.model.name,
-  "vehicleModelDate": car.year,
-  "mileageFromOdometer": {
-    "@type": "QuantitativeValue",
-    "value": car.mileage,
-    "unitCode": "KMT"
-  },
-  "offers": {
-    "@type": "Offer",
-    "price": car.price,
-    "priceCurrency": car.currency
+  "production": {
+    "build_tool": "Vite build",
+    "minification": true,
+    "tree_shaking": true,
+    "code_splitting": true,
+    "asset_optimization": true
   }
-});
+}
 ```
 
-### Мета-теги:
-- Динамические title и description
-- Open Graph теги для социальных сетей
-- Twitter Card теги
-- Канонические URL
-
----
-
-## 🌍 Локализация
-
-### Поддержка языков:
-- **Русский** (основной)
-- **Английский** (планируется)
-
-### Форматы:
-- **Даты:** Московское время (без часовых поясов)
-- **Валюта:** Рубли (RUB)
-- **Числа:** Русский формат
-
----
-
-## 📋 Чек-лист разработки
-
-### Этап 1: Настройка проекта (1-2 дня)
-- [ ] Создание React приложения с TypeScript
-- [ ] Настройка Material-UI и темы
-- [ ] Настройка Redux Toolkit
-- [ ] Настройка React Router
-- [ ] Настройка ESLint и Prettier
-- [ ] Настройка структуры папок
-
-### Этап 2: Базовые компоненты (3-5 дней)
-- [ ] Layout компоненты (Header, Footer, Sidebar)
-- [ ] UI компоненты (Button, Input, Modal, etc.)
-- [ ] Формы (с валидацией)
-- [ ] Навигация и маршрутизация
-- [ ] Аутентификация
-
-### Этап 3: Каталог автомобилей (5-7 дней)
-- [ ] Список автомобилей с фильтрацией
-- [ ] Детальная страница автомобиля
-- [ ] Галерея изображений
-- [ ] Поиск и сортировка
-- [ ] Избранное и история просмотров
-
-### Этап 4: Компании (3-4 дня)
-- [ ] Список компаний
-- [ ] Детальная страница компании
-- [ ] Отзывы и рейтинги
-- [ ] Каталог автомобилей компании
-
-### Этап 5: ERP система (7-10 дней)
-- [ ] Дашборд ERP
-- [ ] Управление инвентарем
-- [ ] Продажи
-- [ ] Сервисные услуги
-- [ ] Финансы
-- [ ] Trello-like доски проектов
-- [ ] Задачи и комментарии
-
-### Этап 6: Дополнительные сервисы (4-5 дней)
-- [ ] Аукционы
-- [ ] Лизинг
-- [ ] Страхование
-
-### Этап 7: Telegram Mini App (3-4 дня)
-- [ ] Интеграция с Telegram WebApp
-- [ ] Адаптация интерфейса для Mini App
-- [ ] Обработка Telegram данных
-
-### Этап 8: PWA и оптимизация (2-3 дня)
-- [ ] Service Worker
-- [ ] Манифест PWA
-- [ ] Офлайн режим
-- [ ] Оптимизация производительности
-
-### Этап 9: Тестирование и деплой (2-3 дня)
-- [ ] Unit тесты
-- [ ] Integration тесты
-- [ ] E2E тесты
-- [ ] Настройка CI/CD
-- [ ] Деплой на продакшн
-
----
-
-## 🚀 Деплой и инфраструктура
-
-### Сборка:
-```bash
-# Разработка
-npm start
-
-# Продакшн сборка
-npm run build
-
-# Тесты
-npm test
-```
-
-### Docker:
+### Docker конфигурация
 ```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
-```
+# Multi-stage build для оптимизации размера
+FROM node:18-alpine as build
+# ... build steps
 
-### Переменные окружения:
-```env
-REACT_APP_API_URL=https://api.veles-drive.ru
-REACT_APP_TELEGRAM_BOT_TOKEN=your_bot_token
-REACT_APP_GOOGLE_ANALYTICS_ID=your_ga_id
-REACT_APP_SENTRY_DSN=your_sentry_dsn
+FROM nginx:alpine
+# ... production config
 ```
 
 ---
 
-## 📞 Контакты и поддержка
+## 📝 Дополнительные требования
 
-**Backend разработчик:** @alx (ты будешь получать только бэк)  
-**Документация API:** https://api.veles-drive.ru/docs/  
-**Демо данные:** Доступны в системе  
-**Telegram поддержка:** @veles_auto_support  
+### 1. Интернационализация
+```typescript
+// i18n настройка
+import { useTranslation } from 'react-i18next';
+
+const { t } = useTranslation();
+return <button>{t('buttons.save')}</button>;
+
+// Поддерживаемые языки: RU, EN
+```
+
+### 2. PWA возможности
+```typescript
+// Progressive Web App
+- Service Worker
+- Offline caching
+- Push notifications
+- Add to homescreen
+```
+
+### 3. Accessibility (A11y)
+```typescript
+// Доступность
+- ARIA attributes
+- Keyboard navigation
+- Screen reader support
+- Color contrast compliance
+- Focus management
+```
 
 ---
 
-## 🎯 Критерии готовности
+## ⏰ Временные рамки
 
-### MVP (Минимально жизнеспособный продукт):
-- [ ] Каталог автомобилей с базовой фильтрацией
-- [ ] Детальные страницы автомобилей
-- [ ] Список компаний
-- [ ] Базовая аутентификация
-- [ ] Адаптивный дизайн
+### Фазы разработки
+```
+Фаза 1 (4-6 недель): Основная структура + Авторизация
+- Настройка проекта и инфраструктуры
+- Система аутентификации
+- Базовая навигация и лейауты
+- Основные компоненты UI kit
 
-### Полная версия:
-- [ ] Все модули ERP системы
-- [ ] Telegram Mini App интеграция
-- [ ] PWA функциональность
-- [ ] Полное тестирование
-- [ ] Оптимизация производительности
+Фаза 2 (6-8 недель): Основные модули
+- Модуль автомобилей (каталог, детали, фильтры)
+- Модуль компаний
+- Базовый дашборд
+- Мобильная адаптация
+
+Фаза 3 (8-10 недель): ERP система
+- Управление продажами
+- Сервисное обслуживание  
+- Финансовый модуль
+- Управление складом
+
+Фаза 4 (4-6 недель): Trello-система проектов
+- Доски проектов
+- Drag & Drop функционал
+- Задачи, комментарии, вложения
+- Интеграция с ERP модулями
+
+Фаза 5 (4-6 недель): Админ-панель
+- Управление пользователями
+- Системные настройки
+- Отчеты и аналитика
+- Логи и мониторинг
+
+Фаза 6 (2-4 недели): Финализация
+- Оптимизация производительности
+- Тестирование и баг-фиксы
+- Документация
+- Развертывание
+```
+
+### Общий срок: 28-40 недель (7-10 месяцев)
 
 ---
 
-**Удачи в разработке! 🚀**
+## 🎯 Критерии успеха
 
-*Это техническое задание покрывает все аспекты фронтенд разработки. При возникновении вопросов обращайся к backend разработчику или изучай существующий код и API документацию.*
+### Технические критерии
+- ✅ Полное покрытие всех API endpoints
+- ✅ Адаптивность на всех устройствах
+- ✅ Время загрузки страниц < 3 сек
+- ✅ Покрытие тестами > 80%
+- ✅ Соответствие дизайн-системе
+
+### Функциональные критерии
+- ✅ Полнофункциональная ERP система
+- ✅ Рабочая Trello-система проектов  
+- ✅ Комплексная админ-панель
+- ✅ Система отчетов и аналитики
+- ✅ Интеграция с Telegram Bot
+
+### Пользовательские критерии
+- ✅ Интуитивный интерфейс
+- ✅ Быстрая работа системы
+- ✅ Стабильность работы
+- ✅ Удобство использования на мобильных устройствах
+
+---
+
+## 📞 Техническая поддержка
+
+При возникновении вопросов по техническим деталям реализации обращайтесь к:
+- Backend API документации
+- Дизайн-системе проекта  
+- Техническому архитектору проекта
+
+---
+
+**VELES AUTO Frontend** - Современный, функциональный и красивый интерфейс для комплексной системы управления автомобильным бизнесом! 🚗✨
