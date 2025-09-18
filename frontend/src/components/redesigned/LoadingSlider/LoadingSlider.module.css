@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    gap: 2px;
+    width: 100%;
+    height: 4px;
+}
+
+.bar {
+    flex: 1;
+    height: 100%;
+    background-color: #0000001A; /* Не заполненный цвет */
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.filled {
+    height: 100%;
+    background-color: #000; /* Заполненный цвет */
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
