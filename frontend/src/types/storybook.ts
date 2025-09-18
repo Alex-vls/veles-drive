@@ -17,4 +17,5 @@ export interface ContainerProps {
     padding?: string;
     backgroundColor?: string;
     border?: string;
+    maxWidth?: string | number;
 }
