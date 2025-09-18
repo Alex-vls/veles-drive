@@ -10,10 +10,6 @@ const StarIcon = () => (
     <span style={{ display: 'flex', alignItems: 'center' }}>★</span>
 );
 
-const PlusIcon = () => (
-    <span style={{ display: 'flex', alignItems: 'center' }}>+</span>
-);
-
 export const ButtonStory: StoryBookStory = {
     title: 'Button',
     component: Button,

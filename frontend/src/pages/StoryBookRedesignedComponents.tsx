@@ -10,11 +10,13 @@ import {SellerStory} from "@/components/StoryBook/stories/Seller.stories";
 import {BreadcrumbsStory} from "@/components/StoryBook/stories/Breadcrumbs.stories";
 import {PromotionCardStory} from "@/components/StoryBook/stories/PromotionCard.stories";
 import {LoadingSliderStory} from "@/components/StoryBook/stories/LoadingSlider.stories";
+import {SelectStory} from "@/components/StoryBook/stories/Select.stories";
 
 const StoryBookRedesignedComponents: React.FC = () => {
     const stories = [
         ButtonStory,
         CheckboxStory,
+        SelectStory,
         TabsStory,
         TagStory,
         CarCardStory,
