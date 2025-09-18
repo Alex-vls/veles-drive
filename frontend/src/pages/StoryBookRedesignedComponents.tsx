@@ -7,6 +7,7 @@ import {TagStory} from "@/components/StoryBook/stories/Tag.stories";
 import {CarCardStory} from "@/components/StoryBook/stories/CarCard.stories";
 import {NewsCardStory} from "@/components/StoryBook/stories/NewsCard.stories";
 import {SellerStory} from "@/components/StoryBook/stories/Seller.stories";
+import {BreadcrumbsStory} from "@/components/StoryBook/stories/Breadcrumbs.stories";
 
 const StoryBookRedesignedComponents: React.FC = () => {
     const stories = [
@@ -16,7 +17,8 @@ const StoryBookRedesignedComponents: React.FC = () => {
         TagStory,
         CarCardStory,
         NewsCardStory,
-        SellerStory
+        SellerStory,
+        BreadcrumbsStory
     ];
 
     return (
