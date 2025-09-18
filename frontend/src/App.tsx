@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/design/Header';
 import HeroSection from './components/design/HeroSection';
+import StoryBookRedesignedComponents from "@/pages/StoryBookRedesignedComponents.tsx";
 
 function App() {
   const handleCatalogClick = () => {
@@ -36,6 +37,7 @@ function App() {
               <HeroSection onCatalogClick={handleCatalogClick} />
             } 
           />
+            <Route path="/storybook" element={<StoryBookRedesignedComponents />} />
           {/* Другие маршруты будут добавлены позже */}
         </Routes>
       </div>
